@@ -45,7 +45,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 </style></head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم الثامن</h1><p>مادة العلوم • التميز يبدأ من المشاركة</p><button id="welcomeEnter">دخول التطبيق</button></div></div>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
-<aside class="sidebar"><div class="brand"><h1>⭐ نجوم الثامن <small style="font-size:10px">v17</small></h1><p>🧪 مادة العلوم <small>v17</small></p></div>
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم الثامن <small style="font-size:10px">v18</small></h1><p>🧪 مادة العلوم <small>v17</small></p></div>
 <div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b><small>معلم مادة العلوم</small></div></div>
 <div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
 <nav>
@@ -56,7 +56,12 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 <div class="metric"><b id="heroStudents">0</b><span>👥 الطلاب</span></div><div class="metric"><b id="heroToday">0</b><span>⭐ نقاط اليوم</span></div><div class="metric"><b id="heroTotal">0</b><span>🎯 الإجمالي</span></div></div>
 
 <section id="home" class="tab on">
-<div class="topgrid"><div class="card"><div class="title">📚 اختر الفصل</div><div id="classes" class="classes"></div></div><div class="card"><div class="title">🎯 هدف الحصة</div><input id="goal" placeholder="اكتب هدف الحصة هنا..."></div></div>
+<div class="topgrid"><div class="card"><div class="title">📚 اختر الفصل</div><div id="classes" class="classes"></div></div><div class="card"><div class="title">🎯 هدف الحصة</div><input id="goal" placeholder="اكتب هدف الحصة هنا..."></div><div class="card">
+  <div class="title">🔎 بحث سريع عن طالب</div>
+  <input id="homeStudentSearch" placeholder="اكتب أول حروف الاسم... مثال: مح" autocomplete="off">
+  <div class="muted" style="margin-top:7px">يعرض طلاب الشعبة المحددة فقط</div>
+  <div id="homeStudentSearchResults" style="margin-top:10px"></div>
+</div></div>
 <div class="dashboard">
 <div class="card tall"><div class="title">👥 عجلة الطلاب</div><canvas id="homeWheel" width="340" height="340"></canvas><button class="primary" id="goQuestion">⚡ تسجيل مشاركة سريع</button><div style="text-align:center;color:#8290a4;margin-top:12px">اكتب اسم الطالب بسرعة ثم اختر التقييم</div></div>
 <div class="card tall"><div class="title">💼 أدوات الحصة</div><button class="score green" disabled>✅ صح<br>+2</button><button class="score yellow" disabled>🟡 حاول<br>+1</button><button class="score blue" disabled>⭐ إجابة مثالية<br>+3</button><div style="margin-top:20px;background:#f6f9ff;padding:16px;border-radius:13px;text-align:center">💡 شجّع طلابك واحتفل<br>بكل إنجاز صغير</div></div>
@@ -97,7 +102,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 <section id="ai" class="tab"><div class="card"><div class="title">🤖 مساعد المعلم AI</div><div id="aiText">ابدأ بتسجيل المشاركات وسأحلل بيانات الفصل.</div><button id="aiAnalyze" class="primary" style="margin-top:15px">تحليل الفصل</button></div></section>
 </main></div>
 <script>
-(function(){"use strict";var SUPABASE_URL="https://gzyshnowsxkadohpmhbz.supabase.co",SUPABASE_KEY="sb_publishable_GVn1IF5FDn9ExsSOjdmTBg_Bt0uiKHM";var KEY="nojoom_v15";var data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+(function(){"use strict";var SUPABASE_URL="https://gzyshnowsxkadohpmhbz.supabase.co",SUPABASE_KEY="sb_publishable_GVn1IF5FDn9ExsSOjdmTBg_Bt0uiKHM";var KEY="nojoom_v18_full_rosters";var data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!data)data={"current":"c1","globalQuestion":"","classes":[{"id":"c1","name":"الشعبة 11","dbName":"الصف الثامن 8/1","students":[{"id":"local-11-1","name":"أحمد بن عزيز بن سليمان صبيح السيابي","points":0},{"id":"local-11-2","name":"أسامة بن يحيى بن محفوظ سليمان العامري","points":0},{"id":"local-11-3","name":"ابوبكر عبدالقادر دفع","points":0},{"id":"local-11-4","name":"الزهر بن ايوب بن علي غاشم الحسني","points":0},{"id":"local-11-5","name":"الصلت بن أحمد بن سالم خميس القيضي","points":0},{"id":"local-11-6","name":"المعتصم بن أحمد بن مبارك خلفان الشعيلي","points":0},{"id":"local-11-7","name":"اليزن بن أحمد بن حمود أحمد المنجي","points":0},{"id":"local-11-8","name":"بدر بن أحمد بن مبارك أحمد الصوافي","points":0},{"id":"local-11-9","name":"تميم بن طالب بن سالم سليمان الجدياني","points":0},{"id":"local-11-10","name":"حسن بن علي بن جمعه سهيل البلوشي","points":0},{"id":"local-11-11","name":"حمود بن يونس بن حمود عيسى الراشدي","points":0},{"id":"local-11-12","name":"ذاير بن خليفة بن عبيد ربيع المشايخي","points":0},{"id":"local-11-13","name":"زاهر بن سالم بن سعيد محمد المنجي","points":0},{"id":"local-11-14","name":"سالم بن ناصر بن سالم عيسى النظيري","points":0},{"id":"local-11-15","name":"سلمان جيدي","points":0},{"id":"local-11-16","name":"شهاب الدين بن أحمد بن سالم عبيد العويسي","points":0},{"id":"local-11-17","name":"عبد الرحمن زايد محمد طه","points":0},{"id":"local-11-18","name":"عبدالعزيز بن سالم بن صالح خلفان الراشدي","points":0},{"id":"local-11-19","name":"عبدا بن محمد بن عبدا سالم المنذري","points":0},{"id":"local-11-20","name":"عبدا بن نواف بن عبدا سالم المعمري","points":0},{"id":"local-11-21","name":"عزام عصام فتتي واصل","points":0},{"id":"local-11-22","name":"علي بن مسعود بن علي مبروك النعماني","points":0},{"id":"local-11-23","name":"عمر بن ماجد بن أحمد صالح البلوشي","points":0},{"id":"local-11-24","name":"غيث بن عيسى بن خلفان خليل الوهيبي","points":0},{"id":"local-11-25","name":"فيصل بن بدر بن سعيد مسلم البوسعيدي","points":0},{"id":"local-11-26","name":"مؤيد بن سامي بن خميس البلوشي","points":0},{"id":"local-11-27","name":"محمد أحمد محمد ابراهيم توفي","points":0},{"id":"local-11-28","name":"محمد بن زاهر بن عبدا محمد العبري","points":0},{"id":"local-11-29","name":"محمد بن هلال بن عبدا سعيد العامري","points":0},{"id":"local-11-30","name":"مساعد مسعود محمد الخروصي","points":0},{"id":"local-11-31","name":"مهند بن سامي بن خميس البلوشي","points":0},{"id":"local-11-32","name":"وسام بن سالم بن محمد حمدان الحارثي","points":0},{"id":"local-11-33","name":"يزن بن صالح بن سالم عبدا الحنيني","points":0},{"id":"local-11-34","name":"يوسف بن محمد بن حمود سيف الرواحي","points":0}],"logs":[],"used":[],"goal":""},{"id":"c2","name":"الشعبة 12","dbName":"الصف الثامن 8/2","students":[{"id":"local-12-1","name":"أسامه بن طلال بن سلطان يوسف الظفري","points":0},{"id":"local-12-2","name":"أمين بن يوسف بن محمد زهران البلوشي","points":0},{"id":"local-12-3","name":"احمد عبدالعزيز احمد كبير","points":0},{"id":"local-12-4","name":"الزهر بن حمود بن ناصر حميد الصوافي","points":0},{"id":"local-12-5","name":"الطيب محمد عبدا سليمان","points":0},{"id":"local-12-6","name":"المنتظر بن طلال بن سيف خميس الحديدي","points":0},{"id":"local-12-7","name":"اليزيد بن خالد بن مبارك ناصر الجابري","points":0},{"id":"local-12-8","name":"بدر بن علي بن سليمان حمد الرواحي","points":0},{"id":"local-12-9","name":"تميم بن عامر بن سيف ناصر الحارثي","points":0},{"id":"local-12-10","name":"حمد احمد المصطفى","points":0},{"id":"local-12-11","name":"حميد بن اسماعيل بن محمد سالم المصدوقي","points":0},{"id":"local-12-12","name":"ذياب بن منصور بن خميس ذياب الشكيري","points":0},{"id":"local-12-13","name":"سامي فاروق","points":0},{"id":"local-12-14","name":"سلوم بن سعيد بن سلوم سليم الشكيري","points":0},{"id":"local-12-15","name":"سيف بن سامي بن سيف عديم الحسني","points":0},{"id":"local-12-16","name":"شهاب بن أحمد بن سالم حمدان الحسيني","points":0},{"id":"local-12-17","name":"عبد الملك ربيع عيسى وهيب","points":0},{"id":"local-12-18","name":"عبدالعزيز بن سعود بن حمود خالد المعمري","points":0},{"id":"local-12-19","name":"عبدا بن محمد بن عبدا سيف العجمي","points":0},{"id":"local-12-20","name":"عزان بن عارف بن عيسى موسى البلوشي","points":0},{"id":"local-12-21","name":"علي بن محمد بن علي عبدا بالفورا","points":0},{"id":"local-12-22","name":"عمر بن مالك بن سند راشد المعمري","points":0},{"id":"local-12-23","name":"عمر بن موسى بن مراد خدابخش البلوشي","points":0},{"id":"local-12-24","name":"فاتك بن فهد بن حاجي شميه البلوشي","points":0},{"id":"local-12-25","name":"فهد بن محمود بن عبدا فاضل المجرفي","points":0},{"id":"local-12-26","name":"مؤيد بن سعيد بن مبارك عبيد الربعاني","points":0},{"id":"local-12-27","name":"محمد أمين عمار ظاهر","points":0},{"id":"local-12-28","name":"محمد بن سالم بن عبدا حمدان العدوي","points":0},{"id":"local-12-29","name":"محمد بن موسى بن علي هلال الجابري","points":0},{"id":"local-12-30","name":"محمد بن هود بن سالم سويد العراقي","points":0},{"id":"local-12-31","name":"مسلم بن سعيد بن مسلم سعيد النعماني","points":0},{"id":"local-12-32","name":"ناصر بن بدر بن ناصر عبدا المعشري","points":0},{"id":"local-12-33","name":"وسام بن سيف بن محمد سيف الرواحي","points":0},{"id":"local-12-34","name":"يوسف بن منير بن محمد حسن الحمدي","points":0}],"logs":[],"used":[],"goal":""},{"id":"c3","name":"الشعبة 13","dbName":"الصف الثامن 8/3","students":[{"id":"local-13-1","name":"أحمد بن محمد بن ابراهيم محمد الحسني","points":0},{"id":"local-13-2","name":"أسامه بن محمد بن ربيع عوف العمري","points":0},{"id":"local-13-3","name":"احمد خالد عبد الخبيت","points":0},{"id":"local-13-4","name":"المير بن نبيل بن عبدا محمد العلوي","points":0},{"id":"local-13-5","name":"الحسام بن صالح بن محمد سالم العبري","points":0},{"id":"local-13-6","name":"العزم بن سليمان بن محمد حميد السليمي","points":0},{"id":"local-13-7","name":"الموهب بن سعيد بن ناصر خلفان التوبي","points":0},{"id":"local-13-8","name":"الهمام بن ناصر بن مسلم أحمد الحسني","points":0},{"id":"local-13-9","name":"اليسع بن ابراهيم بن سالم عبدا شملي","points":0},{"id":"local-13-10","name":"يعرب بن عبدا بن يعرب شاهمس البطاشي","points":0},{"id":"local-13-11","name":"تميم بن فيصل بن هلال محمد البوسعيدي","points":0},{"id":"local-13-12","name":"حمد بن خميس بن حمد سالم العلوي","points":0},{"id":"local-13-13","name":"حمد بن مصعب بن حمد رشيد آل جمعه","points":0},{"id":"local-13-14","name":"خالد بن وليد بن سليمان عبدا المسكري","points":0},{"id":"local-13-15","name":"رائد بن محمد بن عبدا علي البطاشي","points":0},{"id":"local-13-16","name":"سعد بن سمير بن خميس صوار الزدجالي","points":0},{"id":"local-13-17","name":"سعود بن بدر بن حارب حمد الحراصي","points":0},{"id":"local-13-18","name":"سعيد بن راشد بن سعيد سالم الصواعي","points":0},{"id":"local-13-19","name":"سليمان بن عادل بن سليمان علي البلوشي","points":0},{"id":"local-13-20","name":"عبدالعزيز بن عبدالحميد بن ابراهيم خدابخش","points":0},{"id":"local-13-21","name":"عبدا بن محمد بن عبدا موسى البلوشي","points":0},{"id":"local-13-22","name":"عمار بن عبدالرفيق بن ابل خدابخش البلوشي","points":0},{"id":"local-13-23","name":"عمر بن عبدالعزيز بن جمعه مطر البهاني","points":0},{"id":"local-13-24","name":"عمر بن محسن بن عبدا اسحاق البلوشي","points":0},{"id":"local-13-25","name":"فارس بن ابراهيم بن غلام شاهو البلوشي","points":0},{"id":"local-13-26","name":"فيصل بن خليفه بن سالم ناصر الخضيري","points":0},{"id":"local-13-27","name":"مؤيد بن سليمان بن خميس الرواحي","points":0},{"id":"local-13-28","name":"محمد بدر عيسى الحمامده","points":0},{"id":"local-13-29","name":"محمد بن سالم بن مرهون محمد العامري","points":0},{"id":"local-13-30","name":"محمد بن يوسف بن عبدا ملن البلوشي","points":0},{"id":"local-13-31","name":"مشعل بن أحمد بن مبارك مسلم العبيدي","points":0},{"id":"local-13-32","name":"ناصر بن جمعه بن ناصر علي العوفي","points":0},{"id":"local-13-33","name":"وسام بن أحمد بن خميس الهنائي","points":0},{"id":"local-13-34","name":"وقاص بن مقبول بن منصور عيسى البلوشي","points":0},{"id":"local-13-35","name":"يوسف بن موسى بن سعيد راشد المهري","points":0}],"logs":[],"used":[],"goal":""}]};
 var EMBEDDED_ROSTERS={"11":["أحمد بن عزيز بن سليمان صبيح السيابي","أسامة بن يحيى بن محفوظ سليمان العامري","ابوبكر عبدالقادر دفع","الزهر بن ايوب بن علي غاشم الحسني","الصلت بن أحمد بن سالم خميس القيضي","المعتصم بن أحمد بن مبارك خلفان الشعيلي","اليزن بن أحمد بن حمود أحمد المنجي","بدر بن أحمد بن مبارك أحمد الصوافي","تميم بن طالب بن سالم سليمان الجدياني","حسن بن علي بن جمعه سهيل البلوشي","حمود بن يونس بن حمود عيسى الراشدي","ذاير بن خليفة بن عبيد ربيع المشايخي","زاهر بن سالم بن سعيد محمد المنجي","سالم بن ناصر بن سالم عيسى النظيري","سلمان جيدي","شهاب الدين بن أحمد بن سالم عبيد العويسي","عبد الرحمن زايد محمد طه","عبدالعزيز بن سالم بن صالح خلفان الراشدي","عبدا بن محمد بن عبدا سالم المنذري","عبدا بن نواف بن عبدا سالم المعمري","عزام عصام فتتي واصل","علي بن مسعود بن علي مبروك النعماني","عمر بن ماجد بن أحمد صالح البلوشي","غيث بن عيسى بن خلفان خليل الوهيبي","فيصل بن بدر بن سعيد مسلم البوسعيدي","مؤيد بن سامي بن خميس البلوشي","محمد أحمد محمد ابراهيم توفي","محمد بن زاهر بن عبدا محمد العبري","محمد بن هلال بن عبدا سعيد العامري","مساعد مسعود محمد الخروصي","مهند بن سامي بن خميس البلوشي","وسام بن سالم بن محمد حمدان الحارثي","يزن بن صالح بن سالم عبدا الحنيني","يوسف بن محمد بن حمود سيف الرواحي"],"12":["أسامه بن طلال بن سلطان يوسف الظفري","أمين بن يوسف بن محمد زهران البلوشي","احمد عبدالعزيز احمد كبير","الزهر بن حمود بن ناصر حميد الصوافي","الطيب محمد عبدا سليمان","المنتظر بن طلال بن سيف خميس الحديدي","اليزيد بن خالد بن مبارك ناصر الجابري","بدر بن علي بن سليمان حمد الرواحي","تميم بن عامر بن سيف ناصر الحارثي","حمد احمد المصطفى","حميد بن اسماعيل بن محمد سالم المصدوقي","ذياب بن منصور بن خميس ذياب الشكيري","سامي فاروق","سلوم بن سعيد بن سلوم سليم الشكيري","سيف بن سامي بن سيف عديم الحسني","شهاب بن أحمد بن سالم حمدان الحسيني","عبد الملك ربيع عيسى وهيب","عبدالعزيز بن سعود بن حمود خالد المعمري","عبدا بن محمد بن عبدا سيف العجمي","عزان بن عارف بن عيسى موسى البلوشي","علي بن محمد بن علي عبدا بالفورا","عمر بن مالك بن سند راشد المعمري","عمر بن موسى بن مراد خدابخش البلوشي","فاتك بن فهد بن حاجي شميه البلوشي","فهد بن محمود بن عبدا فاضل المجرفي","مؤيد بن سعيد بن مبارك عبيد الربعاني","محمد أمين عمار ظاهر","محمد بن سالم بن عبدا حمدان العدوي","محمد بن موسى بن علي هلال الجابري","محمد بن هود بن سالم سويد العراقي","مسلم بن سعيد بن مسلم سعيد النعماني","ناصر بن بدر بن ناصر عبدا المعشري","وسام بن سيف بن محمد سيف الرواحي","يوسف بن منير بن محمد حسن الحمدي"],"13":["أحمد بن محمد بن ابراهيم محمد الحسني","أسامه بن محمد بن ربيع عوف العمري","احمد خالد عبد الخبيت","المير بن نبيل بن عبدا محمد العلوي","الحسام بن صالح بن محمد سالم العبري","العزم بن سليمان بن محمد حميد السليمي","الموهب بن سعيد بن ناصر خلفان التوبي","الهمام بن ناصر بن مسلم أحمد الحسني","اليسع بن ابراهيم بن سالم عبدا شملي","يعرب بن عبدا بن يعرب شاهمس البطاشي","تميم بن فيصل بن هلال محمد البوسعيدي","حمد بن خميس بن حمد سالم العلوي","حمد بن مصعب بن حمد رشيد آل جمعه","خالد بن وليد بن سليمان عبدا المسكري","رائد بن محمد بن عبدا علي البطاشي","سعد بن سمير بن خميس صوار الزدجالي","سعود بن بدر بن حارب حمد الحراصي","سعيد بن راشد بن سعيد سالم الصواعي","سليمان بن عادل بن سليمان علي البلوشي","عبدالعزيز بن عبدالحميد بن ابراهيم خدابخش","عبدا بن محمد بن عبدا موسى البلوشي","عمار بن عبدالرفيق بن ابل خدابخش البلوشي","عمر بن عبدالعزيز بن جمعه مطر البهاني","عمر بن محسن بن عبدا اسحاق البلوشي","فارس بن ابراهيم بن غلام شاهو البلوشي","فيصل بن خليفه بن سالم ناصر الخضيري","مؤيد بن سليمان بن خميس الرواحي","محمد بدر عيسى الحمامده","محمد بن سالم بن مرهون محمد العامري","محمد بن يوسف بن عبدا ملن البلوشي","مشعل بن أحمد بن مبارك مسلم العبيدي","ناصر بن جمعه بن ناصر علي العوفي","وسام بن أحمد بن خميس الهنائي","وقاص بن مقبول بن منصور عيسى البلوشي","يوسف بن موسى بن سعيد راشد المهري"]};
 var CLASS_DB_IDS={"c1":1,"c2":2,"c3":3};
@@ -130,15 +135,21 @@ async function syncStudentsFromSupabase(){
   var parts=await partsRes.json();
 
   var c=C();
-  if(students.length){
-   c.students=students.map(function(r){return {id:r.id,name:r.name,points:Number(r.points)||0};});
-  }else{
-   var sh=c.id==="c1"?"11":c.id==="c2"?"12":"13";
-   c.students=(EMBEDDED_ROSTERS[sh]||[]).map(function(n,i){return {id:"local-"+sh+"-"+(i+1),name:n,points:0};});
-  }
+  var sh=c.id==="c1"?"11":c.id==="c2"?"12":"13";
+  var remoteByName={};
+  students.forEach(function(r){remoteByName[String(r.name).trim()]={id:r.id,points:Number(r.points)||0};});
+  c.students=(EMBEDDED_ROSTERS[sh]||[]).map(function(n,i){
+    var rr=remoteByName[String(n).trim()];
+    return {
+      id:rr?rr.id:"local-"+sh+"-"+(i+1),
+      name:n,
+      points:rr?rr.points:0
+    };
+  });
 
   var nameById={};
   c.students.forEach(function(s){nameById[String(s.id)]=s.name});
+  students.forEach(function(s){nameById[String(s.id)]=s.name});
 
   c.logs=parts.map(function(p){
    var d=new Date(p.created_at);
@@ -163,8 +174,16 @@ var wheelSelected=null,angle=0,spinning=false;function C(){return data.classes.f
 function classButtons(){return data.classes.map(x=>'<button class="chip '+(x.id===data.current?'on':'')+'" data-class="'+x.id+'">'+x.name+' ('+x.students.length+')</button>').join("")}
 function render(){let c=C(),today=c.logs.filter(l=>l.day===day()),tot=c.students.reduce((a,s)=>a+s.points,0);["sideStudents","heroStudents"].forEach(id=>document.getElementById(id).textContent=c.students.length);document.getElementById("heroToday").textContent=today.reduce((a,l)=>a+l.score,0);document.getElementById("heroTotal").textContent=tot;document.getElementById("classes").innerHTML=classButtons();document.getElementById("qClasses").innerHTML=classButtons();document.getElementById("goal").value=c.goal||"";document.getElementById("questionText").value=data.globalQuestion||"";
 document.getElementById("studentList").innerHTML=c.students.map(s=>'<div class="row"><b>'+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join("")||'<div class="empty">لا يوجد طلاب بعد</div>';let sorted=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("rankList").innerHTML=sorted.length?sorted.map((s,i)=>'<div class="row" style="'+(i<3?'border-width:2px;':'')+'"><b style="font-size:'+(i<3?'18px':'15px')+'">'+(i<3?["🥇","🥈","🥉"][i]:(i+1)+".")+' '+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join(""):'<div class="empty">لا يوجد طلاب في هذا الفصل بعد</div>';
-document.getElementById("recent").innerHTML=today.length?today.slice(-6).reverse().map(l=>'<div class="row"><b>'+l.name+'</b><span>'+l.reason+' <b class="pts">'+(l.score>0?"+":"")+l.score+'</b></span></div>').join(""):'<div class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div>';report();renderStudentSearch();drawWheel("wheel");drawWheel("homeWheel")}
+document.getElementById("recent").innerHTML=today.length?today.slice(-6).reverse().map(l=>'<div class="row"><b>'+l.name+'</b><span>'+l.reason+' <b class="pts">'+(l.score>0?"+":"")+l.score+'</b></span></div>').join(""):'<div class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div>';report();renderStudentSearch();renderHomeStudentSearch();drawWheel("wheel");drawWheel("homeWheel")}
 document.addEventListener("click",e=>{let b=e.target.closest("button");if(!b)return;if(b.dataset.tab){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));document.querySelectorAll("nav button").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.tab).classList.add("on");b.classList.add("on");return}if(b.dataset.class){data.current=b.dataset.class;save();syncStudentsFromSupabase();return}if(b.dataset.wscore){awardWheel(+b.dataset.wscore,b.dataset.wreason)}})
+
+
+document.getElementById("homeStudentSearch").addEventListener("input",renderHomeStudentSearch);
+document.getElementById("homeStudentSearchResults").addEventListener("click",function(e){
+  var b=e.target.closest("[data-hstudent]");
+  if(!b)return;
+  scoreStudentFromHome(b.dataset.hstudent,b.dataset.score,b.dataset.reason);
+});
 
 document.getElementById("studentSearch").addEventListener("input",renderStudentSearch);
 document.getElementById("studentSearchResults").addEventListener("click",function(e){
@@ -233,6 +252,60 @@ function drawWheel(id){
 }
 document.getElementById("spin").onclick=function(){let ss=C().students;if(!ss.length||spinning)return;let av=ss.filter(s=>!C().used.includes(String(s.id)));if(!av.length){C().used=[];av=ss.slice()}let p=av[Math.floor(Math.random()*av.length)];C().used.push(String(p.id));localStorage.setItem(KEY,JSON.stringify(data));let idx=ss.indexOf(p),step=Math.PI*2/ss.length,target=-Math.PI/2-(idx+.5)*step,start=angle,delta=target-start;while(delta<Math.PI*2*5)delta+=Math.PI*2;spinning=true;document.getElementById("wheelGrade").classList.add("hidden");document.getElementById("noWinner").classList.remove("hidden");let st=performance.now();function go(now){let t=Math.min(1,(now-st)/3500),e=1-Math.pow(1-t,4);angle=start+delta*e;drawWheel("wheel");if(t<1)requestAnimationFrame(go);else{spinning=false;wheelSelected=p.id;document.getElementById("winner").textContent="🎉 الطالب المختار: "+p.name;document.getElementById("winner").classList.remove("hidden");document.getElementById("wheelGrade").classList.remove("hidden");document.getElementById("noWinner").classList.add("hidden")}}requestAnimationFrame(go)};
 function awardWheel(score,reason){if(!wheelSelected)return;let s=C().students.find(x=>String(x.id)===String(wheelSelected));s.points+=score;C().logs.push({studentId:s.id,name:s.name,score,reason,day:day()});document.getElementById("winner").textContent="✅ تم تسجيل "+reason+" لـ "+s.name;document.getElementById("wheelGrade").classList.add("hidden");wheelSelected=null;save()}
+
+
+function renderHomeStudentSearch(){
+  var box=document.getElementById("homeStudentSearchResults");
+  var input=document.getElementById("homeStudentSearch");
+  if(!box||!input)return;
+  var q=(input.value||"").trim().toLowerCase();
+  if(!q){box.innerHTML="";return;}
+  var hits=C().students.slice().sort(function(a,b){
+    return String(a.name).localeCompare(String(b.name),"ar");
+  }).filter(function(s){
+    return String(s.name).toLowerCase().startsWith(q);
+  });
+  box.innerHTML=hits.length?hits.map(function(s){
+    return '<div class="search-hit" style="gap:10px">'
+      +'<b style="flex:1">'+s.name+'</b>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="1" data-reason="حاول" style="background:#fff4cc;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+1 حاول</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="2" data-reason="صح" style="background:#dff7df;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+2 صح</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="3" data-reason="إجابة مثالية" style="background:#e9e3ff;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+3 مثالية</button>'
+      +'</div>';
+  }).join(""):'<div class="empty" style="padding:12px">لا يوجد اسم يبدأ بهذه الحروف في الشعبة الحالية</div>';
+}
+
+async function scoreStudentFromHome(id,score,reason){
+  var s=C().students.find(function(x){return String(x.id)===String(id)});
+  if(!s)return;
+  if(String(s.id).indexOf("local-")===0){
+    alert("هذا الطالب لم يُرفع إلى Supabase بعد. نفّذ ملف SQL المرفق مرة واحدة أولًا.");
+    return;
+  }
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/add_student_points",{
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        p_student_name:s.name,
+        p_class_name:(C().dbName||C().name),
+        p_points:Number(score),
+        p_reason:reason
+      })
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    await syncStudentsFromSupabase();
+    document.getElementById("homeStudentSearch").value="";
+    renderHomeStudentSearch();
+  }catch(err){
+    console.error(err);
+    alert("تعذر تسجيل النقاط في Supabase");
+  }
+}
 
 function renderStudentSearch(){
   var box=document.getElementById("studentSearchResults");
