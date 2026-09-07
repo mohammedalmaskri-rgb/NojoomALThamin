@@ -37,9 +37,9 @@ input,textarea{width:100%;border:1px solid #d7e0ec;border-radius:13px;padding:14
 
 #welcomeScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0875f3,#0649c9);color:#fff;text-align:center;padding:30px}#welcomeScreen.hidden{display:none}.welcome-card{width:min(720px,92vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:34px;padding:46px 34px;box-shadow:0 25px 70px rgba(0,40,120,.25);backdrop-filter:blur(8px)}.welcome-icons{font-size:56px;margin-bottom:16px}.welcome-card h1{font-size:42px;margin:8px 0 12px}.welcome-card h2{font-size:28px;margin:0 0 12px;font-weight:800}.welcome-card p{font-size:18px;opacity:.92;margin:0 0 28px}#welcomeEnter{border:0;background:#fff;color:#0758d8;border-radius:18px;padding:15px 34px;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.16)}
 
-/* v31 — تخطيط v31 الأصلي + زخرفة علوم داخل الفراغ الأوسط فقط */
+/* v32 — تخطيط v32 الأصلي + زخرفة علوم داخل الفراغ الأوسط فقط */
 #home{position:relative}
-.v31-science-fill{
+.v32-science-fill{
   position:absolute;
   left:26px;
   top:300px;
@@ -49,7 +49,7 @@ input,textarea{width:100%;border:1px solid #d7e0ec;border-radius:13px;padding:14
   z-index:0;
   opacity:.34;
 }
-.v31-science-fill .science-icon{
+.v32-science-fill .science-icon{
   position:absolute;
   display:grid;
   place-items:center;
@@ -58,52 +58,61 @@ input,textarea{width:100%;border:1px solid #d7e0ec;border-radius:13px;padding:14
   border-radius:26px;
   box-shadow:0 8px 24px rgba(28,104,214,.06);
 }
-.v31-science-fill .microscope{font-size:74px;width:125px;height:125px;left:4%;top:72px;transform:rotate(-6deg)}
-.v31-science-fill .dna{font-size:78px;width:130px;height:130px;left:34%;top:8px;transform:rotate(5deg)}
-.v31-science-fill .flask{font-size:72px;width:120px;height:120px;left:65%;top:92px;transform:rotate(-4deg)}
-.v31-science-fill .atom{font-size:58px;position:absolute;left:61%;top:8px}
-.v31-science-fill .leaf{font-size:48px;position:absolute;left:27%;top:160px}
-#home > *:not(.v31-science-fill){position:relative;z-index:1}
-@media(max-width:900px){.v31-science-fill{display:none}}
+.v32-science-fill .microscope{font-size:74px;width:125px;height:125px;left:4%;top:72px;transform:rotate(-6deg)}
+.v32-science-fill .dna{font-size:78px;width:130px;height:130px;left:34%;top:8px;transform:rotate(5deg)}
+.v32-science-fill .flask{font-size:72px;width:120px;height:120px;left:65%;top:92px;transform:rotate(-4deg)}
+.v32-science-fill .atom{font-size:58px;position:absolute;left:61%;top:8px}
+.v32-science-fill .leaf{font-size:48px;position:absolute;left:27%;top:160px}
+#home > *:not(.v32-science-fill){position:relative;z-index:1}
+@media(max-width:900px){.v32-science-fill{display:none}}
 
 
-/* v31 — رسومات العلوم أوضح وأكبر داخل الفراغ */
-.v31-science-fill{
+/* v32 — رسومات العلوم أوضح وأكبر داخل الفراغ */
+.v32-science-fill{
   top:285px !important;
   left:28px !important;
   width:47% !important;
   height:270px !important;
   opacity:.78 !important;
 }
-.v31-science-fill .science-icon{
+.v32-science-fill .science-icon{
   background:rgba(255,255,255,.92) !important;
   border:2px solid rgba(28,104,214,.22) !important;
   box-shadow:0 10px 28px rgba(28,104,214,.14) !important;
 }
-.v31-science-fill .microscope{
+.v32-science-fill .microscope{
   font-size:92px !important;width:145px !important;height:145px !important;
   left:1% !important;top:80px !important;
 }
-.v31-science-fill .dna{
+.v32-science-fill .dna{
   font-size:98px !important;width:150px !important;height:150px !important;
   left:33% !important;top:2px !important;
 }
-.v31-science-fill .flask{
+.v32-science-fill .flask{
   font-size:90px !important;width:145px !important;height:145px !important;
   left:67% !important;top:86px !important;
 }
-.v31-science-fill .atom{
+.v32-science-fill .atom{
   font-size:78px !important;left:68% !important;top:0 !important;
 }
-.v31-science-fill .leaf{
+.v32-science-fill .leaf{
   font-size:66px !important;left:29% !important;top:185px !important;
 }
 
 
-/* v31: إلغاء الملصقات القديمة نهائياً */
+/* v32: إلغاء الملصقات القديمة نهائياً */
 [class*="science-fill"]{display:none!important}
 
-.qitem{border:1px solid #dce8f7;border-radius:13px;padding:12px;margin:8px 0}.qitem button{border:0;border-radius:9px;padding:7px 10px;margin:5px 3px;font-family:inherit;font-weight:800}.qopt{width:100%;text-align:right;border:1px solid #dce8f7;background:#fff;border-radius:13px;padding:13px;margin:7px 0;font-family:inherit;font-weight:800}.qopt.correct{background:#eaf9ee;border-color:#8bd3a0;color:#087a2e}.qopt.wrong{background:#fff0f0;border-color:#efaaaa;color:#b42318}</style><script>
+.qitem{border:1px solid #dce8f7;border-radius:13px;padding:12px;margin:8px 0}.qitem button{border:0;border-radius:9px;padding:7px 10px;margin:5px 3px;font-family:inherit;font-weight:800}.qopt{width:100%;text-align:right;border:1px solid #dce8f7;background:#fff;border-radius:13px;padding:13px;margin:7px 0;font-family:inherit;font-weight:800}.qopt.correct{background:#eaf9ee;border-color:#8bd3a0;color:#087a2e}.qopt.wrong{background:#fff0f0;border-color:#efaaaa;color:#b42318}
+/* v32 final home spacing */
+@media (min-width:901px){
+  #home .topgrid{margin-bottom:12px!important}
+  #home .dashboard{margin-top:0!important}
+  #home{row-gap:12px!important}
+}
+#home [class*="science-fill"],#home [class*="science-lineart"]{display:none!important}
+
+</style><script>
 if (!Element.prototype.matches) Element.prototype.matches=Element.prototype.webkitMatchesSelector;
 if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=this;do{if(el.matches(s))return el;el=el.parentElement||el.parentNode;}while(el&&el.nodeType===1);return null;};
 </script><style>
@@ -112,7 +121,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 </style>
 <style>
 #home{position:relative}
-.science-lineart-v31{
+.science-lineart-v32{
   position:absolute;
   left:4%;
   top:305px;
@@ -122,35 +131,35 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
   pointer-events:none;
   opacity:.34;
 }
-.science-lineart-v31 svg{width:100%;height:100%}
-.science-lineart-v31 .b{fill:none;stroke:#4f78c8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.science-lineart-v31 .p{fill:none;stroke:#8a70c7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.science-lineart-v31 .d{fill:#5f82cf}
-#home>*:not(.science-lineart-v31){position:relative;z-index:1}
-.recent-title-v31{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.science-lineart-v32 svg{width:100%;height:100%}
+.science-lineart-v32 .b{fill:none;stroke:#4f78c8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.science-lineart-v32 .p{fill:none;stroke:#8a70c7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.science-lineart-v32 .d{fill:#5f82cf}
+#home>*:not(.science-lineart-v32){position:relative;z-index:1}
+.recent-title-v32{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #clearRecentV25{
   border:1px solid #efcaca;background:#fff7f7;color:#b42318;
   border-radius:9px;padding:6px 9px;font:800 12px inherit;cursor:pointer
 }
-@media(max-width:900px){.science-lineart-v31{display:none}}
+@media(max-width:900px){.science-lineart-v32{display:none}}
 </style>
 
 </head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم الثامن والتاسع</h1><p> • التميز يبدأ من المشاركة</p><button id="welcomeEnter">دخول التطبيق</button></div></div>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
-<aside class="sidebar"><div class="brand"><h1>⭐ نجوم الثامن والتاسع <small style="font-size:10px">v31</small></h1><p>🧪  <small>v31</small></p></div>
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم الثامن والتاسع <small style="font-size:10px">v32</small></h1><p>🧪  <small>v32</small></p></div>
 <div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b></div></div>
 <div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
 <nav>
 <button class="on" data-tab="home">🏠 &nbsp; الرئيسية</button><button data-tab="questions">❓ &nbsp; الأسئلة</button><button data-tab="question">🎡 &nbsp; السؤال</button><button data-tab="students">👥 &nbsp; الطلاب</button><button data-tab="rank">🏆 &nbsp; الترتيب</button><button data-tab="report">📊 &nbsp; التقرير</button><button data-tab="ai">🤖 &nbsp; AI</button>
 </nav><div class="science-bottom">🔬 🌱</div></aside>
 <main class="main">
-<div class="hero"><div class="heroTitle"><div class="cup">🏆</div><div><h2>نجوم الثامن والتاسع</h2><p>🧪 </p><small>v17</small></div></div>
+<div class="hero"><div class="heroTitle"><div class="cup">🏆</div><div><h2>نجوم الثامن والتاسع</h2><p>🧪 </p><small>v32</small></div></div>
 <div class="metric"><b id="heroStudents">0</b><span>👥 الطلاب</span></div><div class="metric"><b id="heroToday">0</b><span>⭐ نقاط اليوم</span></div><div class="metric"><b id="heroTotal">0</b><span>🎯 الإجمالي</span></div></div>
 
 <section id="home" class="tab on">
 
-<div class="science-lineart-v31" aria-hidden="true">
+<div class="science-lineart-v32" aria-hidden="true">
 <svg viewBox="0 0 620 245" xmlns="http://www.w3.org/2000/svg">
   <path class="p" d="M55 20C135 58 135 100 55 138C-10 170 0 210 70 232"/>
   <path class="b" d="M145 20C65 58 65 100 145 138C210 170 200 210 130 232"/>
@@ -169,7 +178,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 </div>
 
 
-<div class="v31-science-fill" aria-hidden="true">
+<div class="v32-science-fill" aria-hidden="true">
   <div class="science-icon microscope">🔬</div>
   <div class="science-icon dna">🧬</div>
   <div class="science-icon flask">🧪</div>
@@ -186,7 +195,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 <div class="dashboard">
 <div class="card tall"><div class="title">👥 عجلة الطلاب</div><canvas id="homeWheel" width="340" height="340"></canvas><button class="primary" id="goQuestion">⚡ تسجيل مشاركة سريع</button><div style="text-align:center;color:#8290a4;margin-top:12px">اكتب اسم الطالب بسرعة ثم اختر التقييم</div></div>
 <div class="card tall"><div class="title">💼 أدوات الحصة</div><button class="score green" disabled>✅ صح<br>+2</button><button class="score yellow" disabled>🟡 حاول<br>+1</button><button class="score blue" disabled>⭐ إجابة مثالية<br>+3</button><div style="margin-top:20px;background:#f6f9ff;padding:16px;border-radius:13px;text-align:center">💡 شجّع طلابك واحتفل<br>بكل إنجاز صغير</div></div>
-<div class="card tall"><div class="recent-title-v31"><div class="title">🕘 آخر مشاركات</div><button id="clearRecentV25">🗑️ مسح القائمة</button></div><div id="recent" class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div></div>
+<div class="card tall"><div class="recent-title-v32"><div class="title">🕘 آخر مشاركات</div><button id="clearRecentV25">🗑️ مسح القائمة</button></div><div id="recent" class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div></div>
 </div></section>
 
 <section id="questions" class="tab">
@@ -234,7 +243,7 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 <section id="ai" class="tab"><div class="card"><div class="title">🤖 مساعد المعلم AI</div><div id="aiText">ابدأ بتسجيل المشاركات وسأحلل بيانات الفصل.</div><button id="aiAnalyze" class="primary" style="margin-top:15px">تحليل الفصل</button></div></section>
 </main></div>
 <script>
-(function(){"use strict";var SUPABASE_URL="https://gzyshnowsxkadohpmhbz.supabase.co",SUPABASE_KEY="sb_publishable_GVn1IF5FDn9ExsSOjdmTBg_Bt0uiKHM";var KEY="nojoom_v31_8_9_clean";var data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+(function(){"use strict";var SUPABASE_URL="https://gzyshnowsxkadohpmhbz.supabase.co",SUPABASE_KEY="sb_publishable_GVn1IF5FDn9ExsSOjdmTBg_Bt0uiKHM";var KEY="nojoom_v32_final_8_9";var data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!data)data={current:"c1",globalQuestion:"",classes:[
 {id:"c1",name:"الصف الثامن 10",students:[],logs:[],used:[],goal:""},
 {id:"c2",name:"الصف التاسع 1",students:[],logs:[],used:[],goal:""},
@@ -513,4 +522,5 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 </script>
 
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v32</div>
 </body></html>
