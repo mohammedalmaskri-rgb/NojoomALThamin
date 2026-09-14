@@ -1,212 +1,108 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<title>محاكاة 3D — استقصاء التمثيل الضوئي</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>محاكاة 3D — إنبات بذور الفول</title>
 <style>
-  :root{
-    --bg:#06131d; --panel:rgba(8,27,40,.88); --line:rgba(86,190,255,.28);
-    --text:#eaf8ff; --muted:#9fc3d7; --cyan:#46d8ff; --green:#7ff29b; --yellow:#ffd56a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-  #scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
-  #ui{position:fixed;inset:0;pointer-events:none}
-  .panel{background:var(--panel);border:1px solid var(--line);box-shadow:0 10px 35px rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:16px}
-  .top{position:absolute;top:10px;right:10px;left:10px;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .pill{padding:8px 13px;border-radius:14px;background:rgba(8,27,40,.82);border:1px solid var(--line);font-size:12px}
-  .title{font-weight:800;font-size:14px}.accent{color:var(--cyan)}
-  .controls{pointer-events:auto;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:min(980px,calc(100% - 20px));padding:12px;display:grid;grid-template-columns:1.25fr 1.25fr auto;gap:12px;align-items:center}
-  .ctl label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:6px}
-  .ctl b{color:var(--cyan)}
-  input[type=range]{width:100%;accent-color:#4bd5ff}
-  .buttons{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-  button{font:inherit;font-size:12px;font-weight:700;color:var(--text);background:linear-gradient(180deg,rgba(32,86,119,.96),rgba(13,43,62,.96));border:1px solid rgba(92,200,255,.34);border-radius:10px;padding:8px 12px;cursor:pointer}
-  button.on{border-color:rgba(127,242,155,.75);background:linear-gradient(180deg,rgba(28,118,80,.95),rgba(10,68,49,.95))}
-  .stats{position:absolute;top:62px;left:10px;padding:10px;width:min(250px,42vw)}
-  .stats h3{margin:0 0 8px;font-size:12px;color:#cdeeff;text-align:center}
-  .row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 9px;margin:5px 0;border-radius:10px;background:rgba(0,0,0,.18);font-size:11px;color:var(--muted)}
-  .row b{font-size:15px;color:var(--green);font-variant-numeric:tabular-nums}
-  .note{position:absolute;top:62px;right:10px;width:min(290px,46vw);padding:11px;font-size:11px;line-height:1.65;color:#c9e6f4}
-  .note strong{color:var(--yellow)}
-  .label{position:absolute;transform:translate(-50%,-50%);padding:4px 8px;border-radius:8px;background:rgba(4,18,28,.72);border:1px solid rgba(95,198,255,.24);font-size:10.5px;color:#d9f4ff;white-space:nowrap;pointer-events:none}
-  .hint{position:absolute;bottom:116px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(190,220,235,.72);background:rgba(4,18,28,.55);padding:5px 8px;border-radius:8px}
-  #warn{display:none;position:absolute;inset:20% 10%;padding:20px;pointer-events:auto;text-align:center;align-content:center}
-  @media(max-width:780px){
-    .controls{grid-template-columns:1fr 1fr;gap:8px;padding:9px}.buttons{grid-column:1/-1}.title{display:none}.stats{top:58px;width:185px}.note{display:none}.hint{bottom:145px}.row b{font-size:13px}
-  }
-  @media(max-width:520px){.stats{width:160px}.controls{grid-template-columns:1fr}.buttons{grid-column:auto}.hint{display:none}}
+html,body{margin:0;height:100%;overflow:hidden;background:#07131f;color:#eef8ff;font-family:Tahoma,Arial,sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+.ui{position:fixed;inset:0;pointer-events:none}
+.top{position:absolute;top:12px;right:12px;left:12px;display:flex;justify-content:space-between;gap:8px}
+.card{background:#0b2135dd;border:1px solid #2b79a8;border-radius:14px;padding:10px 14px;box-shadow:0 8px 25px #0008;backdrop-filter:blur(8px)}
+.title{font-weight:bold;font-size:16px}
+.bottom{pointer-events:auto;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:min(960px,calc(100% - 20px));display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
+.control{min-width:190px;flex:1}
+label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:#cdeaff}
+input[type=range]{width:100%}
+button{border:1px solid #3488ba;border-radius:10px;background:#12344f;color:white;padding:9px 13px;font-weight:bold}
+button.on{background:#176944}
+.note{position:absolute;top:70px;right:12px;width:min(280px,42vw);font-size:12px;line-height:1.7}
+.badge{color:#7ff2aa;font-weight:bold}
+@media(max-width:650px){.note{font-size:10px;width:210px}.title{font-size:13px}.bottom{gap:6px}.control{min-width:140px}}
 </style>
 </head>
 <body>
-<canvas id="scene"></canvas>
-<div id="ui">
-  <div class="top">
-    <div class="pill"><span id="status">🟢 التجربة تعمل</span></div>
-    <div class="pill title">🌿 محاكاة 3D — استقصاء التمثيل الضوئي</div>
-    <div class="pill">الغاز المتجمع: <b class="accent" id="gasTop">0.0 ml</b></div>
-  </div>
-
-  <div class="panel stats">
-    <h3>نتائج التجربة</h3>
-    <div class="row"><span>معدل إنتاج O₂</span><b id="rateOut">0.00 ml/min</b></div>
-    <div class="row"><span>حجم الغاز</span><b id="volOut">0.0 ml</b></div>
-    <div class="row"><span>زمن التجربة</span><b id="timeOut">0.0 min</b></div>
-  </div>
-
-  <div class="panel note"><strong>الفكرة:</strong> النبات المائي يطلق الأكسجين أثناء التمثيل الضوئي. تصعد الفقاعات إلى القمع ثم تتجمع داخل أنبوبة الاختبار المقلوبة وتزيح الماء.</div>
-
-  <div class="label" id="labPlant">نبات مائي</div>
-  <div class="label" id="labFunnel">قمع مقلوب</div>
-  <div class="label" id="labTube">أنبوبة اختبار مقلوبة</div>
-  <div class="label" id="labGas">O₂ متجمع</div>
-  <div class="label" id="labLamp">مصباح</div>
-
-  <div class="hint">اسحب لتدوير المشهد • قرّب بإصبعين • غيّر شدة الضوء وشاهد الفقاعات</div>
-
-  <div class="panel controls">
-    <div class="ctl">
-      <label><span>شدة الضوء</span><b id="lightVal">70%</b></label>
-      <input id="light" type="range" min="0" max="100" value="70" />
-    </div>
-    <div class="ctl">
-      <label><span>بعد المصباح عن النبات</span><b id="distVal">18 cm</b></label>
-      <input id="dist" type="range" min="10" max="35" value="18" />
-    </div>
-    <div class="buttons">
-      <button id="play">⏸ إيقاف</button>
-      <button id="lamp">💡 المصباح</button>
-      <button id="reset">↺ إعادة</button>
-    </div>
-  </div>
-
-  <div class="panel" id="warn">تعذر تشغيل الرسوم ثلاثية الأبعاد. افتح الصفحة في Safari أو Chrome مع اتصال بالإنترنت.</div>
+<canvas id="c"></canvas>
+<div class="ui">
+ <div class="top">
+  <div class="card title">🌱 محاكاة 3D — إنبات بذور الفول</div>
+  <div class="card">اليوم: <b id="dayOut">1.0</b> / 7</div>
+ </div>
+ <div class="card note">
+  <b>فكرة التجربة</b><br>
+  بذور فول منقوعة بين <span class="badge">ورقة ماصة</span> وجانب علبة شفافة، مع كمية قليلة من الماء.<br>
+  حرّك الزمن لمشاهدة خروج <b>الجذر إلى الأسفل</b> ثم نمو <b>الساق إلى الأعلى</b>.<br>
+  اسحب المشهد بإصبعك لتدويره، وقرّب بإصبعين.
+ </div>
+ <div class="card bottom">
+   <div class="control"><label><span>مرور الأيام</span><b id="dayVal">1.0</b></label><input id="day" type="range" min="0" max="7" value="1" step=".1"></div>
+   <div class="control"><label><span>كمية الماء</span><b id="waterVal">60%</b></label><input id="water" type="range" min="0" max="100" value="60"></div>
+   <div><button id="play">▶ تشغيل النمو</button> <button id="reset">↺ إعادة</button></div>
+ </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-(function(){
-'use strict';
-if(!window.THREE){document.getElementById('warn').style.display='grid';return;}
-const canvas=document.getElementById('scene');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputEncoding=THREE.sRGBEncoding; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
-const scene=new THREE.Scene(); scene.background=new THREE.Color(0x071722); scene.fog=new THREE.Fog(0x071722,90,220);
-const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,500); camera.position.set(42,30,58);
-const controls=new THREE.OrbitControls(camera,renderer.domElement); controls.target.set(2,10,0); controls.enableDamping=true; controls.dampingFactor=.06; controls.enablePan=false; controls.minDistance=25; controls.maxDistance=120; controls.maxPolarAngle=Math.PI*.49;
-scene.add(new THREE.HemisphereLight(0xbfe8ff,0x14212b,.85));
-const key=new THREE.DirectionalLight(0xffffff,.5); key.position.set(30,50,40); scene.add(key);
+const canvas=document.getElementById('c');
+const R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+R.setPixelRatio(Math.min(devicePixelRatio,2)); R.shadowMap.enabled=true;
+R.setSize(innerWidth,innerHeight); R.outputEncoding=THREE.sRGBEncoding;
+const S=new THREE.Scene(); S.background=new THREE.Color(0x081521);
+const C=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,500); C.position.set(34,25,44);
+const O=new THREE.OrbitControls(C,R.domElement); O.target.set(0,9,0); O.enableDamping=true; O.enablePan=false;
+S.add(new THREE.HemisphereLight(0xbde7ff,0x16202a,1.15));
+const dl=new THREE.DirectionalLight(0xfff0cc,1.5); dl.position.set(-20,35,30); dl.castShadow=true; S.add(dl);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,70),new THREE.MeshStandardMaterial({color:0x263746,roughness:.85}));
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; S.add(floor);
 
-const table=new THREE.Mesh(new THREE.BoxGeometry(120,2,70),new THREE.MeshStandardMaterial({color:0x1c2b36,roughness:.72})); table.position.y=-1; table.receiveShadow=true; scene.add(table);
-const back=new THREE.Mesh(new THREE.PlaneGeometry(220,110),new THREE.MeshStandardMaterial({color:0x0d2635,roughness:1})); back.position.set(0,44,-42); scene.add(back);
+const G=new THREE.Group(); S.add(G);
+const glass=new THREE.MeshPhysicalMaterial({color:0xcdefff,transparent:true,opacity:.19,roughness:.08,metalness:0,side:THREE.DoubleSide,depthWrite:false});
+const box=new THREE.Mesh(new THREE.BoxGeometry(25,18,10),glass); box.position.y=9; G.add(box);
+const rimMat=new THREE.MeshStandardMaterial({color:0xbfeaff,transparent:true,opacity:.35});
+function edge(x,y,z,sx,sy,sz){let m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),rimMat);m.position.set(x,y,z);G.add(m)}
+edge(-12.5,9,0,.25,18,10);edge(12.5,9,0,.25,18,10);edge(0,.15,0,25,.3,10);
+const paper=new THREE.Mesh(new THREE.BoxGeometry(22,14,.28),new THREE.MeshStandardMaterial({color:0xf1eee2,roughness:1}));
+paper.position.set(0,9,-4.25); G.add(paper);
+const waterMat=new THREE.MeshPhysicalMaterial({color:0x3faee0,transparent:true,opacity:.42,roughness:.12});
+const water=new THREE.Mesh(new THREE.BoxGeometry(24,1,9),waterMat); water.position.set(0,.65,0); G.add(water);
 
-const glass=new THREE.MeshPhysicalMaterial({color:0xc7efff,roughness:.05,metalness:0,transparent:true,opacity:.22,side:THREE.DoubleSide,depthWrite:false,clearcoat:1});
-const waterMat=new THREE.MeshPhysicalMaterial({color:0x4dbfe7,transparent:true,opacity:.40,roughness:.08,depthWrite:false,clearcoat:1});
-const metal=new THREE.MeshStandardMaterial({color:0x586774,roughness:.36,metalness:.78});
-const dark=new THREE.MeshStandardMaterial({color:0x1d2630,roughness:.45,metalness:.35});
-const stemMat=new THREE.MeshStandardMaterial({color:0x2e8b43,roughness:.8});
-const leafMat=new THREE.MeshStandardMaterial({color:0x4fbe63,roughness:.65,emissive:0x123616,emissiveIntensity:.35});
-
-const apparatus=new THREE.Group(); scene.add(apparatus);
-const tank=new THREE.Mesh(new THREE.BoxGeometry(26,14,18),glass); tank.position.set(3,7,0); tank.renderOrder=5; apparatus.add(tank);
-const water=new THREE.Mesh(new THREE.BoxGeometry(25.2,11.5,17.2),waterMat); water.position.set(3,5.75,0); water.renderOrder=2; apparatus.add(water);
-const rim=new THREE.Mesh(new THREE.BoxGeometry(27,1,19),new THREE.MeshStandardMaterial({color:0x7f95a2,metalness:.25,roughness:.35,transparent:true,opacity:.35})); rim.position.set(3,13.6,0); apparatus.add(rim);
-
-function makePlant(){
- const g=new THREE.Group();
- for(let s=0;s<9;s++){
-  const a=s/9*Math.PI*2+Math.random()*.5, r=.7+Math.random()*2.2, h=5+Math.random()*3.6;
-  const x=Math.cos(a)*r, z=Math.sin(a)*r;
-  const stem=new THREE.Mesh(new THREE.CylinderGeometry(.09,.14,h,7),stemMat); stem.position.set(x,h/2+.2,z); stem.rotation.z=(Math.random()-.5)*.16; g.add(stem);
-  const n=12+Math.floor(Math.random()*7);
-  for(let i=1;i<n;i++){
-    const y=.4+i*(h/n), ang=i*.9+s*.7;
-    const leaf=new THREE.Mesh(new THREE.SphereGeometry(.42,7,5),leafMat); leaf.scale.set(1.15,.28,.55); leaf.position.set(x+Math.cos(ang)*.52,y,z+Math.sin(ang)*.52); leaf.rotation.y=-ang; g.add(leaf);
-  }
- }
- g.position.set(0,0,0); return g;
+const seedMat=new THREE.MeshStandardMaterial({color:0xb99255,roughness:.75});
+const rootMat=new THREE.MeshStandardMaterial({color:0xf1ead4,roughness:.8});
+const stemMat=new THREE.MeshStandardMaterial({color:0x67b84b,roughness:.7});
+const leafMat=new THREE.MeshStandardMaterial({color:0x58b947,roughness:.65});
+const plants=[];
+[-8,-2.7,2.7,8].forEach((x,i)=>{
+ const p=new THREE.Group(); p.position.set(x,4,-3.65);
+ const seed=new THREE.Mesh(new THREE.SphereGeometry(1.25,20,14),seedMat); seed.scale.set(1.3,.75,.75); p.add(seed);
+ const root=new THREE.Mesh(new THREE.CylinderGeometry(.12,.22,1,9),rootMat); root.geometry.translate(0,-.5,0); root.position.y=-.3;p.add(root);
+ const stem=new THREE.Mesh(new THREE.CylinderGeometry(.16,.25,1,10),stemMat); stem.geometry.translate(0,.5,0); stem.position.y=.35;p.add(stem);
+ const leaf1=new THREE.Mesh(new THREE.SphereGeometry(.65,12,8),leafMat); leaf1.scale.set(.65,.25,1.25); leaf1.position.set(.45,1.2,0);p.add(leaf1);
+ const leaf2=leaf1.clone(); leaf2.position.x=-.45; leaf2.rotation.z=.5;p.add(leaf2);
+ G.add(p); plants.push({p,root,stem,leaf1,leaf2,lag:i*.5});
+});
+function update(){
+ const d=+day.value, moist=+waterCtl.value/100;
+ dayVal.textContent=d.toFixed(1); dayOut.textContent=d.toFixed(1); waterVal.textContent=Math.round(moist*100)+'%';
+ water.scale.y=.25+moist*1.3; water.position.y=.2+.35*moist;
+ plants.forEach(q=>{
+  const t=Math.max(0,d-q.lag-.7), vigor=.35+.65*moist;
+  const rootL=Math.min(6,t*1.5)*vigor, stemL=Math.min(9,Math.max(0,t-1)*2)*vigor;
+  q.root.scale.y=Math.max(.03,rootL); q.root.visible=t>.05;
+  q.stem.scale.y=Math.max(.03,stemL); q.stem.visible=t>.65;
+  q.leaf1.visible=q.leaf2.visible=t>2.2;
+  const ly=.9+stemL;
+  q.leaf1.position.y=q.leaf2.position.y=ly;
+  const ls=Math.min(1,Math.max(.1,(t-2.2)/1.6));
+  q.leaf1.scale.set(.65*ls,.25*ls,1.25*ls); q.leaf2.scale.copy(q.leaf1.scale);
+ });
 }
-const plant=makePlant(); apparatus.add(plant);
-
-// Inverted funnel: wide mouth near plant, narrow stem upward
-const funnel=new THREE.Mesh(new THREE.CylinderGeometry(1.25,5.5,7.5,40,1,true),glass); funnel.position.set(0,8.0,0); funnel.renderOrder=6; apparatus.add(funnel);
-const funnelStem=new THREE.Mesh(new THREE.CylinderGeometry(1.25,1.25,5.5,32,1,true),glass); funnelStem.position.set(0,14.5,0); funnelStem.renderOrder=6; apparatus.add(funnelStem);
-
-// Inverted test tube above stem
-const tubeGroup=new THREE.Group(); tubeGroup.position.set(0,15.4,0); apparatus.add(tubeGroup);
-const tube=new THREE.Mesh(new THREE.CylinderGeometry(2.45,2.45,14,40,1,true),glass); tube.position.y=7; tube.renderOrder=7; tubeGroup.add(tube);
-const cap=new THREE.Mesh(new THREE.SphereGeometry(2.45,32,14,0,Math.PI*2,0,Math.PI/2),glass); cap.scale.y=1; cap.position.y=14; cap.renderOrder=7; tubeGroup.add(cap);
-const tubeWaterGeo=new THREE.CylinderGeometry(2.30,2.30,1,32); tubeWaterGeo.translate(0,.5,0);
-const tubeWater=new THREE.Mesh(tubeWaterGeo,waterMat); tubeWater.position.y=0; tubeWater.scale.y=13.4; tubeWater.renderOrder=3; tubeGroup.add(tubeWater);
-const gasMat=new THREE.MeshBasicMaterial({color:0xdffaff,transparent:true,opacity:.18,depthWrite:false});
-const gasGeo=new THREE.CylinderGeometry(2.30,2.30,1,32); gasGeo.translate(0,-.5,0);
-const gasMesh=new THREE.Mesh(gasGeo,gasMat); gasMesh.position.y=13.4; gasMesh.scale.y=.001; gasMesh.renderOrder=4; tubeGroup.add(gasMesh);
-for(let i=0;i<7;i++){const mark=new THREE.Mesh(new THREE.TorusGeometry(2.52,.035,4,30),new THREE.MeshBasicMaterial({color:0x24495b}));mark.rotation.x=Math.PI/2;mark.position.y=2+i*1.8;tubeGroup.add(mark)}
-
-// Lamp
-const lamp=new THREE.Group(); scene.add(lamp);
-const base=new THREE.Mesh(new THREE.CylinderGeometry(4.8,5.6,1.3,32),metal); base.position.y=.65; lamp.add(base);
-const pole=new THREE.Mesh(new THREE.CylinderGeometry(.45,.45,13,12),metal); pole.position.set(0,7,0); lamp.add(pole);
-const head=new THREE.Group(); lamp.add(head);
-const shade=new THREE.Mesh(new THREE.CylinderGeometry(4.5,1.6,4.8,32,1,true),metal); head.add(shade);
-const bulb=new THREE.Mesh(new THREE.SphereGeometry(1.35,20,14),new THREE.MeshBasicMaterial({color:0xfff2bd})); bulb.position.y=1.1; head.add(bulb);
-const spot=new THREE.SpotLight(0xffefc5,2.6,120,.48,.5,1); spot.castShadow=true; scene.add(spot); scene.add(spot.target);
-const beam=new THREE.Mesh(new THREE.ConeGeometry(8,24,24,1,true),new THREE.MeshBasicMaterial({color:0xffefbd,transparent:true,opacity:.07,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending})); scene.add(beam);
-
-const state={running:true,lampOn:true,light:.70,distance:18,oxygen:0,time:0,rate:0};
-const MAXO2=20, TIME_SCALE=18;
-function updateLamp(){
- const x=-state.distance-7; lamp.position.set(x,0,5);
- const hpos=new THREE.Vector3(x+3.5,15,4); const target=new THREE.Vector3(0,6,0); const dir=target.clone().sub(hpos).normalize();
- head.position.copy(hpos).sub(lamp.position); head.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir);
- spot.position.copy(hpos); spot.target.position.copy(target); spot.target.updateMatrixWorld();
- spot.intensity=(.5+3.3*state.light)*(state.lampOn?1:0);
- beam.position.copy(hpos).addScaledVector(dir,1.5); beam.quaternion.setFromUnitVectors(new THREE.Vector3(0,-1,0),dir); beam.material.opacity=(.025+.08*state.light)*(state.lampOn?1:0);
- bulb.material.color.set(state.lampOn?0xfff1b8:0x5b6167);
-}
-function physics(){
- const p=state.lampOn?state.light:0; const d=Math.max(8,state.distance);
- const eff=p*Math.pow(18/d,2); state.rate=1.9*eff/(.55+eff); // ml/min
-}
-
-// bubbles
-const bubbleGeo=new THREE.SphereGeometry(.16,8,6); const bubbleMat=new THREE.MeshPhysicalMaterial({color:0xffffff,transparent:true,opacity:.72,roughness:.03,depthWrite:false});
-const bubbles=[]; const N=70; for(let i=0;i<N;i++){const m=new THREE.Mesh(bubbleGeo,bubbleMat);m.visible=false;scene.add(m);bubbles.push({m,y:0,phase:0,speed:.8+Math.random()*.9,x:0,z:0})}
-function resetBubble(b){b.phase=0;b.y=.6+Math.random()*2;b.x=(Math.random()-.5)*4.2;b.z=(Math.random()-.5)*3.5;b.m.position.set(b.x,b.y,b.z);b.m.visible=true;}
-function updateBubbles(dt){
- const active=Math.round(Math.min(1,state.rate/1.35)*N);
- for(let i=0;i<N;i++){
-  const b=bubbles[i]; if(i>=active){b.m.visible=false;continue;} if(!b.m.visible)resetBubble(b);
-  if(b.phase===0){b.y+=b.speed*dt*2.3;b.x*=.995;b.z*=.995;if(b.y>10.6){b.phase=1;b.x*=.35;b.z*=.35}}
-  else if(b.phase===1){b.y+=b.speed*dt*2.5;b.x*=.97;b.z*=.97;if(b.y>17.8)b.phase=2;}
-  else {b.y+=b.speed*dt*2.0;b.x*=.98;b.z*=.98;const surface=28.2-(state.oxygen/MAXO2)*10.8;if(b.y>surface)resetBubble(b)}
-  b.m.position.set(b.x,b.y,b.z); const s=.7+Math.random()*.25;b.m.scale.setScalar(s);
- }
-}
-
-const light=document.getElementById('light'),dist=document.getElementById('dist');
-light.oninput=()=>{state.light=+light.value/100;document.getElementById('lightVal').textContent=light.value+'%'};
-dist.oninput=()=>{state.distance=+dist.value;document.getElementById('distVal').textContent=dist.value+' cm'};
-document.getElementById('play').onclick=()=>{state.running=!state.running;document.getElementById('play').textContent=state.running?'⏸ إيقاف':'▶ تشغيل'};
-document.getElementById('lamp').onclick=()=>{state.lampOn=!state.lampOn;document.getElementById('lamp').classList.toggle('on',!state.lampOn)};
-document.getElementById('reset').onclick=()=>{state.oxygen=0;state.time=0;for(const b of bubbles)b.m.visible=false};
-
-const labels=[['labPlant',new THREE.Vector3(2,3,5)],['labFunnel',new THREE.Vector3(-4,9,0)],['labTube',new THREE.Vector3(4,24,0)],['labGas',new THREE.Vector3(3,28,0)],['labLamp',new THREE.Vector3(-19,14,4)]];
-function updateLabels(){for(const [id,p0] of labels){const p=p0.clone(); if(id==='labLamp')p.x=-state.distance-3; const v=p.project(camera);const el=document.getElementById(id);if(v.z>1){el.style.opacity=0;continue}el.style.opacity=1;el.style.left=((v.x*.5+.5)*innerWidth)+'px';el.style.top=((-v.y*.5+.5)*innerHeight)+'px';}}
-
-const clock=new THREE.Clock();
-function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);physics();updateLamp();if(state.running){state.time+=dt*TIME_SCALE;state.oxygen=Math.min(MAXO2,state.oxygen+(state.rate/60)*dt*TIME_SCALE)}
- const gasH=(state.oxygen/MAXO2)*10.8; gasMesh.scale.y=Math.max(.001,gasH); gasMesh.position.y=13.4; tubeWater.scale.y=Math.max(.2,13.4-gasH);
- updateBubbles(dt); controls.update(); updateLabels();
- document.getElementById('rateOut').textContent=state.rate.toFixed(2)+' ml/min';document.getElementById('volOut').textContent=state.oxygen.toFixed(1)+' ml';document.getElementById('gasTop').textContent=state.oxygen.toFixed(1)+' ml';document.getElementById('timeOut').textContent=(state.time/60).toFixed(1)+' min';
- document.getElementById('status').textContent=!state.lampOn?'⚪ المصباح مطفأ':(!state.running?'⏸ التجربة متوقفة':'🟢 التجربة تعمل'); renderer.render(scene,camera)}
-animate();
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-})();
-</script>
-</body>
-</html>
+const day=document.getElementById('day'), waterCtl=document.getElementById('water');
+const dayVal=document.getElementById('dayVal'),dayOut=document.getElementById('dayOut'),waterVal=document.getElementById('waterVal');
+day.oninput=waterCtl.oninput=update;
+let playing=false,last=performance.now();
+play.onclick=()=>{playing=!playing;play.classList.toggle('on',playing);play.textContent=playing?'⏸ إيقاف':'▶ تشغيل النمو'};
+reset.onclick=()=>{day.value=0;playing=false;play.classList.remove('on');play.textContent='▶ تشغيل النمو';update()};
+function anim(now){requestAnimationFrame(anim); if(playing){let v=+day.value+(now-last)/2500;if(v>=7){v=7;playing=false;play.classList.remove('on');play.textContent='▶ تشغيل النمو'}day.value=v;update()} last=now; O.update();R.render(S,C)}
+update();requestAnimationFrame(anim);
+addEventListener('resize',()=>{C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
+</script></body></html>
