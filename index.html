@@ -1,108 +1,570 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>محاكاة 3D — إنبات بذور الفول</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الكرفس ثلاثي الأبعاد | رحلة الماء في الخشب | إعداد وفكرة حمد نجله</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
 <style>
-html,body{margin:0;height:100%;overflow:hidden;background:#07131f;color:#eef8ff;font-family:Tahoma,Arial,sans-serif}
-#c{position:fixed;inset:0;width:100%;height:100%;display:block}
-.ui{position:fixed;inset:0;pointer-events:none}
-.top{position:absolute;top:12px;right:12px;left:12px;display:flex;justify-content:space-between;gap:8px}
-.card{background:#0b2135dd;border:1px solid #2b79a8;border-radius:14px;padding:10px 14px;box-shadow:0 8px 25px #0008;backdrop-filter:blur(8px)}
-.title{font-weight:bold;font-size:16px}
-.bottom{pointer-events:auto;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:min(960px,calc(100% - 20px));display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
-.control{min-width:190px;flex:1}
-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:#cdeaff}
-input[type=range]{width:100%}
-button{border:1px solid #3488ba;border-radius:10px;background:#12344f;color:white;padding:9px 13px;font-weight:bold}
-button.on{background:#176944}
-.note{position:absolute;top:70px;right:12px;width:min(280px,42vw);font-size:12px;line-height:1.7}
-.badge{color:#7ff2aa;font-weight:bold}
-@media(max-width:650px){.note{font-size:10px;width:210px}.title{font-size:13px}.bottom{gap:6px}.control{min-width:140px}}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--dye:#ff1744;--green:#7ed957;--gold:#ffcf40;--glass:rgba(255,255,255,.08);--stroke:rgba(255,255,255,.14)}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',system-ui,sans-serif;color:#eef7f0;min-height:100vh;background:radial-gradient(900px 500px at 85% 5%,rgba(126,217,87,.18),transparent),radial-gradient(800px 500px at 10% 90%,rgba(41,121,255,.18),transparent),linear-gradient(160deg,#06121d 0%,#0d2a3a 45%,#071a26 100%);overflow-x:hidden}
+#bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.7;background:radial-gradient(600px 300px at 50% -5%,rgba(255,207,64,.12),transparent)}
+header.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:rgba(6,18,29,.75);backdrop-filter:blur(18px);border-bottom:1px solid var(--stroke);flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,#2e7d32,#7ed957);box-shadow:0 8px 24px rgba(126,217,87,.35);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+.logo h1{font-size:20px;font-weight:900;line-height:1.2;background:linear-gradient(90deg,#fff,#aeea00,#4dd0e1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo p{font-size:12.5px;opacity:.85}
+.credit-badge{background:linear-gradient(135deg,#ff9d00,#ffcf40);color:#1a0f00;font-weight:900;font-size:14px;padding:9px 18px;border-radius:999px;box-shadow:0 6px 20px rgba(255,207,64,.4);white-space:nowrap;animation:pulseGold 2.2s infinite}
+@keyframes pulseGold{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+main.layout{position:relative;z-index:1;display:grid;grid-template-columns:312px minmax(0,1fr) 338px;gap:14px;padding:14px;max-width:1720px;margin:auto;align-items:start}
+.panel{background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--stroke);border-radius:20px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.panel h2{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:1px dashed rgba(255,255,255,.15);padding-bottom:8px}
+.control-group{margin-bottom:14px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
+.control-group label.row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;font-weight:700;margin-bottom:8px}
+.val-pill{background:rgba(255,255,255,.12);padding:2px 12px;border-radius:999px;font-weight:900;font-size:14px;min-width:70px;text-align:center}
+.temp-big{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:4px 0 8px}
+.temp-big b{font-size:46px;font-weight:900;line-height:1;text-shadow:0 4px 18px rgba(255,255,255,.2)}
+.temp-big span{opacity:.8;font-weight:700}
+input[type=range]{width:100%;appearance:none;-webkit-appearance:none;height:10px;border-radius:999px;outline:none;cursor:pointer;border:1px solid rgba(255,255,255,.2)}
+#temp-slider{background:linear-gradient(90deg,#2979ff,#4dd0e1,#7ed957,#ffeb3b,#ff5722,#d50000)}
+#light-slider{background:linear-gradient(90deg,#1a1a2e,#ffcf40)}
+#humidity-slider{background:linear-gradient(90deg,#ffcc80,#4dd0e1,#01579b)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #111;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:grab}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #111}
+.temp-track{height:12px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:10px;position:relative;border:1px solid rgba(255,255,255,.15)}
+#temp-fill{height:100%;width:50%;border-radius:999px;background:linear-gradient(90deg,#2979ff,#7ed957,#ff5722);transition:width .3s,filter .3s}
+.status-pill{display:inline-block;margin-top:8px;padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:800;text-align:center;width:100%}
+.dye-options{display:flex;gap:10px;justify-content:center}
+.dye-btn{width:52px;height:52px;border-radius:50%;border:3px solid transparent;cursor:pointer;position:relative;transition:.25s;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.dye-btn small{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.dye-btn.active{border-color:#fff;transform:scale(1.12);box-shadow:0 0 0 4px rgba(255,255,255,.2),0 6px 18px rgba(0,0,0,.5)}
+.view-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.toggle-btn{padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:.25s}
+.toggle-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+.toggle-btn.active{background:linear-gradient(135deg,#2e7d32,#66bb6a);border-color:#aeea00;box-shadow:0 4px 14px rgba(126,217,87,.35)}
+.action-row{display:flex;gap:8px;margin-top:8px}
+.action-btn{flex:1;padding:11px;border-radius:12px;border:none;font-family:inherit;font-weight:900;font-size:13px;cursor:pointer;transition:.25s}
+.btn-pause{background:linear-gradient(135deg,#ff9800,#ff5722);color:#fff}
+.btn-reset{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.action-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+#viewport{position:relative;height:740px;min-height:600px;border-radius:22px;overflow:hidden;border:1px solid var(--stroke);background:radial-gradient(700px 400px at 50% 20%,rgba(126,217,87,.15),transparent),radial-gradient(600px 400px at 50% 90%,rgba(41,121,255,.12),transparent),rgba(0,0,0,.25);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+#canvas-container{position:absolute;inset:0}
+#canvas-container canvas{display:block}
+#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.label3d{position:absolute;top:0;left:0;display:flex;gap:8px;align-items:center;background:rgba(5,15,25,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);padding:5px 11px 5px 7px;border-radius:12px;font-size:12px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:opacity .3s}
+.label3d .dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 10px currentColor}
+.label3d b{display:block;font-size:12px;line-height:1.1}
+.label3d small{opacity:.75;font-size:10.5px}
+.hud-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;z-index:6;pointer-events:none;flex-wrap:wrap}
+.hud-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:7px}
+.hud-chip .pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--dye);box-shadow:0 0 10px var(--dye);animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.4}}
+.hud-bottom{position:absolute;bottom:12px;left:12px;right:12px;z-index:6;background:rgba(5,15,25,.72);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:11px 14px}
+.hud-bottom .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;margin-bottom:7px;flex-wrap:wrap;gap:4px}
+.progress-track{height:11px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden;position:relative}
+#dye-progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--dye),#fff3);background-color:var(--dye);transition:width .4s;position:relative;overflow:hidden}
+#dye-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmer 1.5s infinite}
+@keyframes shimmer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+#info-toast{position:absolute;top:60px;left:50%;transform:translateX(-50%) translateY(-10px);background:rgba(10,25,40,.92);border:1px solid var(--gold);border-radius:14px;padding:10px 18px;max-width:88%;text-align:center;z-index:8;opacity:0;pointer-events:none;transition:.35s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#info-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#info-toast b{color:var(--gold);font-size:14px}
+#info-toast p{font-size:12.5px;opacity:.9}
+.hint{position:absolute;bottom:86px;left:50%;transform:translateX(-50%);font-size:11px;background:rgba(0,0,0,.55);padding:4px 14px;border-radius:999px;z-index:6;opacity:.9;white-space:nowrap}
+.calc-card{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;margin-bottom:9px;display:flex;align-items:center;gap:10px}
+.calc-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0;background:rgba(255,255,255,.1)}
+.calc-card .t{flex:1}.calc-card .t small{font-size:11.5px;opacity:.75;display:block}.calc-card .t b{font-size:20px;font-weight:900;line-height:1}
+.c-green b{color:#aeea00}.c-blue b{color:#4dd0e1}.c-gold b{color:var(--gold)}.c-pink b{color:#ff8a80}
+.mini-row{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12.5px;font-weight:700}
+.mini-row span.ic{width:26px;text-align:center}
+.mini-track{flex:1;height:9px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
+.mini-fill{height:100%;border-radius:999px;transition:width .4s}
+#bar-root-fill{background:linear-gradient(90deg,#d7ccc8,#a1887f)}#bar-stem-fill{background:linear-gradient(90deg,#33691e,#aeea00)}#bar-leaf-fill{background:linear-gradient(90deg,#1b5e20,#4dd0e1)}
+.mini-val{min-width:62px;text-align:left;font-size:11.5px;opacity:.9}
+#chart{width:100%;height:92px;background:rgba(0,0,0,.35);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+.formula-box{font-size:12px;background:rgba(255,207,64,.08);border:1px dashed rgba(255,207,64,.5);padding:10px;border-radius:12px;margin-top:10px;line-height:1.8}
+.formula-box code{direction:ltr;display:block;text-align:center;font-family:monospace;background:rgba(0,0,0,.4);padding:6px;border-radius:8px;margin:6px 0;color:#aeea00;font-size:12px}
+.mini-credit{text-align:center;margin-top:10px;font-size:12px;background:linear-gradient(135deg,rgba(255,207,64,.2),rgba(255,207,64,.08));border:1px solid rgba(255,207,64,.35);padding:8px;border-radius:12px;font-weight:800;color:var(--gold)}
+footer.steps{max-width:1720px;margin:auto;padding:2px 14px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;z-index:1}
+.step-card{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--stroke);border-radius:16px;padding:13px;font-size:12.5px;line-height:1.8}
+.step-card b{display:flex;align-items:center;gap:7px;font-size:13.5px;margin-bottom:4px}
+.step-num{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;background:linear-gradient(135deg,#2e7d32,#7ed957);font-size:13px;flex-shrink:0}
+.credit-footer{text-align:center;padding:14px;font-size:13px;opacity:.95;position:relative;z-index:1}
+.credit-footer b{color:var(--gold)}
+#cross-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.35s;padding:16px}
+#cross-modal.show{opacity:1;pointer-events:auto}
+.modal-content{background:linear-gradient(160deg,#102a3a,#0a1e2c);border:1px solid rgba(255,255,255,.2);max-width:620px;width:100%;padding:22px;border-radius:22px;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);transform:scale(.92);transition:.35s}
+#cross-modal.show .modal-content{transform:scale(1)}
+.modal-content h3{text-align:center;margin-bottom:6px}
+.modal-content p.sub{text-align:center;font-size:12.5px;opacity:.8;margin-bottom:12px}
+.xylem-pulse{animation:xpulse 1.4s infinite alternate}
+@keyframes xpulse{from{opacity:.55}to{opacity:1}}
+.flow-dash{stroke-dasharray:6 6;animation:dashmove 1s linear infinite}
+@keyframes dashmove{to{stroke-dashoffset:-12}}
+.legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:11.5px}
+.legend span{background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15)}
+.close-btn{width:100%;margin-top:14px;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,#c62828,#ff5252);color:#fff;font-family:inherit;font-weight:900;cursor:pointer;font-size:14px}
+#loader{position:fixed;inset:0;background:#06121d;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .6s}
+#loader.hide{opacity:0;pointer-events:none}
+.spin{font-size:54px;animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1280px){main.layout{grid-template-columns:1fr 1fr}#viewport{grid-column:1/-1;order:-1;height:560px}footer.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){main.layout{grid-template-columns:1fr}#viewport{height:480px}footer.steps{grid-template-columns:1fr}.logo h1{font-size:16px}header.topbar{justify-content:center;text-align:center}}
+::-webkit-scrollbar{width:9px}::-webkit-scrollbar-track{background:#0a1e2c}::-webkit-scrollbar-thumb{background:#2e7d32;border-radius:99px}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div class="ui">
- <div class="top">
-  <div class="card title">🌱 محاكاة 3D — إنبات بذور الفول</div>
-  <div class="card">اليوم: <b id="dayOut">1.0</b> / 7</div>
- </div>
- <div class="card note">
-  <b>فكرة التجربة</b><br>
-  بذور فول منقوعة بين <span class="badge">ورقة ماصة</span> وجانب علبة شفافة، مع كمية قليلة من الماء.<br>
-  حرّك الزمن لمشاهدة خروج <b>الجذر إلى الأسفل</b> ثم نمو <b>الساق إلى الأعلى</b>.<br>
-  اسحب المشهد بإصبعك لتدويره، وقرّب بإصبعين.
- </div>
- <div class="card bottom">
-   <div class="control"><label><span>مرور الأيام</span><b id="dayVal">1.0</b></label><input id="day" type="range" min="0" max="7" value="1" step=".1"></div>
-   <div class="control"><label><span>كمية الماء</span><b id="waterVal">60%</b></label><input id="water" type="range" min="0" max="100" value="60"></div>
-   <div><button id="play">▶ تشغيل النمو</button> <button id="reset">↺ إعادة</button></div>
- </div>
+<div id="bg-glow"></div>
+<div id="loader"><div class="spin">🌿</div><div style="font-weight:900">جاري تجهيز المختبر ثلاثي الأبعاد...</div><div style="font-size:12px;opacity:.7">إعداد وفكرة حمد نجله</div></div>
+
+<header class="topbar">
+<div class="logo">
+<div class="logo-icon">🌿</div>
+<div><h1>الكرفس ثلاثي الأبعاد : رحلة الماء والصبغة في الخشب (Xylem)</h1><p>نموذج واقعي للجذر والساق والأوراق + محاكاة انتقال الماء والأملاح وتأثير الحرارة</p></div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-const canvas=document.getElementById('c');
-const R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
-R.setPixelRatio(Math.min(devicePixelRatio,2)); R.shadowMap.enabled=true;
-R.setSize(innerWidth,innerHeight); R.outputEncoding=THREE.sRGBEncoding;
-const S=new THREE.Scene(); S.background=new THREE.Color(0x081521);
-const C=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,500); C.position.set(34,25,44);
-const O=new THREE.OrbitControls(C,R.domElement); O.target.set(0,9,0); O.enableDamping=true; O.enablePan=false;
-S.add(new THREE.HemisphereLight(0xbde7ff,0x16202a,1.15));
-const dl=new THREE.DirectionalLight(0xfff0cc,1.5); dl.position.set(-20,35,30); dl.castShadow=true; S.add(dl);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,70),new THREE.MeshStandardMaterial({color:0x263746,roughness:.85}));
-floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; S.add(floor);
+<div class="credit-badge">⭐ إعداد وفكرة : حمد نجله ⭐</div>
+</header>
 
-const G=new THREE.Group(); S.add(G);
-const glass=new THREE.MeshPhysicalMaterial({color:0xcdefff,transparent:true,opacity:.19,roughness:.08,metalness:0,side:THREE.DoubleSide,depthWrite:false});
-const box=new THREE.Mesh(new THREE.BoxGeometry(25,18,10),glass); box.position.y=9; G.add(box);
-const rimMat=new THREE.MeshStandardMaterial({color:0xbfeaff,transparent:true,opacity:.35});
-function edge(x,y,z,sx,sy,sz){let m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),rimMat);m.position.set(x,y,z);G.add(m)}
-edge(-12.5,9,0,.25,18,10);edge(12.5,9,0,.25,18,10);edge(0,.15,0,25,.3,10);
-const paper=new THREE.Mesh(new THREE.BoxGeometry(22,14,.28),new THREE.MeshStandardMaterial({color:0xf1eee2,roughness:1}));
-paper.position.set(0,9,-4.25); G.add(paper);
-const waterMat=new THREE.MeshPhysicalMaterial({color:0x3faee0,transparent:true,opacity:.42,roughness:.12});
-const water=new THREE.Mesh(new THREE.BoxGeometry(24,1,9),waterMat); water.position.set(0,.65,0); G.add(water);
+<main class="layout">
+<aside class="panel">
+<h2>🎛️ لوحة التحكم بالتجربة</h2>
+<div class="control-group">
+<label class="row"><span>🌡️ درجة الحرارة</span><span class="val-pill" id="temp-value">28°C</span></label>
+<div class="temp-big"><b id="temp-big">28</b><span>°C</span></div>
+<input type="range" id="temp-slider" min="5" max="45" value="28" step="1">
+<div class="temp-track"><div id="temp-fill"></div></div>
+<div class="status-pill" id="temp-status">مثالي - نقل نشط ✅</div>
+</div>
+<div class="control-group">
+<label class="row"><span>💡 شدة الإضاءة (النتح)</span><span class="val-pill" id="light-value">70%</span></label>
+<input type="range" id="light-slider" min="0" max="100" value="70">
+</div>
+<div class="control-group">
+<label class="row"><span>💧 الرطوبة النسبية</span><span class="val-pill" id="humidity-value">50%</span></label>
+<input type="range" id="humidity-slider" min="10" max="95" value="50">
+</div>
+<div class="control-group">
+<label class="row"><span>🎨 لون الصبغة في الماء</span><span class="val-pill" id="dye-name">أحمر</span></label>
+<div class="dye-options" style="margin-top:14px;margin-bottom:8px">
+<button class="dye-btn active" data-color="#ff1744" data-name="أحمر" style="background:radial-gradient(circle at 30% 30%,#ff8a80,#ff1744)" title="أحمر"><small>أحمر</small></button>
+<button class="dye-btn" data-color="#2979ff" data-name="أزرق" style="background:radial-gradient(circle at 30% 30%,#82b1ff,#2979ff)" title="أزرق"><small>أزرق</small></button>
+<button class="dye-btn" data-color="#aa00ff" data-name="بنفسجي" style="background:radial-gradient(circle at 30% 30%,#e040fb,#aa00ff)" title="بنفسجي"><small>بنفسجي</small></button>
+<button class="dye-btn" data-color="#00c853" data-name="أخضر" style="background:radial-gradient(circle at 30% 30%,#69f0ae,#00c853)" title="أخضر"><small>أخضر</small></button>
+</div>
+</div>
+<div class="control-group">
+<label class="row"><span>👁️ خيارات العرض ثلاثي الأبعاد</span></label>
+<div class="view-grid">
+<button class="toggle-btn active" id="btn-xylem">🔬 الأنسجة الوعائية</button>
+<button class="toggle-btn active" id="btn-labels">🏷️ التسميات</button>
+<button class="toggle-btn active" id="btn-rotate">🔄 تدوير تلقائي</button>
+<button class="toggle-btn" id="btn-section">⭕ قطاع عرضي</button>
+</div>
+<div class="action-row">
+<button class="action-btn btn-pause" id="btn-pause">⏸️ إيقاف</button>
+<button class="action-btn btn-reset" id="btn-reset">♻️ تصفير الصبغة</button>
+</div>
+</div>
+<div style="font-size:11.5px;opacity:.75;line-height:1.8">💡 اسحب بالفأرة للتدوير • عجلة الفأرة للتقريب • انقر على أي جزء من النبات لعرض معلوماته</div>
+</aside>
 
-const seedMat=new THREE.MeshStandardMaterial({color:0xb99255,roughness:.75});
-const rootMat=new THREE.MeshStandardMaterial({color:0xf1ead4,roughness:.8});
-const stemMat=new THREE.MeshStandardMaterial({color:0x67b84b,roughness:.7});
-const leafMat=new THREE.MeshStandardMaterial({color:0x58b947,roughness:.65});
-const plants=[];
-[-8,-2.7,2.7,8].forEach((x,i)=>{
- const p=new THREE.Group(); p.position.set(x,4,-3.65);
- const seed=new THREE.Mesh(new THREE.SphereGeometry(1.25,20,14),seedMat); seed.scale.set(1.3,.75,.75); p.add(seed);
- const root=new THREE.Mesh(new THREE.CylinderGeometry(.12,.22,1,9),rootMat); root.geometry.translate(0,-.5,0); root.position.y=-.3;p.add(root);
- const stem=new THREE.Mesh(new THREE.CylinderGeometry(.16,.25,1,10),stemMat); stem.geometry.translate(0,.5,0); stem.position.y=.35;p.add(stem);
- const leaf1=new THREE.Mesh(new THREE.SphereGeometry(.65,12,8),leafMat); leaf1.scale.set(.65,.25,1.25); leaf1.position.set(.45,1.2,0);p.add(leaf1);
- const leaf2=leaf1.clone(); leaf2.position.x=-.45; leaf2.rotation.z=.5;p.add(leaf2);
- G.add(p); plants.push({p,root,stem,leaf1,leaf2,lag:i*.5});
-});
-function update(){
- const d=+day.value, moist=+waterCtl.value/100;
- dayVal.textContent=d.toFixed(1); dayOut.textContent=d.toFixed(1); waterVal.textContent=Math.round(moist*100)+'%';
- water.scale.y=.25+moist*1.3; water.position.y=.2+.35*moist;
- plants.forEach(q=>{
-  const t=Math.max(0,d-q.lag-.7), vigor=.35+.65*moist;
-  const rootL=Math.min(6,t*1.5)*vigor, stemL=Math.min(9,Math.max(0,t-1)*2)*vigor;
-  q.root.scale.y=Math.max(.03,rootL); q.root.visible=t>.05;
-  q.stem.scale.y=Math.max(.03,stemL); q.stem.visible=t>.65;
-  q.leaf1.visible=q.leaf2.visible=t>2.2;
-  const ly=.9+stemL;
-  q.leaf1.position.y=q.leaf2.position.y=ly;
-  const ls=Math.min(1,Math.max(.1,(t-2.2)/1.6));
-  q.leaf1.scale.set(.65*ls,.25*ls,1.25*ls); q.leaf2.scale.copy(q.leaf1.scale);
- });
+<section id="viewport">
+<div id="canvas-container"></div>
+<div id="labels"></div>
+<div class="hud-top">
+<div class="hud-chip"><span class="pulse-dot"></span><span id="hud-flow">تدفق الصبغة نشط • الخشب Xylem</span></div>
+<div class="hud-chip" id="hud-temp">🌡️ 28°C • معامل الحرارة ×1.23</div>
+</div>
+<div id="info-toast"><b id="toast-title"></b><p id="toast-desc"></p></div>
+<div class="hint">🖱️ اسحب للتدوير حول النموذج | 🔍 انقر على الساق والجذر والورقة</div>
+<div class="hud-bottom">
+<div class="top"><span>🧪 ارتفاع جبهة الصبغة في الساق: <b id="dye-height" style="color:var(--dye)">0.0 سم</b></span><span>⏳ الوصول للأوراق خلال: <b id="dye-time-left">--</b></span><span>📏 الارتفاع الكلي: 25 سم</span></div>
+<div class="progress-track"><div id="dye-progress-fill"></div></div>
+</div>
+</section>
+
+<aside class="panel">
+<h2>📊 حساب معدل نقل الماء داخل ساق الكرفس</h2>
+<div class="calc-card c-green"><div class="calc-icon">🚀</div><div class="t"><small>سرعة صعود العصارة في الخشب</small><b><span id="stat-speed">1.85</span> <small style="display:inline;font-size:12px">سم/دقيقة</small></b></div></div>
+<div class="calc-card c-blue"><div class="calc-icon">💧</div><div class="t"><small>معدل امتصاص الماء (الجذور)</small><b><span id="stat-uptake">3.42</span> <small style="display:inline;font-size:12px">مل/ساعة</small></b></div></div>
+<div class="calc-card c-gold"><div class="calc-icon">🍃</div><div class="t"><small>معدل النتح من الأوراق</small><b><span id="stat-transp">2.20</span> <small style="display:inline;font-size:12px">مليمول/م²/ث</small></b></div></div>
+<div class="calc-card c-pink"><div class="calc-icon">⏱️</div><div class="t"><small>الزمن اللازم للوصول للأوراق</small><b><span id="stat-time">13.5</span> <small style="display:inline;font-size:12px">دقيقة</small></b></div></div>
+<div class="control-group" style="margin-top:10px">
+<label class="row"><span>🌡️ تأثير الحرارة على الأعضاء</span></label>
+<div class="mini-row"><span class="ic">🌱</span><span style="min-width:44px">الجذور</span><div class="mini-track"><div class="mini-fill" id="bar-root-fill" style="width:30%"></div></div><span class="mini-val" id="val-root">1.2</span></div>
+<div class="mini-row"><span class="ic">🎋</span><span style="min-width:44px">الساق</span><div class="mini-track"><div class="mini-fill" id="bar-stem-fill" style="width:40%"></div></div><span class="mini-val" id="val-stem">1.8</span></div>
+<div class="mini-row"><span class="ic">🍃</span><span style="min-width:44px">الأوراق</span><div class="mini-track"><div class="mini-fill" id="bar-leaf-fill" style="width:55%"></div></div><span class="mini-val" id="val-leaf">2.3</span></div>
+<div style="font-size:11px;opacity:.7;margin-top:6px">الحرارة تسرّع النتح وسحب العمود المائي، لكن فوق 40° يحدث إجهاد حراري ويقل المعدل.</div>
+</div>
+<div class="control-group">
+<label class="row"><span>📈 منحنى معدل النقل الحي</span><span style="font-size:11px;opacity:.7">سم/دقيقة</span></label>
+<canvas id="chart" width="600" height="150"></canvas>
+</div>
+<div class="formula-box">🧮 <b>المعادلة المستخدمة (Q10):</b>
+<code>v = v0 × Q10^((T-25)/10) × Light × Hum</code>
+حيث v0 = 1.5 سم/دقيقة عند 25°م ، و Q10 = 2.0 ، وامتصاص الماء = v × 1.85 مل/ساعة.
+</div>
+<div class="mini-credit">✨ إعداد وفكرة : حمد نجله ✨<br><span style="font-size:11px;color:#fff;opacity:.8">نموذج تعليمي تفاعلي لمادة الأحياء</span></div>
+</aside>
+</main>
+
+<footer class="steps">
+<div class="step-card"><b><span class="step-num">1</span> 🌱 الامتصاص من الجذور</b>تمتص الشعيرات الجذرية الماء والأملاح المذابة مع الصبغة الملونة بالخاصية الأسموزية والنقل النشط، لاحظ الجسيمات الملونة تدخل من أطراف الجذور.</div>
+<div class="step-card"><b><span class="step-num">2</span> 🎋 الصعود في الخشب Xylem</b>تصعد العصارة عبر أوعية الخشب (أوعية وقصيبات) داخل ساق الكرفس. فعّل وضع الأنسجة الوعائية لرؤية الأوعية والصبغة تتدفق بداخلها.</div>
+<div class="step-card"><b><span class="step-num">3</span> 🌀 قوى السحب والشعرية</b>الخاصية الشعرية + التماسك بين جزيئات الماء + سحب النتح من الأوراق تدفع العمود المائي للأعلى. ارفع الحرارة والإضاءة لتلاحظ تسارع التدفق.</div>
+<div class="step-card"><b><span class="step-num">4</span> 🍃 الوصول للأوراق والنتح</b>تصل الصبغة إلى عروق الأوراق فتتلون، ويتبخر الماء من الثغور تاركاً الأملاح. راقب تلوّن الأوراق وبخار النتح المتصاعد.</div>
+</footer>
+<div class="credit-footer">جميع الحقوق محفوظة © 2026 | <b>إعداد وفكرة حمد نجله</b> | صُمم لأغراض تعليمية 🌿🔬</div>
+
+<div id="cross-modal">
+<div class="modal-content">
+<h3>⭕ قطاع عرضي مكبّر في ساق الكرفس</h3>
+<p class="sub">الحزم الوعائية موزعة بشكل هلالي - الخشب للداخل واللحاء للخارج</p>
+<svg viewBox="0 0 340 300" style="width:100%;height:auto;background:rgba(0,0,0,.3);border-radius:16px">
+<circle cx="170" cy="150" r="132" fill="#8bc34a" stroke="#1b5e20" stroke-width="5"/>
+<circle cx="170" cy="150" r="118" fill="#dcedc8"/>
+<circle cx="170" cy="150" r="95" fill="#f1f8e9" stroke="#aed581" stroke-width="2" stroke-dasharray="5 5"/>
+<g id="bundles"></g>
+<g font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">
+<text x="170" y="22">البشرة Epidermis</text>
+<text x="170" y="288">النخاع Pith (بارنشيما)</text>
+</g>
+<line x1="170" y1="28" x2="170" y2="52" stroke="#fff" stroke-width="1.5"/>
+</svg>
+<div class="legend"><span>🟠 خشب Xylem - صعود الماء ↑</span><span>🟢 لحاء Phloem - نقل الغذاء ↓</span><span>🟡 كولنشيما للدعم</span></div>
+<p style="font-size:12.5px;margin-top:10px;line-height:1.9;opacity:.9">الأوعية الخشبية الكبيرة (بالبرتقالي النابض) هي التي تحمل الماء الملون بالصبغة من الجذر إلى الورقة. كلما زادت الحرارة زاد النبض وسرعة التدفق داخلها.</p>
+<button class="close-btn" id="btn-close-modal">إغلاق القطاع ✖</button>
+</div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const state={temp:28,light:70,humidity:50,dye:'#ff1744',dyeName:'أحمر',showXylem:true,showLabels:true,autoRotate:true,paused:false};
+let simTime=0,dyeFront=0,leafTint=0,lastUI=0;
+const history=[];
+
+const $=id=>document.getElementById(id);
+const container=$('canvas-container'),labelsBox=$('labels');
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x0a1e2c,26,60);
+const camera=new THREE.PerspectiveCamera(45,container.clientWidth/container.clientHeight,0.1,200);
+camera.position.set(10.5,7.5,12);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(container.clientWidth,container.clientHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.15;
+container.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.target.set(0,4.6,0);
+controls.enableDamping=true;controls.dampingFactor=0.06;
+controls.minDistance=4;controls.maxDistance=28;controls.maxPolarAngle=1.52;
+controls.autoRotate=true;controls.autoRotateSpeed=0.9;
+
+scene.add(new THREE.HemisphereLight(0xe8f5e9,0x1b3a2a,0.85));
+const sun=new THREE.DirectionalLight(0xfff8e1,1.5);
+sun.position.set(6,12,6);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-10;sun.shadow.camera.right=10;sun.shadow.camera.top=14;sun.shadow.camera.bottom=-4;
+scene.add(sun);
+const fill=new THREE.PointLight(0x4dd0e1,25,40);fill.position.set(-7,6,-4);scene.add(fill);
+const tempLight=new THREE.PointLight(0xffab40,18,30);tempLight.position.set(0,5,6);scene.add(tempLight);
+
+const table=new THREE.Mesh(new THREE.CylinderGeometry(8.5,9,0.6,64),new THREE.MeshStandardMaterial({color:0x5d4037,roughness:0.7}));
+table.position.y=-0.3;table.receiveShadow=true;scene.add(table);
+const tableTop=new THREE.Mesh(new THREE.CircleGeometry(8.5,64),new THREE.MeshStandardMaterial({color:0x8d6e63,roughness:0.5}));
+tableTop.rotation.x=-Math.PI/2;tableTop.position.y=0.001;tableTop.receiveShadow=true;scene.add(tableTop);
+const grid=new THREE.PolarGridHelper(8.5,8,6,48,0x7ed957,0x2e7d32);
+grid.position.y=0.02;grid.material.transparent=true;grid.material.opacity=0.22;scene.add(grid);
+
+const glassMat=new THREE.MeshPhongMaterial({color:0xb3e5fc,transparent:true,opacity:0.13,shininess:120,side:THREE.DoubleSide,depthWrite:false});
+const glass=new THREE.Mesh(new THREE.CylinderGeometry(2.25,2.1,3.5,48,1,true),glassMat);
+glass.position.y=1.78;glass.renderOrder=10;scene.add(glass);
+const glassBottom=new THREE.Mesh(new THREE.CircleGeometry(2.1,48),new THREE.MeshPhongMaterial({color:0xb3e5fc,transparent:true,opacity:0.25}));
+glassBottom.rotation.x=-Math.PI/2;glassBottom.position.y=0.06;scene.add(glassBottom);
+const rim=new THREE.Mesh(new THREE.TorusGeometry(2.25,0.06,12,60),new THREE.MeshStandardMaterial({color:0xe1f5fe,roughness:0.2,metalness:0.4}));
+rim.rotation.x=Math.PI/2;rim.position.y=3.53;scene.add(rim);
+for(let i=0;i<4;i++){const tick=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.03,0.02),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.6}));tick.position.set(1.95*Math.cos(0.5),0.9+i*0.6,1.95*Math.sin(0.5));tick.lookAt(0,tick.position.y,0);scene.add(tick);}
+
+const waterMat=new THREE.MeshStandardMaterial({color:new THREE.Color(state.dye),transparent:true,opacity:0.55,roughness:0.15,emissive:new THREE.Color(state.dye),emissiveIntensity:0.25,depthWrite:false});
+const water=new THREE.Mesh(new THREE.CylinderGeometry(2.05,1.95,2.1,48),waterMat);
+water.position.y=1.15;water.renderOrder=5;water.userData.info={t:'💧 الماء الملون بالصبغة',d:'ماء مضاف إليه صبغة ملونة ليتتبع الطالب مسار الماء والأملاح من الجذور حتى الأوراق.'};scene.add(water);
+const waterTop=new THREE.Mesh(new THREE.CircleGeometry(2.05,48),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.25,roughness:0.1}));
+waterTop.rotation.x=-Math.PI/2;waterTop.position.y=2.21;waterTop.renderOrder=6;scene.add(waterTop);
+
+function taperedTube(curve,tub,rad,r0,r1){
+const frames=curve.computeFrenetFrames(tub,false);
+const pos=[],nor=[],uv=[],idx=[];const P=new THREE.Vector3();
+for(let i=0;i<=tub;i++){const t=i/tub;curve.getPointAt(t,P);
+const N=frames.normals[i],B=frames.binormals[i];const r=r0+(r1-r0)*t;
+for(let j=0;j<=rad;j++){const v=j/rad*Math.PI*2,s=Math.sin(v),c=-Math.cos(v);
+const nx=c*N.x+s*B.x,ny=c*N.y+s*B.y,nz=c*N.z+s*B.z;
+nor.push(nx,ny,nz);pos.push(P.x+r*nx,P.y+r*ny,P.z+r*nz);uv.push(t,j/rad);}}
+for(let i=0;i<tub;i++)for(let j=0;j<rad;j++){const a=(rad+1)*i+j,b=(rad+1)*(i+1)+j,c=(rad+1)*(i+1)+j+1,d=(rad+1)*i+j+1;idx.push(a,b,d,b,c,d);}
+const g=new THREE.BufferGeometry();g.setIndex(idx);
+g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return g;}
+
+function leafGeo(len=1.7,wid=0.95){
+const s=new THREE.Shape();s.moveTo(0,0);
+s.bezierCurveTo(wid*0.65,len*0.2,wid*0.75,len*0.62,0,len);
+s.bezierCurveTo(-wid*0.75,len*0.62,-wid*0.65,len*0.2,0,0);
+const g=new THREE.ShapeGeometry(s,14);const p=g.attributes.position;
+for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);const cx=Math.abs(x)/wid;p.setZ(i,-cx*cx*0.28+Math.sin(Math.max(0,y)/len*Math.PI)*0.18);}
+g.computeVertexNormals();return g;}
+
+const stalkMat=new THREE.MeshStandardMaterial({color:0xaed581,roughness:0.42,metalness:0.05,transparent:true,opacity:0.5,depthWrite:false});
+const ribMat=new THREE.MeshStandardMaterial({color:0x558b2f,roughness:0.55});
+const xylemMat=new THREE.MeshStandardMaterial({color:0xffcc80,emissive:0xff6f00,emissiveIntensity:0.7,roughness:0.3});
+const rootMat=new THREE.MeshStandardMaterial({color:0xf3ead5,roughness:0.85});
+const leafBase=new THREE.Color(0x2e9e44);
+const leafMat=new THREE.MeshStandardMaterial({color:leafBase.clone(),roughness:0.65,side:THREE.DoubleSide,emissive:0x000000,emissiveIntensity:0.4});
+const dyeMat=new THREE.MeshStandardMaterial({color:state.dye,emissive:state.dye,emissiveIntensity:1.4,roughness:0.2});
+const dyeGeo=new THREE.SphereGeometry(0.065,10,10);
+
+const celery=new THREE.Group();scene.add(celery);
+const stalkCurves=[],stalkMeshes=[],xylemMeshes=[],leafMeshes=[],rootCurves=[],rootMeshes=[],leafPositions=[];
+const dyeParticles=[];
+const baseBall=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,16),new THREE.MeshStandardMaterial({color:0xdcedc8,roughness:0.6}));
+baseBall.position.y=1.35;baseBall.scale.set(1,0.7,1);baseBall.castShadow=true;celery.add(baseBall);
+
+const NSTALK=8;
+const sharedLeafGeo=leafGeo();
+for(let i=0;i<NSTALK;i++){
+const a=(i/NSTALK)*Math.PI*2+i*0.35;
+const central=i===0;
+const r0=0.22,r1=central?0.25:0.75+Math.random()*0.3,r2=central?0.4:1.3+Math.random()*0.4,r3=central?0.5:1.8+Math.random()*0.6;
+const h3=central?10.2:7.6+Math.random()*1.6;
+const pts=[new THREE.Vector3(Math.cos(a)*r0,1.3,Math.sin(a)*r0),
+new THREE.Vector3(Math.cos(a+0.12)*r1,3.2,Math.sin(a+0.12)*r1),
+new THREE.Vector3(Math.cos(a+0.22)*r2,5.4,Math.sin(a+0.22)*r2),
+new THREE.Vector3(Math.cos(a+0.32)*r3,h3,Math.sin(a+0.32)*r3)];
+const curve=new THREE.CatmullRomCurve3(pts);stalkCurves.push(curve);
+const mesh=new THREE.Mesh(taperedTube(curve,36,12,0.34,0.13),stalkMat);
+mesh.castShadow=true;mesh.userData.info={t:'🎋 ساق الكرفس (عنق الورقة)',d:'ساق لحمية غنية بالماء، بداخلها حزم وعائية خشبية تنقل الماء والأملاح. الشفافية تُظهر الأوعية بالداخل.'};
+celery.add(mesh);stalkMeshes.push(mesh);
+for(let rb=0;rb<3;rb++){const off=rb/3*Math.PI*2;
+const rpts=pts.map((p,k)=>{const t=k/3;const rr=(0.34+(0.13-0.34)*t)*0.98;return new THREE.Vector3(p.x+Math.cos(off)*rr*0.9,p.y,p.z+Math.sin(off)*rr*0.9);});
+const rib=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rpts),24,0.028,6),ribMat);celery.add(rib);}
+const NV=3;
+for(let v=0;v<NV;v++){const va=v/NV*Math.PI*2+0.5;
+const vpts=pts.map((p,k)=>{const t=k/3;const rr=0.1*(1-t*0.5);return new THREE.Vector3(p.x+Math.cos(va)*rr,p.y,p.z+Math.sin(va)*rr);});
+const vcurve=new THREE.CatmullRomCurve3(vpts);
+const vm=new THREE.Mesh(new THREE.TubeGeometry(vcurve,28,0.038,8),xylemMat);
+vm.userData.info={t:'🔬 وعاء خشبي Xylem',d:'أنبوب ميت مُلَجنَن ينقل الماء والأملاح من الجذر للورقة بقوى التماسك وسحب النتح. النقاط اللامعة هي الصبغة الصاعدة.'};
+celery.add(vm);xylemMeshes.push(vm);
+for(let k=0;k<2;k++){const m=new THREE.Mesh(dyeGeo,dyeMat);celery.add(m);
+dyeParticles.push({mesh:m,curve:vcurve,t:Math.random(),sp:0.85+Math.random()*0.3});}}
+const end=curve.getPointAt(1),tan=curve.getTangentAt(1);
+for(let l=0;l<3;l++){
+const lm=new THREE.Mesh(sharedLeafGeo,leafMat);lm.castShadow=true;
+lm.userData.info={t:'🍃 ورقة الكرفس',d:'تتبخر الماء من الثغور (النتح) فيسحب العمود المائي من الأسفل. تراكم الصبغة في العروق يدل على وصول الماء.'};
+const side=l-1;
+lm.position.copy(end).add(new THREE.Vector3(side*0.4,0.15+l*0.12,0));
+lm.rotation.set(-0.6-Math.random()*0.4,a+side*0.7,side*0.5);
+lm.scale.setScalar(l===1?1.15:0.85);
+celery.add(lm);leafMeshes.push(lm);
+if(l===1)leafPositions.push(lm.position.clone().add(new THREE.Vector3(0,0.8,0)));}}
+
+const NROOT=13;
+for(let i=0;i<NROOT;i++){
+const a=i/NROOT*Math.PI*2+Math.random()*0.4;
+const tipR=0.6+Math.random()*1.2;
+const tip=new THREE.Vector3(Math.cos(a)*tipR,0.22+Math.random()*0.25,Math.sin(a)*tipR);
+const mid1=new THREE.Vector3(Math.cos(a+0.2)*tipR*0.6,0.6+Math.random()*0.2,Math.sin(a+0.2)*tipR*0.6);
+const mid2=new THREE.Vector3(Math.cos(a)*0.3,1.0,Math.sin(a)*0.3);
+const top=new THREE.Vector3(Math.cos(a)*0.15,1.35,Math.sin(a)*0.15);
+const curve=new THREE.CatmullRomCurve3([tip,mid1,mid2,top]);rootCurves.push(curve);
+const rm=new THREE.Mesh(taperedTube(curve,20,8,0.045,0.09),rootMat);
+rm.userData.info={t:'🌱 الجذر والشعيرات الجذرية',d:'تمتص الجذور الماء والأملاح والصبغة من التربة (الماء هنا) وتنقلها للساق. لاحظ التدفق الصاعد من أطراف الجذور.'};
+celery.add(rm);rootMeshes.push(rm);
+const m=new THREE.Mesh(new THREE.SphereGeometry(0.055,10,10),dyeMat);celery.add(m);
+dyeParticles.push({mesh:m,curve:curve,t:Math.random(),sp:0.7+Math.random()*0.4});}
+
+const bubbles=[];
+const bubGeo=new THREE.SphereGeometry(0.05,8,8);
+const bubMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.5});
+for(let i=0;i<20;i++){const b=new THREE.Mesh(bubGeo,bubMat);b.position.set((Math.random()-0.5)*3.4,0.3+Math.random()*1.8,(Math.random()-0.5)*3.4);b.userData.sp=0.4+Math.random()*0.6;scene.add(b);bubbles.push(b);}
+
+const NVAP=70;
+const vapPos=new Float32Array(NVAP*3);const vapLife=new Float32Array(NVAP);
+function vapReset(i){const o=leafPositions[Math.floor(Math.random()*leafPositions.length)]||new THREE.Vector3(0,9,0);vapPos[i*3]=o.x+(Math.random()-0.5)*1.4;vapPos[i*3+1]=o.y+Math.random()*0.5;vapPos[i*3+2]=o.z+(Math.random()-0.5)*1.4;vapLife[i]=0;}
+for(let i=0;i<NVAP;i++){vapReset(i);vapLife[i]=Math.random()*3;}
+const vapGeo=new THREE.BufferGeometry();vapGeo.setAttribute('position',new THREE.BufferAttribute(vapPos,3));
+const vapMat=new THREE.PointsMaterial({color:0xe1f5fe,size:0.22,transparent:true,opacity:0.35,depthWrite:false});
+const vapor=new THREE.Points(vapGeo,vapMat);scene.add(vapor);
+const dustGeo=new THREE.BufferGeometry();const ND=220;const dPos=new Float32Array(ND*3);
+for(let i=0;i<ND;i++){dPos[i*3]=(Math.random()-0.5)*30;dPos[i*3+1]=Math.random()*14;dPos[i*3+2]=(Math.random()-0.5)*30;}
+dustGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
+const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0xaeea00,size:0.07,transparent:true,opacity:0.5}));scene.add(dust);
+
+const pickables=[...stalkMeshes,...leafMeshes,...rootMeshes,...xylemMeshes,water];
+const ray=new THREE.Raycaster();const ptr=new THREE.Vector2();let downX=0,downY=0,toastTimer=null;
+renderer.domElement.addEventListener('pointerdown',e=>{downX=e.clientX;downY=e.clientY;});
+renderer.domElement.addEventListener('pointerup',e=>{
+if(Math.hypot(e.clientX-downX,e.clientY-downY)>6)return;
+const r=renderer.domElement.getBoundingClientRect();
+ptr.x=((e.clientX-r.left)/r.width)*2-1;ptr.y=-((e.clientY-r.top)/r.height)*2+1;
+ray.setFromCamera(ptr,camera);const hit=ray.intersectObjects(pickables,false)[0];
+if(hit&&hit.object.userData.info){$('toast-title').textContent=hit.object.userData.info.t;$('toast-desc').textContent=hit.object.userData.info.d;
+$('info-toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('info-toast').classList.remove('show'),3800);}});
+
+const labelDefs=[
+{t:'🌱 الجذر',s:'امتصاص الماء',c:'#d7ccc8',p:()=>rootCurves[2].getPointAt(0.35)},
+{t:'🎋 الساق',s:'عنق ورقة لحمي',c:'#aeea00',p:()=>stalkCurves[3].getPointAt(0.45)},
+{t:'🔬 الخشب Xylem',s:'أوعية صاعدة',c:'#ff9800',p:()=>stalkCurves[5].getPointAt(0.62)},
+{t:'🍃 الورقة',s:'النتح والتلوّن',c:'#4dd0e1',p:()=>leafPositions[0]||new THREE.Vector3(0,9,0)},
+{t:'🧪 ماء + صبغة',s:'محلول ملوّن',c:state.dye,p:()=>new THREE.Vector3(1.6,1.3,1.1)}];
+const labelEls=labelDefs.map(d=>{const el=document.createElement('div');el.className='label3d';
+el.innerHTML=`<span class="dot" style="background:${d.c};color:${d.c}"></span><div><b>${d.t}</b><small>${d.s}</small></div>`;
+labelsBox.appendChild(el);return el;});
+const tmpV=new THREE.Vector3();
+function updateLabels(){
+const w=container.clientWidth,h=container.clientHeight;
+labelDefs.forEach((d,i)=>{const el=labelEls[i];
+if(!state.showLabels){el.style.opacity='0';return;}
+tmpV.copy(d.p()).project(camera);
+if(tmpV.z>1){el.style.opacity='0';return;}
+el.style.opacity='1';
+el.style.transform=`translate(${(tmpV.x*0.5+0.5)*w+14}px,${(-tmpV.y*0.5+0.5)*h-14}px)`;});}
+
+function computeRates(){
+const T=state.temp,L=state.light,H=state.humidity;
+let tempF=Math.pow(2.0,(T-25)/10);
+if(T>40)tempF*=Math.max(0.25,1-(T-40)*0.14);
+const lightF=0.4+(L/100)*0.9,humF=1.35-(H/100)*0.7;
+const total=tempF*lightF*humF;
+const v=1.5*total/1.03;
+const uptake=v*1.85,transp=1.8*total/1.03;
+const timeMin=25/Math.max(0.12,v);
+return{tempF,lightF,humF,total,v,uptake,transp,timeMin,root:v*0.65,stem:v,leaf:v*1.28};}
+
+function tempStatus(T){
+if(T<12)return['🥶 بارد جداً - نقل بطيء وخامل','#2979ff'];
+if(T<22)return['🧊 بارد - نقل بطيء','#4dd0e1'];
+if(T<=30)return['✅ مثالي - نقل نشط وسريع','#7ed957'];
+if(T<=38)return['🔥 دافئ - نقل سريع جداً','#ff9800'];
+return['⚠️ حار جداً - إجهاد حراري','#ff1744'];}
+
+function updateTempUI(){
+$('temp-value').textContent=state.temp+'°C';$('temp-big').textContent=state.temp;
+$('temp-fill').style.width=((state.temp-5)/40*100)+'%';
+const[txt,col]=tempStatus(state.temp);
+const st=$('temp-status');st.textContent=txt;st.style.background=col+'33';st.style.border='1px solid '+col;st.style.color='#fff';
+tempLight.color.set(col);
+document.documentElement.style.setProperty('--dye',state.dye);}
+
+const chart=$('chart').getContext('2d');
+function drawChart(){
+const W=600,H=150;chart.clearRect(0,0,W,H);
+chart.fillStyle='rgba(0,0,0,0)';chart.fillRect(0,0,W,H);
+chart.strokeStyle='rgba(255,255,255,.12)';chart.lineWidth=1;
+for(let g=0;g<4;g++){chart.beginPath();chart.moveTo(0,20+g*35);chart.lineTo(W,20+g*35);chart.stroke();}
+if(history.length<2)return;
+const max=Math.max(4,...history)*1.15;
+const grad=chart.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#aeea00');grad.addColorStop(1,'#2979ff');
+chart.beginPath();
+history.forEach((v,i)=>{const x=i/(99)*W,y=H-10-(v/max)*(H-25);i?chart.lineTo(x,y):chart.moveTo(x,y);});
+chart.strokeStyle='#aeea00';chart.lineWidth=3;chart.shadowColor='#aeea00';chart.shadowBlur=8;chart.stroke();chart.shadowBlur=0;
+chart.lineTo(W,H);chart.lineTo((history.length-1)/99*W,H);chart.closePath();
+chart.fillStyle='rgba(174,234,0,.15)';chart.fill();}
+
+function updateStatsUI(r){
+$('stat-speed').textContent=r.v.toFixed(2);
+$('stat-uptake').textContent=r.uptake.toFixed(2);
+$('stat-transp').textContent=r.transp.toFixed(2);
+$('stat-time').textContent=r.timeMin<60?r.timeMin.toFixed(1):(r.timeMin/60).toFixed(2)+' س';
+$('hud-temp').textContent=`🌡️ ${state.temp}°C • معامل الحرارة ×${r.tempF.toFixed(2)}`;
+const mx=6;
+$('bar-root-fill').style.width=Math.min(100,r.root/mx*100)+'%';
+$('bar-stem-fill').style.width=Math.min(100,r.stem/mx*100)+'%';
+$('bar-leaf-fill').style.width=Math.min(100,r.leaf/mx*100)+'%';
+$('val-root').textContent=r.root.toFixed(2)+' سم/د';$('val-stem').textContent=r.stem.toFixed(2)+' سم/د';$('val-leaf').textContent=r.leaf.toFixed(2)+' سم/د';
+const hcm=dyeFront*25;
+$('dye-height').textContent=hcm.toFixed(1)+' سم';
+$('dye-progress-fill').style.width=(dyeFront*100)+'%';
+const left=(25-hcm)/Math.max(0.12,r.v);
+$('dye-time-left').textContent=dyeFront>=1?'وصلت ✅':(left<60?left.toFixed(1)+' دقيقة':(left/60).toFixed(1)+' ساعة');
+$('hud-flow').textContent=state.paused?'⏸️ المحاكاة متوقفة':(dyeFront>=1?'✅ الصبغة وصلت للأوراق - تلوّن العروق':'تدفق الصبغة نشط • الخشب Xylem');}
+
+$('temp-slider').addEventListener('input',e=>{state.temp=+e.target.value;updateTempUI();});
+$('light-slider').addEventListener('input',e=>{state.light=+e.target.value;$('light-value').textContent=state.light+'%';});
+$('humidity-slider').addEventListener('input',e=>{state.humidity=+e.target.value;$('humidity-value').textContent=state.humidity+'%';});
+document.querySelectorAll('.dye-btn').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('.dye-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+state.dye=b.dataset.color;state.dyeName=b.dataset.name;$('dye-name').textContent=state.dyeName;
+dyeMat.color.set(state.dye);dyeMat.emissive.set(state.dye);
+waterMat.color.set(state.dye);waterMat.emissive.set(state.dye);
+document.documentElement.style.setProperty('--dye',state.dye);updateTempUI();}));
+function toggle(btn,fn){$(btn).addEventListener('click',()=>{$(btn).classList.toggle('active');fn($(btn).classList.contains('active'));});}
+toggle('btn-xylem',on=>{state.showXylem=on;stalkMat.opacity=on?0.5:1;stalkMat.depthWrite=!on;stalkMat.needsUpdate=true;});
+toggle('btn-labels',on=>{state.showLabels=on;});
+toggle('btn-rotate',on=>{state.autoRotate=on;controls.autoRotate=on;});
+$('btn-section').addEventListener('click',()=>{$('cross-modal').classList.add('show');$('btn-section').classList.add('active');});
+$('btn-close-modal').addEventListener('click',()=>{$('cross-modal').classList.remove('show');$('btn-section').classList.remove('active');});
+$('cross-modal').addEventListener('click',e=>{if(e.target.id==='cross-modal'){$('cross-modal').classList.remove('show');$('btn-section').classList.remove('active');}});
+$('btn-pause').addEventListener('click',()=>{state.paused=!state.paused;$('btn-pause').textContent=state.paused?'▶️ تشغيل':'⏸️ إيقاف';});
+$('btn-reset').addEventListener('click',()=>{dyeFront=0;leafTint=0;history.length=0;leafMat.color.copy(leafBase);leafMat.emissive.set(0x000000);});
+
+(function buildBundles(){
+const g=document.getElementById('bundles');let s='';
+for(let i=0;i<8;i++){const a=i/8*Math.PI*2;const x=170+Math.cos(a)*72,y=150+Math.sin(a)*72;
+s+=`<g><ellipse cx="${x}" cy="${y}" rx="20" ry="15" fill="#fff9c4" stroke="#827717" stroke-width="1.5" transform="rotate(${a*180/Math.PI} ${x} ${y})"/>`
++`<circle class="xylem-pulse" cx="${x-5}" cy="${y}" r="6.5" fill="#ff5722" stroke="#bf360c" stroke-width="1.5" style="animation-delay:${i*0.15}s"/>`
++`<circle class="xylem-pulse" cx="${x+4}" cy="${y-4}" r="5" fill="#ff9800" stroke="#e65100" stroke-width="1.5" style="animation-delay:${i*0.15+0.2}s"/>`
++`<circle class="xylem-pulse" cx="${x+4}" cy="${y+5}" r="4.5" fill="#ffab40" stroke="#e65100" stroke-width="1.2" style="animation-delay:${i*0.15+0.4}s"/>`
++`<circle cx="${x-12}" cy="${y+8}" r="4" fill="#66bb6a" stroke="#1b5e20" stroke-width="1.2"/></g>`;}
+s+=`<path class="flow-dash" d="M170 230 L170 70" stroke="#ff1744" stroke-width="3" fill="none" opacity=".8"/><text x="188" y="150" fill="#ff8a80" font-size="10">صعود الماء ↑</text>`;
+g.innerHTML=s;})();
+
+function onResize(){const w=container.clientWidth,h=container.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);}
+window.addEventListener('resize',onResize);
+
+const clock=new THREE.Clock();
+const dyeCol=new THREE.Color();
+function animate(){
+requestAnimationFrame(animate);
+const dt=Math.min(clock.getDelta(),0.05);
+const r=computeRates();
+if(!state.paused){
+simTime+=dt;
+const speed=0.085*r.total;
+dyeParticles.forEach(p=>{p.t+=speed*dt*p.sp*1.4;if(p.t>1)p.t-=1;
+p.mesh.position.copy(p.curve.getPointAt(p.t));
+const s=1+Math.sin(simTime*6+p.t*10)*0.15;p.mesh.scale.setScalar(s);});
+if(dyeFront<1)dyeFront=Math.min(1,dyeFront+dt*0.045*r.total);
+if(dyeFront>0.85)leafTint=Math.min(1,leafTint+dt*0.06*r.total);
+bubbles.forEach(b=>{b.position.y+=dt*b.userData.sp*(0.5+r.total*0.5);if(b.position.y>2.1){b.position.y=0.3;b.position.x=(Math.random()-0.5)*3.4;b.position.z=(Math.random()-0.5)*3.4;}});
+const vp=vapGeo.attributes.position.array;
+for(let i=0;i<NVAP;i++){vapLife[i]+=dt;vp[i*3+1]+=dt*(0.6+r.total*0.7);vp[i*3]+=Math.sin(simTime*2+i)*dt*0.3;if(vapLife[i]>3)vapReset(i);}
+vapGeo.attributes.position.needsUpdate=true;
+dust.rotation.y+=dt*0.02;
 }
-const day=document.getElementById('day'), waterCtl=document.getElementById('water');
-const dayVal=document.getElementById('dayVal'),dayOut=document.getElementById('dayOut'),waterVal=document.getElementById('waterVal');
-day.oninput=waterCtl.oninput=update;
-let playing=false,last=performance.now();
-play.onclick=()=>{playing=!playing;play.classList.toggle('on',playing);play.textContent=playing?'⏸ إيقاف':'▶ تشغيل النمو'};
-reset.onclick=()=>{day.value=0;playing=false;play.classList.remove('on');play.textContent='▶ تشغيل النمو';update()};
-function anim(now){requestAnimationFrame(anim); if(playing){let v=+day.value+(now-last)/2500;if(v>=7){v=7;playing=false;play.classList.remove('on');play.textContent='▶ تشغيل النمو'}day.value=v;update()} last=now; O.update();R.render(S,C)}
-update();requestAnimationFrame(anim);
-addEventListener('resize',()=>{C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
-</script></body></html>
+xylemMat.emissiveIntensity=0.55+Math.sin(simTime*3.5)*0.25+r.total*0.08;
+water.position.y=1.15+Math.sin(simTime*1.6)*0.02;
+waterTop.position.y=2.21+Math.sin(simTime*1.6)*0.02;
+waterTop.rotation.z+=dt*0.15;
+vapMat.opacity=Math.min(0.6,0.12+r.total*0.14);
+dyeCol.set(state.dye);
+leafMat.color.copy(leafBase).lerp(dyeCol,leafTint*0.5);
+leafMat.emissive.copy(dyeCol).multiplyScalar(leafTint*0.3);
+stalkMat.color.set(0xaed581).lerp(dyeCol,dyeFront*0.12);
+if(simTime-lastUI>0.2){lastUI=simTime;history.push(r.v);if(history.length>100)history.shift();updateStatsUI(r);drawChart();}
+updateLabels();controls.update();renderer.render(scene,camera);}
+
+updateTempUI();updateStatsUI(computeRates());drawChart();onResize();animate();
+setTimeout(()=>$('loader').classList.add('hide'),900);
+setTimeout(()=>{$('toast-title').textContent='🌿 أهلاً بك في مختبر الكرفس!';$('toast-desc').textContent='ارفع درجة الحرارة لتلاحظ تسارع الصبغة الملونة الصاعدة في أوعية الخشب نحو الأوراق.';$('info-toast').classList.add('show');setTimeout(()=>$('info-toast').classList.remove('show'),4500);},1400);
+</script>
+</body>
+</html>
