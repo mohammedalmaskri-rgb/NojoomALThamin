@@ -243,8 +243,15 @@ footer.steps{max-width:1720px;margin:auto;padding:2px 14px 10px;display:grid;gri
 </div>
 
 <script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// GitHub Pages / Safari-safe module loading: use direct absolute URLs instead of import-map aliases.
+// Also expose startup errors instead of leaving the loader stuck forever.
+const loaderEl = document.getElementById('loader');
+const loaderMsg = loaderEl ? loaderEl.children[1] : null;
+window.addEventListener('error', () => { if (loaderMsg) loaderMsg.textContent = 'تعذر تشغيل العرض ثلاثي الأبعاد — حدّث الصفحة أو تحقق من الاتصال'; });
+window.addEventListener('unhandledrejection', () => { if (loaderMsg) loaderMsg.textContent = 'تعذر تحميل مكتبة العرض ثلاثي الأبعاد — حاول تحديث الصفحة'; });
+
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
 
 const state={temp:28,light:70,humidity:50,dye:'#ff1744',dyeName:'أحمر',showXylem:true,showLabels:true,autoRotate:true,paused:false};
 let simTime=0,dyeFront=0,leafTint=0,lastUI=0;
