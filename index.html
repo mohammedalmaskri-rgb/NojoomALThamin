@@ -1,577 +1,640 @@
-<!DOCTYPE html>
-<html dir="rtl" lang="ar">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الكرفس ثلاثي الأبعاد | رحلة الماء في الخشب | إعداد وفكرة حمد نجله</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<script type="importmap">
-{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
-</script>
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="theme-color" content="#0863e9">
+<title>نجوم التاسع</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--dye:#ff1744;--green:#7ed957;--gold:#ffcf40;--glass:rgba(255,255,255,.08);--stroke:rgba(255,255,255,.14)}
-html{scroll-behavior:smooth}
-body{font-family:'Cairo',system-ui,sans-serif;color:#eef7f0;min-height:100vh;background:radial-gradient(900px 500px at 85% 5%,rgba(126,217,87,.18),transparent),radial-gradient(800px 500px at 10% 90%,rgba(41,121,255,.18),transparent),linear-gradient(160deg,#06121d 0%,#0d2a3a 45%,#071a26 100%);overflow-x:hidden}
-#bg-glow{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.7;background:radial-gradient(600px 300px at 50% -5%,rgba(255,207,64,.12),transparent)}
-header.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px;background:rgba(6,18,29,.75);backdrop-filter:blur(18px);border-bottom:1px solid var(--stroke);flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,#2e7d32,#7ed957);box-shadow:0 8px 24px rgba(126,217,87,.35);animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
-.logo h1{font-size:20px;font-weight:900;line-height:1.2;background:linear-gradient(90deg,#fff,#aeea00,#4dd0e1);-webkit-background-clip:text;background-clip:text;color:transparent}
-.logo p{font-size:12.5px;opacity:.85}
-.credit-badge{background:linear-gradient(135deg,#ff9d00,#ffcf40);color:#1a0f00;font-weight:900;font-size:14px;padding:9px 18px;border-radius:999px;box-shadow:0 6px 20px rgba(255,207,64,.4);white-space:nowrap;animation:pulseGold 2.2s infinite}
-@keyframes pulseGold{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-main.layout{position:relative;z-index:1;display:grid;grid-template-columns:312px minmax(0,1fr) 338px;gap:14px;padding:14px;max-width:1720px;margin:auto;align-items:start}
-.panel{background:var(--glass);backdrop-filter:blur(18px);border:1px solid var(--stroke);border-radius:20px;padding:16px;box-shadow:0 12px 32px rgba(0,0,0,.35)}
-.panel h2{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;border-bottom:1px dashed rgba(255,255,255,.15);padding-bottom:8px}
-.control-group{margin-bottom:14px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
-.control-group label.row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;font-weight:700;margin-bottom:8px}
-.val-pill{background:rgba(255,255,255,.12);padding:2px 12px;border-radius:999px;font-weight:900;font-size:14px;min-width:70px;text-align:center}
-.temp-big{display:flex;align-items:baseline;justify-content:center;gap:6px;margin:4px 0 8px}
-.temp-big b{font-size:46px;font-weight:900;line-height:1;text-shadow:0 4px 18px rgba(255,255,255,.2)}
-.temp-big span{opacity:.8;font-weight:700}
-input[type=range]{width:100%;appearance:none;-webkit-appearance:none;height:10px;border-radius:999px;outline:none;cursor:pointer;border:1px solid rgba(255,255,255,.2)}
-#temp-slider{background:linear-gradient(90deg,#2979ff,#4dd0e1,#7ed957,#ffeb3b,#ff5722,#d50000)}
-#light-slider{background:linear-gradient(90deg,#1a1a2e,#ffcf40)}
-#humidity-slider{background:linear-gradient(90deg,#ffcc80,#4dd0e1,#01579b)}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #111;box-shadow:0 2px 10px rgba(0,0,0,.5);cursor:grab}
-input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid #111}
-.temp-track{height:12px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:10px;position:relative;border:1px solid rgba(255,255,255,.15)}
-#temp-fill{height:100%;width:50%;border-radius:999px;background:linear-gradient(90deg,#2979ff,#7ed957,#ff5722);transition:width .3s,filter .3s}
-.status-pill{display:inline-block;margin-top:8px;padding:6px 14px;border-radius:999px;font-size:12.5px;font-weight:800;text-align:center;width:100%}
-.dye-options{display:flex;gap:10px;justify-content:center}
-.dye-btn{width:52px;height:52px;border-radius:50%;border:3px solid transparent;cursor:pointer;position:relative;transition:.25s;box-shadow:0 4px 14px rgba(0,0,0,.4)}
-.dye-btn small{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
-.dye-btn.active{border-color:#fff;transform:scale(1.12);box-shadow:0 0 0 4px rgba(255,255,255,.2),0 6px 18px rgba(0,0,0,.5)}
-.view-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.toggle-btn{padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:.25s}
-.toggle-btn:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
-.toggle-btn.active{background:linear-gradient(135deg,#2e7d32,#66bb6a);border-color:#aeea00;box-shadow:0 4px 14px rgba(126,217,87,.35)}
-.action-row{display:flex;gap:8px;margin-top:8px}
-.action-btn{flex:1;padding:11px;border-radius:12px;border:none;font-family:inherit;font-weight:900;font-size:13px;cursor:pointer;transition:.25s}
-.btn-pause{background:linear-gradient(135deg,#ff9800,#ff5722);color:#fff}
-.btn-reset{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.25)}
-.action-btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
-#viewport{position:relative;height:740px;min-height:600px;border-radius:22px;overflow:hidden;border:1px solid var(--stroke);background:radial-gradient(700px 400px at 50% 20%,rgba(126,217,87,.15),transparent),radial-gradient(600px 400px at 50% 90%,rgba(41,121,255,.12),transparent),rgba(0,0,0,.25);box-shadow:0 18px 50px rgba(0,0,0,.45)}
-#canvas-container{position:absolute;inset:0}
-#canvas-container canvas{display:block}
-#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
-.label3d{position:absolute;top:0;left:0;display:flex;gap:8px;align-items:center;background:rgba(5,15,25,.78);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);padding:5px 11px 5px 7px;border-radius:12px;font-size:12px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:opacity .3s}
-.label3d .dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 10px currentColor}
-.label3d b{display:block;font-size:12px;line-height:1.1}
-.label3d small{opacity:.75;font-size:10.5px}
-.hud-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;z-index:6;pointer-events:none;flex-wrap:wrap}
-.hud-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:7px}
-.hud-chip .pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--dye);box-shadow:0 0 10px var(--dye);animation:blink 1.2s infinite}
-@keyframes blink{50%{opacity:.4}}
-.hud-bottom{position:absolute;bottom:12px;left:12px;right:12px;z-index:6;background:rgba(5,15,25,.72);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:11px 14px}
-.hud-bottom .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;margin-bottom:7px;flex-wrap:wrap;gap:4px}
-.progress-track{height:11px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden;position:relative}
-#dye-progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--dye),#fff3);background-color:var(--dye);transition:width .4s;position:relative;overflow:hidden}
-#dye-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmer 1.5s infinite}
-@keyframes shimmer{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-#info-toast{position:absolute;top:60px;left:50%;transform:translateX(-50%) translateY(-10px);background:rgba(10,25,40,.92);border:1px solid var(--gold);border-radius:14px;padding:10px 18px;max-width:88%;text-align:center;z-index:8;opacity:0;pointer-events:none;transition:.35s;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-#info-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#info-toast b{color:var(--gold);font-size:14px}
-#info-toast p{font-size:12.5px;opacity:.9}
-.hint{position:absolute;bottom:86px;left:50%;transform:translateX(-50%);font-size:11px;background:rgba(0,0,0,.55);padding:4px 14px;border-radius:999px;z-index:6;opacity:.9;white-space:nowrap}
-.calc-card{background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 12px;margin-bottom:9px;display:flex;align-items:center;gap:10px}
-.calc-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0;background:rgba(255,255,255,.1)}
-.calc-card .t{flex:1}.calc-card .t small{font-size:11.5px;opacity:.75;display:block}.calc-card .t b{font-size:20px;font-weight:900;line-height:1}
-.c-green b{color:#aeea00}.c-blue b{color:#4dd0e1}.c-gold b{color:var(--gold)}.c-pink b{color:#ff8a80}
-.mini-row{display:flex;align-items:center;gap:8px;margin:7px 0;font-size:12.5px;font-weight:700}
-.mini-row span.ic{width:26px;text-align:center}
-.mini-track{flex:1;height:9px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
-.mini-fill{height:100%;border-radius:999px;transition:width .4s}
-#bar-root-fill{background:linear-gradient(90deg,#d7ccc8,#a1887f)}#bar-stem-fill{background:linear-gradient(90deg,#33691e,#aeea00)}#bar-leaf-fill{background:linear-gradient(90deg,#1b5e20,#4dd0e1)}
-.mini-val{min-width:62px;text-align:left;font-size:11.5px;opacity:.9}
-#chart{width:100%;height:92px;background:rgba(0,0,0,.35);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
-.formula-box{font-size:12px;background:rgba(255,207,64,.08);border:1px dashed rgba(255,207,64,.5);padding:10px;border-radius:12px;margin-top:10px;line-height:1.8}
-.formula-box code{direction:ltr;display:block;text-align:center;font-family:monospace;background:rgba(0,0,0,.4);padding:6px;border-radius:8px;margin:6px 0;color:#aeea00;font-size:12px}
-.mini-credit{text-align:center;margin-top:10px;font-size:12px;background:linear-gradient(135deg,rgba(255,207,64,.2),rgba(255,207,64,.08));border:1px solid rgba(255,207,64,.35);padding:8px;border-radius:12px;font-weight:800;color:var(--gold)}
-footer.steps{max-width:1720px;margin:auto;padding:2px 14px 10px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;z-index:1}
-.step-card{background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--stroke);border-radius:16px;padding:13px;font-size:12.5px;line-height:1.8}
-.step-card b{display:flex;align-items:center;gap:7px;font-size:13.5px;margin-bottom:4px}
-.step-num{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;background:linear-gradient(135deg,#2e7d32,#7ed957);font-size:13px;flex-shrink:0}
-.credit-footer{text-align:center;padding:14px;font-size:13px;opacity:.95;position:relative;z-index:1}
-.credit-footer b{color:var(--gold)}
-#cross-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.35s;padding:16px}
-#cross-modal.show{opacity:1;pointer-events:auto}
-.modal-content{background:linear-gradient(160deg,#102a3a,#0a1e2c);border:1px solid rgba(255,255,255,.2);max-width:620px;width:100%;padding:22px;border-radius:22px;max-height:92vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.6);transform:scale(.92);transition:.35s}
-#cross-modal.show .modal-content{transform:scale(1)}
-.modal-content h3{text-align:center;margin-bottom:6px}
-.modal-content p.sub{text-align:center;font-size:12.5px;opacity:.8;margin-bottom:12px}
-.xylem-pulse{animation:xpulse 1.4s infinite alternate}
-@keyframes xpulse{from{opacity:.55}to{opacity:1}}
-.flow-dash{stroke-dasharray:6 6;animation:dashmove 1s linear infinite}
-@keyframes dashmove{to{stroke-dashoffset:-12}}
-.legend{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:11.5px}
-.legend span{background:rgba(255,255,255,.1);padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.15)}
-.close-btn{width:100%;margin-top:14px;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,#c62828,#ff5252);color:#fff;font-family:inherit;font-weight:900;cursor:pointer;font-size:14px}
-#loader{position:fixed;inset:0;background:#06121d;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .6s}
-#loader.hide{opacity:0;pointer-events:none}
-.spin{font-size:54px;animation:spin 1.4s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:1280px){main.layout{grid-template-columns:1fr 1fr}#viewport{grid-column:1/-1;order:-1;height:560px}footer.steps{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){main.layout{grid-template-columns:1fr}#viewport{height:480px}footer.steps{grid-template-columns:1fr}.logo h1{font-size:16px}header.topbar{justify-content:center;text-align:center}}
-::-webkit-scrollbar{width:9px}::-webkit-scrollbar-track{background:#0a1e2c}::-webkit-scrollbar-thumb{background:#2e7d32;border-radius:99px}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f8fbff;color:#10233f;min-height:100vh}
+.shell{display:grid;grid-template-columns:250px 1fr;direction:ltr;min-height:100vh}
+.sidebar{direction:rtl;background:#fff;border-right:1px solid #dbe7f7;position:fixed;left:0;top:0;bottom:0;width:250px;z-index:20;box-shadow:5px 0 22px #1e5eb40d}
+.brand{background:linear-gradient(135deg,#0873ef,#0749d1);color:#fff;padding:24px 20px;height:140px}
+.brand h1{margin:0;font-size:28px}.brand p{margin:12px 0 0;font-weight:700}
+.teacher{margin:18px;border:1px solid #dce8f7;border-radius:16px;padding:13px;display:flex;gap:11px;align-items:center}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#eef6ff;font-size:29px}
+.teacher b{display:block}.teacher small{color:#6b7c93}
+.sidecount{margin:0 18px 18px;background:#0867e9;color:#fff;border-radius:14px;padding:14px;text-align:center;font-size:18px;font-weight:900}
+nav{padding:0 18px}nav button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(8,103,233,.12);width:100%;border:0;background:#fff;border-radius:13px;padding:12px 14px;margin:4px 0;text-align:right;font-size:15px;font-weight:800;color:#20324d;cursor:pointer}
+nav button.on{background:#e9f2ff;color:#0759d8}.science-bottom{position:absolute;bottom:10px;left:12px;right:12px;font-size:46px;display:flex;justify-content:space-around}
+.main{grid-column:2;direction:rtl;padding:28px 42px;position:relative;overflow:hidden;z-index:2}
+.main:before{content:"🧬";position:fixed;left:260px;top:0;font-size:74px;opacity:.25;pointer-events:none;z-index:-1}.main:after{content:"⚛️";position:fixed;right:25px;top:25px;font-size:100px;opacity:.18;pointer-events:none;z-index:-1}
+.hero{max-width:830px;margin:0 auto 24px;background:linear-gradient(135deg,#0875f3,#0749d7);color:#fff;border-radius:22px;padding:28px;display:grid;grid-template-columns:1.4fr repeat(3,1fr);align-items:center;box-shadow:0 12px 30px #0867e928}
+.heroTitle{display:flex;gap:14px;align-items:center}.heroTitle .cup{font-size:65px}.heroTitle h2{font-size:26px;margin:0}.heroTitle p{margin:7px 0 0}.metric{text-align:center;border-right:1px solid #ffffff44}.metric b{font-size:30px;display:block}.metric span{font-size:14px}
+.tab{display:none}.tab.on{display:block}.topgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.card{background:#fff;border:1px solid #dce8f7;border-radius:18px;padding:20px;box-shadow:0 6px 18px #1b64b50b}.title{font-size:18px;font-weight:900;margin-bottom:14px}
+.classes{display:flex;gap:12px}.chip{flex:1;border:1px solid #9bc0f4;background:#fff;color:#075bd8;border-radius:999px;padding:11px;font-weight:800}.chip.on{background:#0867e9;color:#fff}
+input,textarea{width:100%;border:1px solid #d7e0ec;border-radius:13px;padding:14px;font:inherit;outline:none}textarea{min-height:76px;resize:vertical}
+.dashboard{display:grid;grid-template-columns:1.05fr .78fr 1.05fr;gap:18px}.tall{min-height:475px}
+#wheel{display:block;width:min(330px,95%);height:auto;margin:5px auto}.primary{width:100%;border:0;background:linear-gradient(135deg,#0875f3,#0750db);color:#fff;border-radius:12px;padding:13px;font-weight:900;font-size:16px}
+.score{border:1px solid;border-radius:14px;padding:17px;margin:10px 0;font-weight:900;text-align:center;font-size:17px;cursor:pointer;width:100%}.green{background:#effcf2;border-color:#cdeed4;color:#0ca53d}.yellow{background:#fff9e9;border-color:#f8e1a3;color:#e89a00}.blue{background:#eef5ff;border-color:#ccdef9;color:#0860df}
+.empty{text-align:center;color:#7d8da3;padding:70px 10px}.empty .big{font-size:76px;opacity:.6}.row{display:flex;justify-content:space-between;align-items:center;border:1px solid #e1e9f4;border-radius:12px;padding:11px;margin:7px 0}.pts{color:#0860df;font-weight:900}
+.hidden{display:none!important}.winner{text-align:center;background:#eafaf0;color:#16813b;border-radius:12px;padding:11px;margin-top:8px;font-weight:900}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.reportgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.reportbox{text-align:center;background:#f4f8ff;border-radius:14px;padding:18px}.reportbox b{display:block;font-size:27px;color:#0860df}
+.decor{position:fixed;pointer-events:none!important;opacity:.35;font-size:62px;z-index:0}.d1{right:18px;top:220px}.d2{right:22px;bottom:170px}.d3{left:270px;bottom:15px}.d4{right:45px;bottom:25px}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.sidebar{position:static;width:auto}.main{grid-column:1;padding:14px}.hero,.dashboard,.topgrid,.formgrid{grid-template-columns:1fr}.science-bottom{display:none}}
+
+.search-hit{width:100%;border:1px solid #dbe7f7;background:#fff;border-radius:12px;padding:12px;margin:7px 0;display:flex;align-items:center;justify-content:space-between;text-align:right;cursor:pointer}
+.search-hit:hover{background:#f3f8ff}
+.search-hit b{font-size:16px}
+.search-hit span{color:#0860df;font-weight:900}
+
+#welcomeScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0875f3,#0649c9);color:#fff;text-align:center;padding:30px}#welcomeScreen.hidden{display:none}.welcome-card{width:min(720px,92vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:34px;padding:46px 34px;box-shadow:0 25px 70px rgba(0,40,120,.25);backdrop-filter:blur(8px)}.welcome-icons{font-size:56px;margin-bottom:16px}.welcome-card h1{font-size:42px;margin:8px 0 12px}.welcome-card h2{font-size:28px;margin:0 0 12px;font-weight:800}.welcome-card p{font-size:18px;opacity:.92;margin:0 0 28px}#welcomeEnter{border:0;background:#fff;color:#0758d8;border-radius:18px;padding:15px 34px;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+
+/* v35 — تخطيط v35 الأصلي + زخرفة علوم داخل الفراغ الأوسط فقط */
+#home{position:relative}
+.v35-science-fill{
+  position:absolute;
+  left:26px;
+  top:300px;
+  width:42%;
+  height:235px;
+  pointer-events:none;
+  z-index:0;
+  opacity:.34;
+}
+.v35-science-fill .science-icon{
+  position:absolute;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.56);
+  border:1px solid rgba(28,104,214,.13);
+  border-radius:26px;
+  box-shadow:0 8px 24px rgba(28,104,214,.06);
+}
+.v35-science-fill .microscope{font-size:74px;width:125px;height:125px;left:4%;top:72px;transform:rotate(-6deg)}
+.v35-science-fill .dna{font-size:78px;width:130px;height:130px;left:34%;top:8px;transform:rotate(5deg)}
+.v35-science-fill .flask{font-size:72px;width:120px;height:120px;left:65%;top:92px;transform:rotate(-4deg)}
+.v35-science-fill .atom{font-size:58px;position:absolute;left:61%;top:8px}
+.v35-science-fill .leaf{font-size:48px;position:absolute;left:27%;top:160px}
+#home > *:not(.v35-science-fill){position:relative;z-index:1}
+@media(max-width:900px){.v35-science-fill{display:none}}
+
+
+/* v35 — رسومات العلوم أوضح وأكبر داخل الفراغ */
+.v35-science-fill{
+  top:285px !important;
+  left:28px !important;
+  width:47% !important;
+  height:270px !important;
+  opacity:.78 !important;
+}
+.v35-science-fill .science-icon{
+  background:rgba(255,255,255,.92) !important;
+  border:2px solid rgba(28,104,214,.22) !important;
+  box-shadow:0 10px 28px rgba(28,104,214,.14) !important;
+}
+.v35-science-fill .microscope{
+  font-size:92px !important;width:145px !important;height:145px !important;
+  left:1% !important;top:80px !important;
+}
+.v35-science-fill .dna{
+  font-size:98px !important;width:150px !important;height:150px !important;
+  left:33% !important;top:2px !important;
+}
+.v35-science-fill .flask{
+  font-size:90px !important;width:145px !important;height:145px !important;
+  left:67% !important;top:86px !important;
+}
+.v35-science-fill .atom{
+  font-size:78px !important;left:68% !important;top:0 !important;
+}
+.v35-science-fill .leaf{
+  font-size:66px !important;left:29% !important;top:185px !important;
+}
+
+
+/* v35: إلغاء الملصقات القديمة نهائياً */
+[class*="science-fill"]{display:none!important}
+
+.qitem{border:1px solid #dce8f7;border-radius:13px;padding:12px;margin:8px 0}.qitem button{border:0;border-radius:9px;padding:7px 10px;margin:5px 3px;font-family:inherit;font-weight:800}.qopt{width:100%;text-align:right;border:1px solid #dce8f7;background:#fff;border-radius:13px;padding:13px;margin:7px 0;font-family:inherit;font-weight:800}.qopt.correct{background:#eaf9ee;border-color:#8bd3a0;color:#087a2e}.qopt.wrong{background:#fff0f0;border-color:#efaaaa;color:#b42318}
+/* v35 final home spacing */
+@media (min-width:901px){
+  #home .topgrid{margin-bottom:12px!important}
+  #home .dashboard{margin-top:0!important}
+  #home{row-gap:12px!important}
+}
+#home [class*="science-fill"],#home [class*="science-lineart"]{display:none!important}
+
+
+.qimg{display:block;max-width:100%;max-height:360px;margin:12px auto 16px;border-radius:16px;border:1px solid #dce8f7;object-fit:contain;background:#fff}
+.qthumb{display:block;max-width:120px;max-height:90px;margin:8px 0;border-radius:10px;border:1px solid #dce8f7;object-fit:cover}
+
+</style><script>
+if (!Element.prototype.matches) Element.prototype.matches=Element.prototype.webkitMatchesSelector;
+if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=this;do{if(el.matches(s))return el;el=el.parentElement||el.parentNode;}while(el&&el.nodeType===1);return null;};
+</script><style>
+.reporttable{width:100%;border-collapse:collapse;margin-top:10px}.reporttable th,.reporttable td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:right}.muted{color:#6b7280}
+@media print{aside,.hero,nav,.no-print{display:none!important}.main{margin:0!important;padding:0!important}.tab{display:none!important}#report{display:block!important}.card{box-shadow:none!important;border:1px solid #ddd!important}}
 </style>
-</head>
-<body>
-<div id="bg-glow"></div>
-<div id="loader"><div class="spin">🌿</div><div style="font-weight:900">جاري تجهيز المختبر ثلاثي الأبعاد...</div><div style="font-size:12px;opacity:.7">إعداد وفكرة حمد نجله</div></div>
+<style>
+#home{position:relative}
+.science-lineart-v35{
+  position:absolute;
+  left:4%;
+  top:305px;
+  width:43%;
+  height:235px;
+  z-index:0;
+  pointer-events:none;
+  opacity:.34;
+}
+.science-lineart-v35 svg{width:100%;height:100%}
+.science-lineart-v35 .b{fill:none;stroke:#4f78c8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.science-lineart-v35 .p{fill:none;stroke:#8a70c7;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.science-lineart-v35 .d{fill:#5f82cf}
+#home>*:not(.science-lineart-v35){position:relative;z-index:1}
+.recent-title-v35{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#clearRecentV25{
+  border:1px solid #efcaca;background:#fff7f7;color:#b42318;
+  border-radius:9px;padding:6px 9px;font:800 12px inherit;cursor:pointer
+}
+@media(max-width:900px){.science-lineart-v35{display:none}}
+</style>
 
-<header class="topbar">
-<div class="logo">
-<div class="logo-icon">🌿</div>
-<div><h1>الكرفس ثلاثي الأبعاد : رحلة الماء والصبغة في الخشب (Xylem)</h1><p>نموذج واقعي للجذر والساق والأوراق + محاكاة انتقال الماء والأملاح وتأثير الحرارة</p></div>
-</div>
-<div class="credit-badge">⭐ إعداد وفكرة : حمد نجله ⭐</div>
-</header>
+</head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم التاسع</h1><p> • التميز يبدأ من المشاركة</p><button id="welcomeEnter">دخول التطبيق</button></div></div>
+<div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
+<div class="shell">
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v35</small></h1><p>🧪  <small>v35</small></p></div>
+<div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b></div></div>
+<div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
+<nav>
+<button class="on" data-tab="home">🏠 &nbsp; الرئيسية</button><button data-tab="questions">❓ &nbsp; الأسئلة</button><button data-tab="question">🎡 &nbsp; السؤال</button><button data-tab="students">👥 &nbsp; الطلاب</button><button data-tab="rank">🏆 &nbsp; الترتيب</button><button data-tab="report">📊 &nbsp; التقرير</button><button data-tab="ai">🤖 &nbsp; AI</button>
+</nav><div class="science-bottom">🔬 🌱</div></aside>
+<main class="main">
+<div class="hero"><div class="heroTitle"><div class="cup">🏆</div><div><h2>نجوم التاسع</h2><p>🧪 </p><small>v35</small></div></div>
+<div class="metric"><b id="heroStudents">0</b><span>👥 الطلاب</span></div><div class="metric"><b id="heroToday">0</b><span>⭐ نقاط اليوم</span></div><div class="metric"><b id="heroTotal">0</b><span>🎯 الإجمالي</span></div></div>
 
-<main class="layout">
-<aside class="panel">
-<h2>🎛️ لوحة التحكم بالتجربة</h2>
-<div class="control-group">
-<label class="row"><span>🌡️ درجة الحرارة</span><span class="val-pill" id="temp-value">28°C</span></label>
-<div class="temp-big"><b id="temp-big">28</b><span>°C</span></div>
-<input type="range" id="temp-slider" min="5" max="45" value="28" step="1">
-<div class="temp-track"><div id="temp-fill"></div></div>
-<div class="status-pill" id="temp-status">مثالي - نقل نشط ✅</div>
-</div>
-<div class="control-group">
-<label class="row"><span>💡 شدة الإضاءة (النتح)</span><span class="val-pill" id="light-value">70%</span></label>
-<input type="range" id="light-slider" min="0" max="100" value="70">
-</div>
-<div class="control-group">
-<label class="row"><span>💧 الرطوبة النسبية</span><span class="val-pill" id="humidity-value">50%</span></label>
-<input type="range" id="humidity-slider" min="10" max="95" value="50">
-</div>
-<div class="control-group">
-<label class="row"><span>🎨 لون الصبغة في الماء</span><span class="val-pill" id="dye-name">أحمر</span></label>
-<div class="dye-options" style="margin-top:14px;margin-bottom:8px">
-<button class="dye-btn active" data-color="#ff1744" data-name="أحمر" style="background:radial-gradient(circle at 30% 30%,#ff8a80,#ff1744)" title="أحمر"><small>أحمر</small></button>
-<button class="dye-btn" data-color="#2979ff" data-name="أزرق" style="background:radial-gradient(circle at 30% 30%,#82b1ff,#2979ff)" title="أزرق"><small>أزرق</small></button>
-<button class="dye-btn" data-color="#aa00ff" data-name="بنفسجي" style="background:radial-gradient(circle at 30% 30%,#e040fb,#aa00ff)" title="بنفسجي"><small>بنفسجي</small></button>
-<button class="dye-btn" data-color="#00c853" data-name="أخضر" style="background:radial-gradient(circle at 30% 30%,#69f0ae,#00c853)" title="أخضر"><small>أخضر</small></button>
-</div>
-</div>
-<div class="control-group">
-<label class="row"><span>👁️ خيارات العرض ثلاثي الأبعاد</span></label>
-<div class="view-grid">
-<button class="toggle-btn active" id="btn-xylem">🔬 الأنسجة الوعائية</button>
-<button class="toggle-btn active" id="btn-labels">🏷️ التسميات</button>
-<button class="toggle-btn active" id="btn-rotate">🔄 تدوير تلقائي</button>
-<button class="toggle-btn" id="btn-section">⭕ قطاع عرضي</button>
-</div>
-<div class="action-row">
-<button class="action-btn btn-pause" id="btn-pause">⏸️ إيقاف</button>
-<button class="action-btn btn-reset" id="btn-reset">♻️ تصفير الصبغة</button>
-</div>
-</div>
-<div style="font-size:11.5px;opacity:.75;line-height:1.8">💡 اسحب بالفأرة للتدوير • عجلة الفأرة للتقريب • انقر على أي جزء من النبات لعرض معلوماته</div>
-</aside>
+<section id="home" class="tab on">
 
-<section id="viewport">
-<div id="canvas-container"></div>
-<div id="labels"></div>
-<div class="hud-top">
-<div class="hud-chip"><span class="pulse-dot"></span><span id="hud-flow">تدفق الصبغة نشط • الخشب Xylem</span></div>
-<div class="hud-chip" id="hud-temp">🌡️ 28°C • معامل الحرارة ×1.23</div>
+<div class="science-lineart-v35" aria-hidden="true">
+<svg viewBox="0 0 620 245" xmlns="http://www.w3.org/2000/svg">
+  <path class="p" d="M55 20C135 58 135 100 55 138C-10 170 0 210 70 232"/>
+  <path class="b" d="M145 20C65 58 65 100 145 138C210 170 200 210 130 232"/>
+  <path class="b" d="M77 43h47M66 70h69M61 99h79M67 128h67M79 157h45M68 188h67M82 218h41"/>
+  <ellipse class="b" cx="300" cy="88" rx="78" ry="28" transform="rotate(20 300 88)"/>
+  <ellipse class="p" cx="300" cy="88" rx="78" ry="28" transform="rotate(-42 300 88)"/>
+  <ellipse class="b" cx="300" cy="88" rx="28" ry="78"/>
+  <circle class="d" cx="300" cy="88" r="8"/>
+  <path class="b" d="M445 22h48M457 22v55l-45 100q-8 20 14 24h98q22-4 14-24l-45-100V22"/>
+  <path class="p" d="M427 164q46-20 96 0"/>
+  <path class="p" d="M560 52l-25 28 20 20 25-27zM545 99q-30 24-23 59 7 33 49 37M502 203h96M526 176l-33 27"/>
+  <path class="b" d="M230 203l38 23 39-22 40 23 39-24"/>
+  <circle class="d" cx="230" cy="203" r="6"/><circle class="d" cx="268" cy="226" r="6"/>
+  <circle class="d" cx="307" cy="204" r="6"/><circle class="d" cx="347" cy="227" r="6"/><circle class="d" cx="386" cy="203" r="6"/>
+</svg>
 </div>
-<div id="info-toast"><b id="toast-title"></b><p id="toast-desc"></p></div>
-<div class="hint">🖱️ اسحب للتدوير حول النموذج | 🔍 انقر على الساق والجذر والورقة</div>
-<div class="hud-bottom">
-<div class="top"><span>🧪 ارتفاع جبهة الصبغة في الساق: <b id="dye-height" style="color:var(--dye)">0.0 سم</b></span><span>⏳ الوصول للأوراق خلال: <b id="dye-time-left">--</b></span><span>📏 الارتفاع الكلي: 25 سم</span></div>
-<div class="progress-track"><div id="dye-progress-fill"></div></div>
+
+
+<div class="v35-science-fill" aria-hidden="true">
+  <div class="science-icon microscope">🔬</div>
+  <div class="science-icon dna">🧬</div>
+  <div class="science-icon flask">🧪</div>
+  <div class="atom">⚛️</div>
+  <div class="leaf">🌱</div>
+</div>
+
+<div class="topgrid"><div class="card"><div class="title">📚 اختر الفصل</div><div id="classes" class="classes"></div></div><div class="card"><div class="title">🎯 هدف الحصة</div><input id="goal" placeholder="اكتب هدف الحصة هنا..."></div><div class="card">
+  <div class="title">🔎 بحث سريع عن طالب</div>
+  <input id="homeStudentSearch" placeholder="اكتب أول حروف الاسم... مثال: مح" autocomplete="off">
+  <div class="muted" style="margin-top:7px">يعرض طلاب الشعبة المحددة فقط</div>
+  <div id="homeStudentSearchResults" style="margin-top:10px"></div>
+</div></div>
+<div class="dashboard">
+<div class="card tall"><div class="title">👥 عجلة الطلاب</div><canvas id="homeWheel" width="340" height="340"></canvas><button class="primary" id="goQuestion">⚡ تسجيل مشاركة سريع</button><div style="text-align:center;color:#8290a4;margin-top:12px">اكتب اسم الطالب بسرعة ثم اختر التقييم</div></div>
+<div class="card tall"><div class="title">💼 أدوات الحصة</div><button class="score green" disabled>✅ صح<br>+2</button><button class="score yellow" disabled>🟡 حاول<br>+1</button><button class="score blue" disabled>⭐ إجابة مثالية<br>+3</button><div style="margin-top:20px;background:#f6f9ff;padding:16px;border-radius:13px;text-align:center">💡 شجّع طلابك واحتفل<br>بكل إنجاز صغير</div></div>
+<div class="card tall"><div class="recent-title-v35"><div class="title">🕘 آخر مشاركات</div><button id="clearRecentV25">🗑️ مسح القائمة</button></div><div id="recent" class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div></div>
+</div></section>
+
+<section id="questions" class="tab">
+<div class="topgrid">
+<div class="card"><div class="title">❓ إضافة سؤال</div><div id="questionBankLabel" style="font-weight:900;color:#0860df;margin-bottom:10px"></div>
+<textarea id="bankQuestionText" placeholder="اكتب السؤال هنا..."></textarea>
+<div style="margin-top:10px">
+  <label for="questionImageInput" style="display:block;font-weight:900;margin-bottom:6px">🖼️ صورة للسؤال (اختياري)</label>
+  <input id="questionImageInput" type="file" accept="image/*" style="width:100%">
+  <div id="questionImagePreviewWrap" style="display:none;margin-top:10px">
+    <img id="questionImagePreview" alt="معاينة صورة السؤال" style="max-width:100%;max-height:260px;border-radius:14px;border:1px solid #dce8f7;object-fit:contain;background:#fff">
+    <div style="margin-top:8px">
+      <button id="removeQuestionImage" type="button" style="border:0;border-radius:9px;padding:7px 10px;background:#fff0f0;color:#b42318;font-family:inherit;font-weight:900;cursor:pointer">🗑️ حذف الصورة</button>
+    </div>
+  </div>
+</div>
+<input id="optA" placeholder="أ) الخيار الأول" style="margin-top:8px"><input id="optB" placeholder="ب) الخيار الثاني" style="margin-top:8px">
+<input id="optC" placeholder="ج) الخيار الثالث" style="margin-top:8px"><input id="optD" placeholder="د) الخيار الرابع" style="margin-top:8px">
+<select id="correctOpt" style="width:100%;padding:12px;border:1px solid #d7e0ec;border-radius:12px;margin-top:10px;font:inherit"><option value="A">الصحيحة: أ</option><option value="B">الصحيحة: ب</option><option value="C">الصحيحة: ج</option><option value="D">الصحيحة: د</option></select>
+<button id="saveBankQuestion" class="primary" style="margin-top:10px">💾 حفظ السؤال</button></div>
+<div class="card"><div class="title">📚 بنك الأسئلة</div><div id="questionBankList"></div></div></div>
+<div class="card"><div class="title">🧪 السؤال الحالي</div><div id="liveQuestion" class="empty">اختر سؤالًا من بنك الأسئلة</div></div>
+</section>
+<section id="question" class="tab"><div class="topgrid"><div class="card"><div class="title">📚 اختر الفصل</div><div id="qClasses" class="classes"></div></div><div class="card"><div class="title">❓ سؤال الحصة</div><textarea id="questionText" placeholder="اكتب سؤال الحصة هنا..."></textarea></div></div>
+<div class="dashboard" style="grid-template-columns:1.2fr .8fr"><div class="card"><div class="title">🎡 عجلة الطلاب</div><canvas id="wheel" width="430" height="430"></canvas><button id="spin" class="primary">🎯 ابدأ الدوران</button><div id="winner" class="winner hidden"></div></div>
+<div class="card"><div class="title">⭐ تقييم الطالب المختار</div><div id="wheelGrade" class="hidden"><button class="score" style="background:#ffe1e1;border-color:#ffc5c5;color:#b42318" data-wscore="-2" data-wreason="خصم درجتين">🔻 خصم −2</button><button class="score" style="background:#fff0f0;border-color:#ffd2d2;color:#c62828" data-wscore="-1" data-wreason="خصم درجة">🔻 خصم −1</button><button class="score green" data-wscore="2" data-wreason="صح">✅ صح +2</button><button class="score yellow" data-wscore="1" data-wreason="حاول">🟡 حاول +1</button><button class="score blue" data-wscore="3" data-wreason="إجابة مثالية">⭐ إجابة مثالية +3</button></div><div id="noWinner" class="empty">شغّل العجلة أولًا لاختيار طالب</div></div></div></section>
+
+<section id="students" class="tab">
+<div class="formgrid">
+  <div class="card">
+    <div class="title">🔎 البحث عن طالب في الشعبة الحالية</div>
+    <input id="studentSearch" placeholder="ابدأ بكتابة الاسم... مثال: مح">
+    <div class="muted" style="margin-top:8px">البحث يعرض طلاب الشعبة المختارة فقط.</div>
+    <div id="studentSearchResults" style="margin-top:12px"></div>
+  </div>
+  <div class="card">
+    <div class="title">➕ إضافة طالب جديد للشعبة</div>
+    <input id="newStudentName" placeholder="اكتب اسم الطالب الجديد..." autocomplete="off">
+    <button id="addNewStudent" class="primary" style="margin-top:10px">➕ إضافة الطالب</button>
+    <div class="muted" style="margin-top:8px">سيتم إضافة الطالب إلى الشعبة المحددة حاليًا.</div>
+    <div style="height:18px"></div>
+    <div class="title">👥 طلاب الفصل</div>
+    <div id="studentList"></div>
+  </div>
 </div>
 </section>
-
-<aside class="panel">
-<h2>📊 حساب معدل نقل الماء داخل ساق الكرفس</h2>
-<div class="calc-card c-green"><div class="calc-icon">🚀</div><div class="t"><small>سرعة صعود العصارة في الخشب</small><b><span id="stat-speed">1.85</span> <small style="display:inline;font-size:12px">سم/دقيقة</small></b></div></div>
-<div class="calc-card c-blue"><div class="calc-icon">💧</div><div class="t"><small>معدل امتصاص الماء (الجذور)</small><b><span id="stat-uptake">3.42</span> <small style="display:inline;font-size:12px">مل/ساعة</small></b></div></div>
-<div class="calc-card c-gold"><div class="calc-icon">🍃</div><div class="t"><small>معدل النتح من الأوراق</small><b><span id="stat-transp">2.20</span> <small style="display:inline;font-size:12px">مليمول/م²/ث</small></b></div></div>
-<div class="calc-card c-pink"><div class="calc-icon">⏱️</div><div class="t"><small>الزمن اللازم للوصول للأوراق</small><b><span id="stat-time">13.5</span> <small style="display:inline;font-size:12px">دقيقة</small></b></div></div>
-<div class="control-group" style="margin-top:10px">
-<label class="row"><span>🌡️ تأثير الحرارة على الأعضاء</span></label>
-<div class="mini-row"><span class="ic">🌱</span><span style="min-width:44px">الجذور</span><div class="mini-track"><div class="mini-fill" id="bar-root-fill" style="width:30%"></div></div><span class="mini-val" id="val-root">1.2</span></div>
-<div class="mini-row"><span class="ic">🎋</span><span style="min-width:44px">الساق</span><div class="mini-track"><div class="mini-fill" id="bar-stem-fill" style="width:40%"></div></div><span class="mini-val" id="val-stem">1.8</span></div>
-<div class="mini-row"><span class="ic">🍃</span><span style="min-width:44px">الأوراق</span><div class="mini-track"><div class="mini-fill" id="bar-leaf-fill" style="width:55%"></div></div><span class="mini-val" id="val-leaf">2.3</span></div>
-<div style="font-size:11px;opacity:.7;margin-top:6px">الحرارة تسرّع النتح وسحب العمود المائي، لكن فوق 40° يحدث إجهاد حراري ويقل المعدل.</div>
+<section id="rank" class="tab"><div class="card"><div class="title">🏆 ترتيب الطلاب</div><div id="rankList"></div></div></section>
+<section id="report" class="tab">
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div class="title">📊 تقرير الفصل</div>
+    <button class="primary no-print" onclick="window.print()" style="width:auto;padding:10px 18px">🖨️ طباعة / حفظ PDF</button>
+  </div>
+  <div id="reportClass" class="muted" style="margin-bottom:12px"></div>
+  <div id="reportGrid" class="reportgrid"></div>
 </div>
-<div class="control-group">
-<label class="row"><span>📈 منحنى معدل النقل الحي</span><span style="font-size:11px;opacity:.7">سم/دقيقة</span></label>
-<canvas id="chart" width="600" height="150"></canvas>
-</div>
-<div class="formula-box">🧮 <b>المعادلة المستخدمة (Q10):</b>
-<code>v = v0 × Q10^((T-25)/10) × Light × Hum</code>
-حيث v0 = 1.5 سم/دقيقة عند 25°م ، و Q10 = 2.0 ، وامتصاص الماء = v × 1.85 مل/ساعة.
-</div>
-<div class="mini-credit">✨ إعداد وفكرة : حمد نجله ✨<br><span style="font-size:11px;color:#fff;opacity:.8">نموذج تعليمي تفاعلي لمادة الأحياء</span></div>
-</aside>
-</main>
+<div class="card" style="margin-top:16px"><div class="title">🏆 ترتيب الطلاب</div><div id="reportRanking"></div></div>
+<div class="card" style="margin-top:16px"><div class="title">🕘 سجل المشاركات</div><div id="reportLogs"></div></div>
+</section>
+<section id="ai" class="tab"><div class="card"><div class="title">🤖 مساعد المعلم AI</div><div id="aiText">ابدأ بتسجيل المشاركات وسأحلل بيانات الفصل.</div><button id="aiAnalyze" class="primary" style="margin-top:15px">تحليل الفصل</button></div></section>
+</main></div>
+<script>
+(function(){"use strict";var SUPABASE_URL="https://gzyshnowsxkadohpmhbz.supabase.co",SUPABASE_KEY="sb_publishable_GVn1IF5FDn9ExsSOjdmTBg_Bt0uiKHM";var KEY="nojoom_v35_grade9_only";var data;try{data=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!data)data={current:"c2",globalQuestion:"",classes:[
+{id:"c2",name:"الصف التاسع 1",students:[],logs:[],used:[],goal:""},
+{id:"c3",name:"الصف التاسع 2",students:[],logs:[],used:[],goal:""},
+{id:"c4",name:"الصف التاسع 3",students:[],logs:[],used:[],goal:""},
+{id:"c5",name:"الصف التاسع 4",students:[],logs:[],used:[],goal:""},
+{id:"c6",name:"الصف التاسع 5",students:[],logs:[],used:[],goal:""},
+{id:"c7",name:"الصف التاسع 6",students:[],logs:[],used:[],goal:""}]};
+var CLASS_DB_IDS={"c1":1,"c2":2,"c3":3,"c4":4,"c5":5,"c6":6,"c7":7};
+async function syncStudentsFromSupabase(){
+ try{
+  var baseHeaders={
+   "apikey":SUPABASE_KEY,
+   "Authorization":"Bearer "+SUPABASE_KEY,
+   "Accept":"application/json"
+  };
 
-<footer class="steps">
-<div class="step-card"><b><span class="step-num">1</span> 🌱 الامتصاص من الجذور</b>تمتص الشعيرات الجذرية الماء والأملاح المذابة مع الصبغة الملونة بالخاصية الأسموزية والنقل النشط، لاحظ الجسيمات الملونة تدخل من أطراف الجذور.</div>
-<div class="step-card"><b><span class="step-num">2</span> 🎋 الصعود في الخشب Xylem</b>تصعد العصارة عبر أوعية الخشب (أوعية وقصيبات) داخل ساق الكرفس. فعّل وضع الأنسجة الوعائية لرؤية الأوعية والصبغة تتدفق بداخلها.</div>
-<div class="step-card"><b><span class="step-num">3</span> 🌀 قوى السحب والشعرية</b>الخاصية الشعرية + التماسك بين جزيئات الماء + سحب النتح من الأوراق تدفع العمود المائي للأعلى. ارفع الحرارة والإضاءة لتلاحظ تسارع التدفق.</div>
-<div class="step-card"><b><span class="step-num">4</span> 🍃 الوصول للأوراق والنتح</b>تصل الصبغة إلى عروق الأوراق فتتلون، ويتبخر الماء من الثغور تاركاً الأملاح. راقب تلوّن الأوراق وبخار النتح المتصاعد.</div>
-</footer>
-<div class="credit-footer">جميع الحقوق محفوظة © 2026 | <b>إعداد وفكرة حمد نجله</b> | صُمم لأغراض تعليمية 🌿🔬</div>
+  var studentsRes=await fetch(
+   SUPABASE_URL+"/rest/v1/students?select=id,name,class_id,points&order=class_id.asc,name.asc",
+   {headers:baseHeaders,cache:"no-store"}
+  );
+  if(!studentsRes.ok)throw new Error("Students HTTP "+studentsRes.status);
+  var students=await studentsRes.json();
 
-<div id="cross-modal">
-<div class="modal-content">
-<h3>⭕ قطاع عرضي مكبّر في ساق الكرفس</h3>
-<p class="sub">الحزم الوعائية موزعة بشكل هلالي - الخشب للداخل واللحاء للخارج</p>
-<svg viewBox="0 0 340 300" style="width:100%;height:auto;background:rgba(0,0,0,.3);border-radius:16px">
-<circle cx="170" cy="150" r="132" fill="#8bc34a" stroke="#1b5e20" stroke-width="5"/>
-<circle cx="170" cy="150" r="118" fill="#dcedc8"/>
-<circle cx="170" cy="150" r="95" fill="#f1f8e9" stroke="#aed581" stroke-width="2" stroke-dasharray="5 5"/>
-<g id="bundles"></g>
-<g font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">
-<text x="170" y="22">البشرة Epidermis</text>
-<text x="170" y="288">النخاع Pith (بارنشيما)</text>
-</g>
-<line x1="170" y1="28" x2="170" y2="52" stroke="#fff" stroke-width="1.5"/>
-</svg>
-<div class="legend"><span>🟠 خشب Xylem - صعود الماء ↑</span><span>🟢 لحاء Phloem - نقل الغذاء ↓</span><span>🟡 كولنشيما للدعم</span></div>
-<p style="font-size:12.5px;margin-top:10px;line-height:1.9;opacity:.9">الأوعية الخشبية الكبيرة (بالبرتقالي النابض) هي التي تحمل الماء الملون بالصبغة من الجذر إلى الورقة. كلما زادت الحرارة زاد النبض وسرعة التدفق داخلها.</p>
-<button class="close-btn" id="btn-close-modal">إغلاق القطاع ✖</button>
-</div>
-</div>
+  var partsRes=await fetch(
+   SUPABASE_URL+"/rest/v1/participations?select=id,student_id,class_id,points,reason,created_at&order=created_at.desc",
+   {headers:baseHeaders,cache:"no-store"}
+  );
+  if(!partsRes.ok)throw new Error("Participations HTTP "+partsRes.status);
+  var parts=await partsRes.json();
 
-<script type="module">
-// GitHub Pages / Safari-safe module loading: use direct absolute URLs instead of import-map aliases.
-// Also expose startup errors instead of leaving the loader stuck forever.
-const loaderEl = document.getElementById('loader');
-const loaderMsg = loaderEl ? loaderEl.children[1] : null;
-window.addEventListener('error', () => { if (loaderMsg) loaderMsg.textContent = 'تعذر تشغيل العرض ثلاثي الأبعاد — حدّث الصفحة أو تحقق من الاتصال'; });
-window.addEventListener('unhandledrejection', () => { if (loaderMsg) loaderMsg.textContent = 'تعذر تحميل مكتبة العرض ثلاثي الأبعاد — حاول تحديث الصفحة'; });
+  var namesById={};
+  students.forEach(function(s){namesById[String(s.id)]=s.name});
 
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+  data.classes.forEach(function(c){
+    var dbId=CLASS_DB_IDS[c.id];
+    c.students=students
+      .filter(function(s){return Number(s.class_id)===Number(dbId)})
+      .map(function(s){
+        return {id:s.id,name:s.name,points:Number(s.points)||0};
+      });
 
-const state={temp:28,light:70,humidity:50,dye:'#ff1744',dyeName:'أحمر',showXylem:true,showLabels:true,autoRotate:true,paused:false};
-let simTime=0,dyeFront=0,leafTint=0,lastUI=0;
-const history=[];
+    c.logs=parts
+      .filter(function(p){return Number(p.class_id)===Number(dbId)})
+      .map(function(p){
+        var d=new Date(p.created_at);
+        return {
+          id:p.id,
+          studentId:p.student_id,
+          name:namesById[String(p.student_id)]||"طالب",
+          score:Number(p.points)||0,
+          reason:p.reason||"",
+          day:d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(),
+          at:p.created_at
+        };
+      });
+  });
 
-const $=id=>document.getElementById(id);
-const container=$('canvas-container'),labelsBox=$('labels');
-
-const scene=new THREE.Scene();
-scene.fog=new THREE.Fog(0x0a1e2c,26,60);
-const camera=new THREE.PerspectiveCamera(45,container.clientWidth/container.clientHeight,0.1,200);
-camera.position.set(10.5,7.5,12);
-const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(container.clientWidth,container.clientHeight);
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.15;
-container.appendChild(renderer.domElement);
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.target.set(0,4.6,0);
-controls.enableDamping=true;controls.dampingFactor=0.06;
-controls.minDistance=4;controls.maxDistance=28;controls.maxPolarAngle=1.52;
-controls.autoRotate=true;controls.autoRotateSpeed=0.9;
-
-scene.add(new THREE.HemisphereLight(0xe8f5e9,0x1b3a2a,0.85));
-const sun=new THREE.DirectionalLight(0xfff8e1,1.5);
-sun.position.set(6,12,6);sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-10;sun.shadow.camera.right=10;sun.shadow.camera.top=14;sun.shadow.camera.bottom=-4;
-scene.add(sun);
-const fill=new THREE.PointLight(0x4dd0e1,25,40);fill.position.set(-7,6,-4);scene.add(fill);
-const tempLight=new THREE.PointLight(0xffab40,18,30);tempLight.position.set(0,5,6);scene.add(tempLight);
-
-const table=new THREE.Mesh(new THREE.CylinderGeometry(8.5,9,0.6,64),new THREE.MeshStandardMaterial({color:0x5d4037,roughness:0.7}));
-table.position.y=-0.3;table.receiveShadow=true;scene.add(table);
-const tableTop=new THREE.Mesh(new THREE.CircleGeometry(8.5,64),new THREE.MeshStandardMaterial({color:0x8d6e63,roughness:0.5}));
-tableTop.rotation.x=-Math.PI/2;tableTop.position.y=0.001;tableTop.receiveShadow=true;scene.add(tableTop);
-const grid=new THREE.PolarGridHelper(8.5,8,6,48,0x7ed957,0x2e7d32);
-grid.position.y=0.02;grid.material.transparent=true;grid.material.opacity=0.22;scene.add(grid);
-
-const glassMat=new THREE.MeshPhongMaterial({color:0xb3e5fc,transparent:true,opacity:0.13,shininess:120,side:THREE.DoubleSide,depthWrite:false});
-const glass=new THREE.Mesh(new THREE.CylinderGeometry(2.25,2.1,3.5,48,1,true),glassMat);
-glass.position.y=1.78;glass.renderOrder=10;scene.add(glass);
-const glassBottom=new THREE.Mesh(new THREE.CircleGeometry(2.1,48),new THREE.MeshPhongMaterial({color:0xb3e5fc,transparent:true,opacity:0.25}));
-glassBottom.rotation.x=-Math.PI/2;glassBottom.position.y=0.06;scene.add(glassBottom);
-const rim=new THREE.Mesh(new THREE.TorusGeometry(2.25,0.06,12,60),new THREE.MeshStandardMaterial({color:0xe1f5fe,roughness:0.2,metalness:0.4}));
-rim.rotation.x=Math.PI/2;rim.position.y=3.53;scene.add(rim);
-for(let i=0;i<4;i++){const tick=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.03,0.02),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.6}));tick.position.set(1.95*Math.cos(0.5),0.9+i*0.6,1.95*Math.sin(0.5));tick.lookAt(0,tick.position.y,0);scene.add(tick);}
-
-const waterMat=new THREE.MeshStandardMaterial({color:new THREE.Color(state.dye),transparent:true,opacity:0.55,roughness:0.15,emissive:new THREE.Color(state.dye),emissiveIntensity:0.25,depthWrite:false});
-const water=new THREE.Mesh(new THREE.CylinderGeometry(2.05,1.95,2.1,48),waterMat);
-water.position.y=1.15;water.renderOrder=5;water.userData.info={t:'💧 الماء الملون بالصبغة',d:'ماء مضاف إليه صبغة ملونة ليتتبع الطالب مسار الماء والأملاح من الجذور حتى الأوراق.'};scene.add(water);
-const waterTop=new THREE.Mesh(new THREE.CircleGeometry(2.05,48),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.25,roughness:0.1}));
-waterTop.rotation.x=-Math.PI/2;waterTop.position.y=2.21;waterTop.renderOrder=6;scene.add(waterTop);
-
-function taperedTube(curve,tub,rad,r0,r1){
-const frames=curve.computeFrenetFrames(tub,false);
-const pos=[],nor=[],uv=[],idx=[];const P=new THREE.Vector3();
-for(let i=0;i<=tub;i++){const t=i/tub;curve.getPointAt(t,P);
-const N=frames.normals[i],B=frames.binormals[i];const r=r0+(r1-r0)*t;
-for(let j=0;j<=rad;j++){const v=j/rad*Math.PI*2,s=Math.sin(v),c=-Math.cos(v);
-const nx=c*N.x+s*B.x,ny=c*N.y+s*B.y,nz=c*N.z+s*B.z;
-nor.push(nx,ny,nz);pos.push(P.x+r*nx,P.y+r*ny,P.z+r*nz);uv.push(t,j/rad);}}
-for(let i=0;i<tub;i++)for(let j=0;j<rad;j++){const a=(rad+1)*i+j,b=(rad+1)*(i+1)+j,c=(rad+1)*(i+1)+j+1,d=(rad+1)*i+j+1;idx.push(a,b,d,b,c,d);}
-const g=new THREE.BufferGeometry();g.setIndex(idx);
-g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
-g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
-g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return g;}
-
-function leafGeo(len=1.7,wid=0.95){
-const s=new THREE.Shape();s.moveTo(0,0);
-s.bezierCurveTo(wid*0.65,len*0.2,wid*0.75,len*0.62,0,len);
-s.bezierCurveTo(-wid*0.75,len*0.62,-wid*0.65,len*0.2,0,0);
-const g=new THREE.ShapeGeometry(s,14);const p=g.attributes.position;
-for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);const cx=Math.abs(x)/wid;p.setZ(i,-cx*cx*0.28+Math.sin(Math.max(0,y)/len*Math.PI)*0.18);}
-g.computeVertexNormals();return g;}
-
-const stalkMat=new THREE.MeshStandardMaterial({color:0xaed581,roughness:0.42,metalness:0.05,transparent:true,opacity:0.5,depthWrite:false});
-const ribMat=new THREE.MeshStandardMaterial({color:0x558b2f,roughness:0.55});
-const xylemMat=new THREE.MeshStandardMaterial({color:0xffcc80,emissive:0xff6f00,emissiveIntensity:0.7,roughness:0.3});
-const rootMat=new THREE.MeshStandardMaterial({color:0xf3ead5,roughness:0.85});
-const leafBase=new THREE.Color(0x2e9e44);
-const leafMat=new THREE.MeshStandardMaterial({color:leafBase.clone(),roughness:0.65,side:THREE.DoubleSide,emissive:0x000000,emissiveIntensity:0.4});
-const dyeMat=new THREE.MeshStandardMaterial({color:state.dye,emissive:state.dye,emissiveIntensity:1.4,roughness:0.2});
-const dyeGeo=new THREE.SphereGeometry(0.065,10,10);
-
-const celery=new THREE.Group();scene.add(celery);
-const stalkCurves=[],stalkMeshes=[],xylemMeshes=[],leafMeshes=[],rootCurves=[],rootMeshes=[],leafPositions=[];
-const dyeParticles=[];
-const baseBall=new THREE.Mesh(new THREE.SphereGeometry(0.65,20,16),new THREE.MeshStandardMaterial({color:0xdcedc8,roughness:0.6}));
-baseBall.position.y=1.35;baseBall.scale.set(1,0.7,1);baseBall.castShadow=true;celery.add(baseBall);
-
-const NSTALK=8;
-const sharedLeafGeo=leafGeo();
-for(let i=0;i<NSTALK;i++){
-const a=(i/NSTALK)*Math.PI*2+i*0.35;
-const central=i===0;
-const r0=0.22,r1=central?0.25:0.75+Math.random()*0.3,r2=central?0.4:1.3+Math.random()*0.4,r3=central?0.5:1.8+Math.random()*0.6;
-const h3=central?10.2:7.6+Math.random()*1.6;
-const pts=[new THREE.Vector3(Math.cos(a)*r0,1.3,Math.sin(a)*r0),
-new THREE.Vector3(Math.cos(a+0.12)*r1,3.2,Math.sin(a+0.12)*r1),
-new THREE.Vector3(Math.cos(a+0.22)*r2,5.4,Math.sin(a+0.22)*r2),
-new THREE.Vector3(Math.cos(a+0.32)*r3,h3,Math.sin(a+0.32)*r3)];
-const curve=new THREE.CatmullRomCurve3(pts);stalkCurves.push(curve);
-const mesh=new THREE.Mesh(taperedTube(curve,36,12,0.34,0.13),stalkMat);
-mesh.castShadow=true;mesh.userData.info={t:'🎋 ساق الكرفس (عنق الورقة)',d:'ساق لحمية غنية بالماء، بداخلها حزم وعائية خشبية تنقل الماء والأملاح. الشفافية تُظهر الأوعية بالداخل.'};
-celery.add(mesh);stalkMeshes.push(mesh);
-for(let rb=0;rb<3;rb++){const off=rb/3*Math.PI*2;
-const rpts=pts.map((p,k)=>{const t=k/3;const rr=(0.34+(0.13-0.34)*t)*0.98;return new THREE.Vector3(p.x+Math.cos(off)*rr*0.9,p.y,p.z+Math.sin(off)*rr*0.9);});
-const rib=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rpts),24,0.028,6),ribMat);celery.add(rib);}
-const NV=3;
-for(let v=0;v<NV;v++){const va=v/NV*Math.PI*2+0.5;
-const vpts=pts.map((p,k)=>{const t=k/3;const rr=0.1*(1-t*0.5);return new THREE.Vector3(p.x+Math.cos(va)*rr,p.y,p.z+Math.sin(va)*rr);});
-const vcurve=new THREE.CatmullRomCurve3(vpts);
-const vm=new THREE.Mesh(new THREE.TubeGeometry(vcurve,28,0.038,8),xylemMat);
-vm.userData.info={t:'🔬 وعاء خشبي Xylem',d:'أنبوب ميت مُلَجنَن ينقل الماء والأملاح من الجذر للورقة بقوى التماسك وسحب النتح. النقاط اللامعة هي الصبغة الصاعدة.'};
-celery.add(vm);xylemMeshes.push(vm);
-for(let k=0;k<2;k++){const m=new THREE.Mesh(dyeGeo,dyeMat);celery.add(m);
-dyeParticles.push({mesh:m,curve:vcurve,t:Math.random(),sp:0.85+Math.random()*0.3});}}
-const end=curve.getPointAt(1),tan=curve.getTangentAt(1);
-for(let l=0;l<3;l++){
-const lm=new THREE.Mesh(sharedLeafGeo,leafMat);lm.castShadow=true;
-lm.userData.info={t:'🍃 ورقة الكرفس',d:'تتبخر الماء من الثغور (النتح) فيسحب العمود المائي من الأسفل. تراكم الصبغة في العروق يدل على وصول الماء.'};
-const side=l-1;
-lm.position.copy(end).add(new THREE.Vector3(side*0.4,0.15+l*0.12,0));
-lm.rotation.set(-0.6-Math.random()*0.4,a+side*0.7,side*0.5);
-lm.scale.setScalar(l===1?1.15:0.85);
-celery.add(lm);leafMeshes.push(lm);
-if(l===1)leafPositions.push(lm.position.clone().add(new THREE.Vector3(0,0.8,0)));}}
-
-const NROOT=13;
-for(let i=0;i<NROOT;i++){
-const a=i/NROOT*Math.PI*2+Math.random()*0.4;
-const tipR=0.6+Math.random()*1.2;
-const tip=new THREE.Vector3(Math.cos(a)*tipR,0.22+Math.random()*0.25,Math.sin(a)*tipR);
-const mid1=new THREE.Vector3(Math.cos(a+0.2)*tipR*0.6,0.6+Math.random()*0.2,Math.sin(a+0.2)*tipR*0.6);
-const mid2=new THREE.Vector3(Math.cos(a)*0.3,1.0,Math.sin(a)*0.3);
-const top=new THREE.Vector3(Math.cos(a)*0.15,1.35,Math.sin(a)*0.15);
-const curve=new THREE.CatmullRomCurve3([tip,mid1,mid2,top]);rootCurves.push(curve);
-const rm=new THREE.Mesh(taperedTube(curve,20,8,0.045,0.09),rootMat);
-rm.userData.info={t:'🌱 الجذر والشعيرات الجذرية',d:'تمتص الجذور الماء والأملاح والصبغة من التربة (الماء هنا) وتنقلها للساق. لاحظ التدفق الصاعد من أطراف الجذور.'};
-celery.add(rm);rootMeshes.push(rm);
-const m=new THREE.Mesh(new THREE.SphereGeometry(0.055,10,10),dyeMat);celery.add(m);
-dyeParticles.push({mesh:m,curve:curve,t:Math.random(),sp:0.7+Math.random()*0.4});}
-
-const bubbles=[];
-const bubGeo=new THREE.SphereGeometry(0.05,8,8);
-const bubMat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.5});
-for(let i=0;i<20;i++){const b=new THREE.Mesh(bubGeo,bubMat);b.position.set((Math.random()-0.5)*3.4,0.3+Math.random()*1.8,(Math.random()-0.5)*3.4);b.userData.sp=0.4+Math.random()*0.6;scene.add(b);bubbles.push(b);}
-
-const NVAP=70;
-const vapPos=new Float32Array(NVAP*3);const vapLife=new Float32Array(NVAP);
-function vapReset(i){const o=leafPositions[Math.floor(Math.random()*leafPositions.length)]||new THREE.Vector3(0,9,0);vapPos[i*3]=o.x+(Math.random()-0.5)*1.4;vapPos[i*3+1]=o.y+Math.random()*0.5;vapPos[i*3+2]=o.z+(Math.random()-0.5)*1.4;vapLife[i]=0;}
-for(let i=0;i<NVAP;i++){vapReset(i);vapLife[i]=Math.random()*3;}
-const vapGeo=new THREE.BufferGeometry();vapGeo.setAttribute('position',new THREE.BufferAttribute(vapPos,3));
-const vapMat=new THREE.PointsMaterial({color:0xe1f5fe,size:0.22,transparent:true,opacity:0.35,depthWrite:false});
-const vapor=new THREE.Points(vapGeo,vapMat);scene.add(vapor);
-const dustGeo=new THREE.BufferGeometry();const ND=220;const dPos=new Float32Array(ND*3);
-for(let i=0;i<ND;i++){dPos[i*3]=(Math.random()-0.5)*30;dPos[i*3+1]=Math.random()*14;dPos[i*3+2]=(Math.random()-0.5)*30;}
-dustGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
-const dust=new THREE.Points(dustGeo,new THREE.PointsMaterial({color:0xaeea00,size:0.07,transparent:true,opacity:0.5}));scene.add(dust);
-
-const pickables=[...stalkMeshes,...leafMeshes,...rootMeshes,...xylemMeshes,water];
-const ray=new THREE.Raycaster();const ptr=new THREE.Vector2();let downX=0,downY=0,toastTimer=null;
-renderer.domElement.addEventListener('pointerdown',e=>{downX=e.clientX;downY=e.clientY;});
-renderer.domElement.addEventListener('pointerup',e=>{
-if(Math.hypot(e.clientX-downX,e.clientY-downY)>6)return;
-const r=renderer.domElement.getBoundingClientRect();
-ptr.x=((e.clientX-r.left)/r.width)*2-1;ptr.y=-((e.clientY-r.top)/r.height)*2+1;
-ray.setFromCamera(ptr,camera);const hit=ray.intersectObjects(pickables,false)[0];
-if(hit&&hit.object.userData.info){$('toast-title').textContent=hit.object.userData.info.t;$('toast-desc').textContent=hit.object.userData.info.d;
-$('info-toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('info-toast').classList.remove('show'),3800);}});
-
-const labelDefs=[
-{t:'🌱 الجذر',s:'امتصاص الماء',c:'#d7ccc8',p:()=>rootCurves[2].getPointAt(0.35)},
-{t:'🎋 الساق',s:'عنق ورقة لحمي',c:'#aeea00',p:()=>stalkCurves[3].getPointAt(0.45)},
-{t:'🔬 الخشب Xylem',s:'أوعية صاعدة',c:'#ff9800',p:()=>stalkCurves[5].getPointAt(0.62)},
-{t:'🍃 الورقة',s:'النتح والتلوّن',c:'#4dd0e1',p:()=>leafPositions[0]||new THREE.Vector3(0,9,0)},
-{t:'🧪 ماء + صبغة',s:'محلول ملوّن',c:state.dye,p:()=>new THREE.Vector3(1.6,1.3,1.1)}];
-const labelEls=labelDefs.map(d=>{const el=document.createElement('div');el.className='label3d';
-el.innerHTML=`<span class="dot" style="background:${d.c};color:${d.c}"></span><div><b>${d.t}</b><small>${d.s}</small></div>`;
-labelsBox.appendChild(el);return el;});
-const tmpV=new THREE.Vector3();
-function updateLabels(){
-const w=container.clientWidth,h=container.clientHeight;
-labelDefs.forEach((d,i)=>{const el=labelEls[i];
-if(!state.showLabels){el.style.opacity='0';return;}
-tmpV.copy(d.p()).project(camera);
-if(tmpV.z>1){el.style.opacity='0';return;}
-el.style.opacity='1';
-el.style.transform=`translate(${(tmpV.x*0.5+0.5)*w+14}px,${(-tmpV.y*0.5+0.5)*h-14}px)`;});}
-
-function computeRates(){
-const T=state.temp,L=state.light,H=state.humidity;
-let tempF=Math.pow(2.0,(T-25)/10);
-if(T>40)tempF*=Math.max(0.25,1-(T-40)*0.14);
-const lightF=0.4+(L/100)*0.9,humF=1.35-(H/100)*0.7;
-const total=tempF*lightF*humF;
-const v=1.5*total/1.03;
-const uptake=v*1.85,transp=1.8*total/1.03;
-const timeMin=25/Math.max(0.12,v);
-return{tempF,lightF,humF,total,v,uptake,transp,timeMin,root:v*0.65,stem:v,leaf:v*1.28};}
-
-function tempStatus(T){
-if(T<12)return['🥶 بارد جداً - نقل بطيء وخامل','#2979ff'];
-if(T<22)return['🧊 بارد - نقل بطيء','#4dd0e1'];
-if(T<=30)return['✅ مثالي - نقل نشط وسريع','#7ed957'];
-if(T<=38)return['🔥 دافئ - نقل سريع جداً','#ff9800'];
-return['⚠️ حار جداً - إجهاد حراري','#ff1744'];}
-
-function updateTempUI(){
-$('temp-value').textContent=state.temp+'°C';$('temp-big').textContent=state.temp;
-$('temp-fill').style.width=((state.temp-5)/40*100)+'%';
-const[txt,col]=tempStatus(state.temp);
-const st=$('temp-status');st.textContent=txt;st.style.background=col+'33';st.style.border='1px solid '+col;st.style.color='#fff';
-tempLight.color.set(col);
-document.documentElement.style.setProperty('--dye',state.dye);}
-
-const chart=$('chart').getContext('2d');
-function drawChart(){
-const W=600,H=150;chart.clearRect(0,0,W,H);
-chart.fillStyle='rgba(0,0,0,0)';chart.fillRect(0,0,W,H);
-chart.strokeStyle='rgba(255,255,255,.12)';chart.lineWidth=1;
-for(let g=0;g<4;g++){chart.beginPath();chart.moveTo(0,20+g*35);chart.lineTo(W,20+g*35);chart.stroke();}
-if(history.length<2)return;
-const max=Math.max(4,...history)*1.15;
-const grad=chart.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#aeea00');grad.addColorStop(1,'#2979ff');
-chart.beginPath();
-history.forEach((v,i)=>{const x=i/(99)*W,y=H-10-(v/max)*(H-25);i?chart.lineTo(x,y):chart.moveTo(x,y);});
-chart.strokeStyle='#aeea00';chart.lineWidth=3;chart.shadowColor='#aeea00';chart.shadowBlur=8;chart.stroke();chart.shadowBlur=0;
-chart.lineTo(W,H);chart.lineTo((history.length-1)/99*W,H);chart.closePath();
-chart.fillStyle='rgba(174,234,0,.15)';chart.fill();}
-
-function updateStatsUI(r){
-$('stat-speed').textContent=r.v.toFixed(2);
-$('stat-uptake').textContent=r.uptake.toFixed(2);
-$('stat-transp').textContent=r.transp.toFixed(2);
-$('stat-time').textContent=r.timeMin<60?r.timeMin.toFixed(1):(r.timeMin/60).toFixed(2)+' س';
-$('hud-temp').textContent=`🌡️ ${state.temp}°C • معامل الحرارة ×${r.tempF.toFixed(2)}`;
-const mx=6;
-$('bar-root-fill').style.width=Math.min(100,r.root/mx*100)+'%';
-$('bar-stem-fill').style.width=Math.min(100,r.stem/mx*100)+'%';
-$('bar-leaf-fill').style.width=Math.min(100,r.leaf/mx*100)+'%';
-$('val-root').textContent=r.root.toFixed(2)+' سم/د';$('val-stem').textContent=r.stem.toFixed(2)+' سم/د';$('val-leaf').textContent=r.leaf.toFixed(2)+' سم/د';
-const hcm=dyeFront*25;
-$('dye-height').textContent=hcm.toFixed(1)+' سم';
-$('dye-progress-fill').style.width=(dyeFront*100)+'%';
-const left=(25-hcm)/Math.max(0.12,r.v);
-$('dye-time-left').textContent=dyeFront>=1?'وصلت ✅':(left<60?left.toFixed(1)+' دقيقة':(left/60).toFixed(1)+' ساعة');
-$('hud-flow').textContent=state.paused?'⏸️ المحاكاة متوقفة':(dyeFront>=1?'✅ الصبغة وصلت للأوراق - تلوّن العروق':'تدفق الصبغة نشط • الخشب Xylem');}
-
-$('temp-slider').addEventListener('input',e=>{state.temp=+e.target.value;updateTempUI();});
-$('light-slider').addEventListener('input',e=>{state.light=+e.target.value;$('light-value').textContent=state.light+'%';});
-$('humidity-slider').addEventListener('input',e=>{state.humidity=+e.target.value;$('humidity-value').textContent=state.humidity+'%';});
-document.querySelectorAll('.dye-btn').forEach(b=>b.addEventListener('click',()=>{
-document.querySelectorAll('.dye-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
-state.dye=b.dataset.color;state.dyeName=b.dataset.name;$('dye-name').textContent=state.dyeName;
-dyeMat.color.set(state.dye);dyeMat.emissive.set(state.dye);
-waterMat.color.set(state.dye);waterMat.emissive.set(state.dye);
-document.documentElement.style.setProperty('--dye',state.dye);updateTempUI();}));
-function toggle(btn,fn){$(btn).addEventListener('click',()=>{$(btn).classList.toggle('active');fn($(btn).classList.contains('active'));});}
-toggle('btn-xylem',on=>{state.showXylem=on;stalkMat.opacity=on?0.5:1;stalkMat.depthWrite=!on;stalkMat.needsUpdate=true;});
-toggle('btn-labels',on=>{state.showLabels=on;});
-toggle('btn-rotate',on=>{state.autoRotate=on;controls.autoRotate=on;});
-$('btn-section').addEventListener('click',()=>{$('cross-modal').classList.add('show');$('btn-section').classList.add('active');});
-$('btn-close-modal').addEventListener('click',()=>{$('cross-modal').classList.remove('show');$('btn-section').classList.remove('active');});
-$('cross-modal').addEventListener('click',e=>{if(e.target.id==='cross-modal'){$('cross-modal').classList.remove('show');$('btn-section').classList.remove('active');}});
-$('btn-pause').addEventListener('click',()=>{state.paused=!state.paused;$('btn-pause').textContent=state.paused?'▶️ تشغيل':'⏸️ إيقاف';});
-$('btn-reset').addEventListener('click',()=>{dyeFront=0;leafTint=0;history.length=0;leafMat.color.copy(leafBase);leafMat.emissive.set(0x000000);});
-
-(function buildBundles(){
-const g=document.getElementById('bundles');let s='';
-for(let i=0;i<8;i++){const a=i/8*Math.PI*2;const x=170+Math.cos(a)*72,y=150+Math.sin(a)*72;
-s+=`<g><ellipse cx="${x}" cy="${y}" rx="20" ry="15" fill="#fff9c4" stroke="#827717" stroke-width="1.5" transform="rotate(${a*180/Math.PI} ${x} ${y})"/>`
-+`<circle class="xylem-pulse" cx="${x-5}" cy="${y}" r="6.5" fill="#ff5722" stroke="#bf360c" stroke-width="1.5" style="animation-delay:${i*0.15}s"/>`
-+`<circle class="xylem-pulse" cx="${x+4}" cy="${y-4}" r="5" fill="#ff9800" stroke="#e65100" stroke-width="1.5" style="animation-delay:${i*0.15+0.2}s"/>`
-+`<circle class="xylem-pulse" cx="${x+4}" cy="${y+5}" r="4.5" fill="#ffab40" stroke="#e65100" stroke-width="1.2" style="animation-delay:${i*0.15+0.4}s"/>`
-+`<circle cx="${x-12}" cy="${y+8}" r="4" fill="#66bb6a" stroke="#1b5e20" stroke-width="1.2"/></g>`;}
-s+=`<path class="flow-dash" d="M170 230 L170 70" stroke="#ff1744" stroke-width="3" fill="none" opacity=".8"/><text x="188" y="150" fill="#ff8a80" font-size="10">صعود الماء ↑</text>`;
-g.innerHTML=s;})();
-
-function onResize(){const w=container.clientWidth,h=container.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);}
-window.addEventListener('resize',onResize);
-
-const clock=new THREE.Clock();
-const dyeCol=new THREE.Color();
-function animate(){
-requestAnimationFrame(animate);
-const dt=Math.min(clock.getDelta(),0.05);
-const r=computeRates();
-if(!state.paused){
-simTime+=dt;
-const speed=0.085*r.total;
-dyeParticles.forEach(p=>{p.t+=speed*dt*p.sp*1.4;if(p.t>1)p.t-=1;
-p.mesh.position.copy(p.curve.getPointAt(p.t));
-const s=1+Math.sin(simTime*6+p.t*10)*0.15;p.mesh.scale.setScalar(s);});
-if(dyeFront<1)dyeFront=Math.min(1,dyeFront+dt*0.045*r.total);
-if(dyeFront>0.85)leafTint=Math.min(1,leafTint+dt*0.06*r.total);
-bubbles.forEach(b=>{b.position.y+=dt*b.userData.sp*(0.5+r.total*0.5);if(b.position.y>2.1){b.position.y=0.3;b.position.x=(Math.random()-0.5)*3.4;b.position.z=(Math.random()-0.5)*3.4;}});
-const vp=vapGeo.attributes.position.array;
-for(let i=0;i<NVAP;i++){vapLife[i]+=dt;vp[i*3+1]+=dt*(0.6+r.total*0.7);vp[i*3]+=Math.sin(simTime*2+i)*dt*0.3;if(vapLife[i]>3)vapReset(i);}
-vapGeo.attributes.position.needsUpdate=true;
-dust.rotation.y+=dt*0.02;
+  localStorage.setItem(KEY,JSON.stringify(data));
+  render();
+ }catch(err){
+  console.error("Supabase sync failed:",err);
+  alert("تعذر تحميل الطلاب من Supabase");
+ }
 }
-xylemMat.emissiveIntensity=0.55+Math.sin(simTime*3.5)*0.25+r.total*0.08;
-water.position.y=1.15+Math.sin(simTime*1.6)*0.02;
-waterTop.position.y=2.21+Math.sin(simTime*1.6)*0.02;
-waterTop.rotation.z+=dt*0.15;
-vapMat.opacity=Math.min(0.6,0.12+r.total*0.14);
-dyeCol.set(state.dye);
-leafMat.color.copy(leafBase).lerp(dyeCol,leafTint*0.5);
-leafMat.emissive.copy(dyeCol).multiplyScalar(leafTint*0.3);
-stalkMat.color.set(0xaed581).lerp(dyeCol,dyeFront*0.12);
-if(simTime-lastUI>0.2){lastUI=simTime;history.push(r.v);if(history.length>100)history.shift();updateStatsUI(r);drawChart();}
-updateLabels();controls.update();renderer.render(scene,camera);}
 
-updateTempUI();updateStatsUI(computeRates());drawChart();onResize();animate();
-setTimeout(()=>$('loader').classList.add('hide'),900);
-setTimeout(()=>{$('toast-title').textContent='🌿 أهلاً بك في مختبر الكرفس!';$('toast-desc').textContent='ارفع درجة الحرارة لتلاحظ تسارع الصبغة الملونة الصاعدة في أوعية الخشب نحو الأوراق.';$('info-toast').classList.add('show');setTimeout(()=>$('info-toast').classList.remove('show'),4500);},1400);
+var pendingQuestionImage="";
+function clearPendingQuestionImage(){
+  pendingQuestionImage="";
+  var inp=document.getElementById("questionImageInput");
+  var wrap=document.getElementById("questionImagePreviewWrap");
+  var img=document.getElementById("questionImagePreview");
+  if(inp)inp.value="";
+  if(wrap)wrap.style.display="none";
+  if(img)img.src="";
+}
+function compressQuestionImage(file){
+  return new Promise(function(resolve,reject){
+    var reader=new FileReader();
+    reader.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var maxW=1200,maxH=900,w=img.width,h=img.height;
+        var scale=Math.min(1,maxW/w,maxH/h);
+        var c=document.createElement("canvas");
+        c.width=Math.max(1,Math.round(w*scale));
+        c.height=Math.max(1,Math.round(h*scale));
+        var ctx=c.getContext("2d");
+        ctx.drawImage(img,0,0,c.width,c.height);
+        try{resolve(c.toDataURL("image/jpeg",0.82))}catch(e){reject(e)}
+      };
+      img.onerror=reject;
+      img.src=reader.result;
+    };
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+var QUESTION_KEY="nojoom_question_banks_v1",questionBanks;try{questionBanks=JSON.parse(localStorage.getItem(QUESTION_KEY))}catch(e){}if(!questionBanks)questionBanks={grade8:[],grade9:[]};
+function currentGradeKey(){return "grade9"}
+function saveQuestionBanks(){localStorage.setItem(QUESTION_KEY,JSON.stringify(questionBanks))}
+function renderQuestionBank(){let list=document.getElementById("questionBankList"),lab=document.getElementById("questionBankLabel");if(!list||!lab)return;let k=currentGradeKey(),a=questionBanks[k]||[];lab.textContent="بنك أسئلة الصف التاسع";list.innerHTML=a.length?a.map((q,i)=>'<div class="qitem"><b>'+(i+1)+'. '+q.text+'</b>'+(q.image?'<img class="qthumb" src="'+q.image+'" alt="صورة السؤال">':'')+'<div><button data-use-q="'+i+'">عرض</button><button data-del-q="'+i+'">حذف</button></div></div>').join(""):'<div class="empty">لا توجد أسئلة محفوظة لهذا الصف</div>'}
+function showLiveQuestion(i){let q=(questionBanks[currentGradeKey()]||[])[i],b=document.getElementById("liveQuestion");if(!q)return;b.className="";b.innerHTML='<h2>'+q.text+'</h2>'+(q.image?'<img class="qimg" src="'+q.image+'" alt="صورة السؤال">':'')+["A","B","C","D"].map(k=>'<button class="qopt" data-answer="'+k+'" data-correct="'+q.correct+'"><b>'+({A:"أ",B:"ب",C:"ج",D:"د"}[k])+')</b> '+q[k]+'</button>').join("")}
+var wheelSelected=null,angle=0,spinning=false;function C(){return data.classes.find(x=>x.id===data.current)||data.classes[0]}function day(){let d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function classButtons(){return data.classes.map(x=>'<button class="chip '+(x.id===data.current?'on':'')+'" data-class="'+x.id+'">'+x.name+' ('+x.students.length+')</button>').join("")}
+function render(){let c=C(),today=c.logs.filter(l=>l.day===day()),tot=c.students.reduce((a,s)=>a+s.points,0);["sideStudents","heroStudents"].forEach(id=>document.getElementById(id).textContent=c.students.length);document.getElementById("heroToday").textContent=today.reduce((a,l)=>a+l.score,0);document.getElementById("heroTotal").textContent=tot;document.getElementById("classes").innerHTML=classButtons();document.getElementById("qClasses").innerHTML=classButtons();document.getElementById("goal").value=c.goal||"";document.getElementById("questionText").value=data.globalQuestion||"";
+document.getElementById("studentList").innerHTML=c.students.map(s=>'<div class="row"><b>'+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join("")||'<div class="empty">لا يوجد طلاب بعد</div>';let sorted=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("rankList").innerHTML=sorted.length?sorted.map((s,i)=>'<div class="row" style="'+(i<3?'border-width:2px;':'')+'"><b style="font-size:'+(i<3?'18px':'15px')+'">'+(i<3?["🥇","🥈","🥉"][i]:(i+1)+".")+' '+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join(""):'<div class="empty">لا يوجد طلاب في هذا الفصل بعد</div>';
+document.getElementById("recent").innerHTML=today.length?today.slice(-6).reverse().map(l=>'<div class="row"><b>'+l.name+'</b><span>'+l.reason+' <b class="pts">'+(l.score>0?"+":"")+l.score+'</b></span></div>').join(""):'<div class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div>';report();renderQuestionBank();renderStudentSearch();renderHomeStudentSearch();drawWheel("wheel");drawWheel("homeWheel")}
+document.addEventListener("click",e=>{let b=e.target.closest("button");if(!b)return;if(b.dataset.tab){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));document.querySelectorAll("nav button").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.tab).classList.add("on");b.classList.add("on");return}if(b.dataset.class){data.current=b.dataset.class;save();syncStudentsFromSupabase();return}if(b.dataset.wscore){awardWheel(+b.dataset.wscore,b.dataset.wreason)}})
+
+
+document.getElementById("homeStudentSearch").addEventListener("input",renderHomeStudentSearch);
+document.getElementById("homeStudentSearchResults").addEventListener("click",function(e){
+  var b=e.target.closest("[data-hstudent]");
+  if(!b)return;
+  scoreStudentFromHome(b.dataset.hstudent,b.dataset.score,b.dataset.reason);
+});
+
+document.getElementById("studentSearch").addEventListener("input",renderStudentSearch);
+document.getElementById("studentSearchResults").addEventListener("click",function(e){
+  var b=e.target.closest("[data-search-student]");
+  if(!b)return;
+  var s=C().students.find(function(x){return String(x.id)===String(b.dataset.searchStudent)});
+  if(!s)return;
+  var choice=prompt("اكتب التقييم للطالب "+s.name+"\nصح = 2\nحاول = 1\nإجابة مثالية = 3","صح");
+  if(choice===null)return;
+  choice=choice.trim();
+  var score=choice==="صح"?2:choice==="حاول"?1:choice==="إجابة مثالية"?3:null;
+  if(score===null){alert("اكتب: صح أو حاول أو إجابة مثالية");return;}
+  fetch(SUPABASE_URL+"/rest/v1/rpc/add_student_points_by_id",{
+    method:"POST",
+    headers:{
+      "apikey":SUPABASE_KEY,
+      "Authorization":"Bearer "+SUPABASE_KEY,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      p_student_id:Number(s.id),
+      p_points:Number(score),
+      p_reason:choice
+    })
+  }).then(function(r){
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return r.text();
+  }).then(function(){
+    return syncStudentsFromSupabase();
+  }).then(function(){
+    document.getElementById("studentSearch").value="";
+    renderStudentSearch();
+  }).catch(function(){
+    alert("تعذر تسجيل النقاط");
+  });
+});
+
+document.getElementById("saveBankQuestion").onclick=function(){
+  let t=document.getElementById("bankQuestionText").value.trim(),
+      A=document.getElementById("optA").value.trim(),
+      B=document.getElementById("optB").value.trim(),
+      Cc=document.getElementById("optC").value.trim(),
+      D=document.getElementById("optD").value.trim();
+  if(!t||!A||!B||!Cc||!D){alert("اكتب السؤال والخيارات الأربعة");return}
+  questionBanks[currentGradeKey()].push({
+    text:t,A:A,B:B,C:Cc,D:D,
+    correct:document.getElementById("correctOpt").value,
+    image:pendingQuestionImage||""
+  });
+  try{
+    saveQuestionBanks();
+  }catch(e){
+    questionBanks[currentGradeKey()].pop();
+    alert("تعذر حفظ السؤال. جرّب صورة أصغر.");
+    return;
+  }
+  ["bankQuestionText","optA","optB","optC","optD"].forEach(id=>document.getElementById(id).value="");
+  clearPendingQuestionImage();
+  renderQuestionBank();
+};
+
+document.getElementById("questionImageInput").addEventListener("change",async function(){
+  var f=this.files&&this.files[0];
+  if(!f){clearPendingQuestionImage();return}
+  if(!f.type.startsWith("image/")){alert("اختر ملف صورة فقط");clearPendingQuestionImage();return}
+  try{
+    pendingQuestionImage=await compressQuestionImage(f);
+    document.getElementById("questionImagePreview").src=pendingQuestionImage;
+    document.getElementById("questionImagePreviewWrap").style.display="block";
+  }catch(e){
+    console.error(e);
+    alert("تعذر تجهيز الصورة");
+    clearPendingQuestionImage();
+  }
+});
+document.getElementById("removeQuestionImage").onclick=function(){clearPendingQuestionImage()};
+
+document.getElementById("questionBankList").onclick=function(e){let u=e.target.closest("[data-use-q]"),d=e.target.closest("[data-del-q]");if(u){showLiveQuestion(+u.dataset.useQ);return}if(d){questionBanks[currentGradeKey()].splice(+d.dataset.delQ,1);saveQuestionBanks();renderQuestionBank()}};
+document.getElementById("liveQuestion").onclick=function(e){let b=e.target.closest("[data-answer]");if(!b)return;document.querySelectorAll("#liveQuestion .qopt").forEach(x=>{x.classList.remove("correct","wrong");if(x.dataset.answer===x.dataset.correct)x.classList.add("correct")});if(b.dataset.answer!==b.dataset.correct)b.classList.add("wrong")};
+document.getElementById("addNewStudent").onclick=async function(){
+  var inp=document.getElementById("newStudentName");
+  var name=(inp.value||"").trim();
+  if(!name){alert("اكتب اسم الطالب أولًا");return;}
+  if(C().students.some(function(s){return String(s.name).trim()===name;})){alert("الطالب موجود بالفعل في هذه الشعبة");return;}
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/students",{
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Content-Type":"application/json",
+        "Prefer":"return=representation"
+      },
+      body:JSON.stringify({name:name,class_id:CLASS_DB_IDS[C().id],points:0})
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    inp.value="";
+    await syncStudentsFromSupabase();
+    alert("تمت إضافة الطالب إلى "+C().name);
+  }catch(err){
+    console.error(err);
+    alert("تعذر إضافة الطالب. تأكد من صلاحية الإضافة في Supabase.");
+  }
+};
+document.getElementById("goal").oninput=function(){C().goal=this.value;localStorage.setItem(KEY,JSON.stringify(data))};document.getElementById("questionText").oninput=function(){data.globalQuestion=this.value;localStorage.setItem(KEY,JSON.stringify(data))};
+document.getElementById("goQuestion").onclick=function(){document.querySelector('[data-tab="question"]').click()};
+
+
+function drawWheel(id){
+  let cv=document.getElementById(id);
+  if(!cv) return;
+  let x=cv.getContext("2d"), ss=C().students, w=cv.width, r=w/2-6;
+  x.clearRect(0,0,w,w);
+  if(!ss.length){
+    x.beginPath();x.arc(w/2,w/2,r,0,Math.PI*2);
+    x.fillStyle="#edf4ff";x.fill();
+    x.fillStyle="#1769e8";x.textAlign="center";x.font="bold 17px Arial";
+    x.fillText("أضف الطلاب أولًا",w/2,w/2);
+    return;
+  }
+  let step=Math.PI*2/ss.length;
+  ss.forEach((s,i)=>{
+    let a=angle+i*step;
+    x.beginPath();x.moveTo(w/2,w/2);x.arc(w/2,w/2,r,a,a+step);x.closePath();
+    x.fillStyle=i%2?"#edf4ff":"#dbeafe";x.fill();x.strokeStyle="#fff";x.stroke();
+    x.save();x.translate(w/2,w/2);x.rotate(a+step/2);
+    x.fillStyle="#0756c9";x.textAlign="right";x.font="bold "+(ss.length>25?9:12)+"px Arial";
+    x.fillText(s.name.slice(0,16),r-12,3);x.restore();
+  });
+  x.beginPath();x.arc(w/2,w/2,38,0,Math.PI*2);x.fillStyle="#0867e9";x.fill();
+  x.fillStyle="#fff";x.textAlign="center";x.font="bold 15px Arial";x.fillText("ابدأ",w/2,w/2+5);
+}
+document.getElementById("spin").onclick=function(){let ss=C().students;if(!ss.length||spinning)return;let av=ss.filter(s=>!C().used.includes(String(s.id)));if(!av.length){C().used=[];av=ss.slice()}let p=av[Math.floor(Math.random()*av.length)];C().used.push(String(p.id));localStorage.setItem(KEY,JSON.stringify(data));let idx=ss.indexOf(p),step=Math.PI*2/ss.length,target=-Math.PI/2-(idx+.5)*step,start=angle,delta=target-start;while(delta<Math.PI*2*5)delta+=Math.PI*2;spinning=true;document.getElementById("wheelGrade").classList.add("hidden");document.getElementById("noWinner").classList.remove("hidden");let st=performance.now();function go(now){let t=Math.min(1,(now-st)/3500),e=1-Math.pow(1-t,4);angle=start+delta*e;drawWheel("wheel");if(t<1)requestAnimationFrame(go);else{spinning=false;wheelSelected=p.id;document.getElementById("winner").textContent="🎉 الطالب المختار: "+p.name;document.getElementById("winner").classList.remove("hidden");document.getElementById("wheelGrade").classList.remove("hidden");document.getElementById("noWinner").classList.add("hidden")}}requestAnimationFrame(go)};
+function awardWheel(score,reason){if(!wheelSelected)return;let s=C().students.find(x=>String(x.id)===String(wheelSelected));s.points+=score;C().logs.push({studentId:s.id,name:s.name,score,reason,day:day()});document.getElementById("winner").textContent="✅ تم تسجيل "+reason+" لـ "+s.name;document.getElementById("wheelGrade").classList.add("hidden");wheelSelected=null;save()}
+
+
+function renderHomeStudentSearch(){
+  var box=document.getElementById("homeStudentSearchResults");
+  var input=document.getElementById("homeStudentSearch");
+  if(!box||!input)return;
+  var q=(input.value||"").trim().toLowerCase();
+  if(!q){box.innerHTML="";return;}
+  var hits=C().students.slice().sort(function(a,b){
+    return String(a.name).localeCompare(String(b.name),"ar");
+  }).filter(function(s){
+    return String(s.name).toLowerCase().startsWith(q);
+  });
+  box.innerHTML=hits.length?hits.map(function(s){
+    return '<div class="search-hit" style="gap:10px">'
+      +'<b style="flex:1">'+s.name+'</b>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="-2" data-reason="خصم درجتين" style="background:#ffe1e1;color:#b42318;border:0;border-radius:9px;padding:8px 10px;font-weight:900">−2</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="-1" data-reason="خصم درجة" style="background:#fff0f0;color:#c62828;border:0;border-radius:9px;padding:8px 10px;font-weight:900">−1</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="1" data-reason="حاول" style="background:#fff4cc;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+1 حاول</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="2" data-reason="صح" style="background:#dff7df;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+2 صح</button>'
+      +'<button class="quick-score" data-hstudent="'+s.id+'" data-score="3" data-reason="إجابة مثالية" style="background:#e9e3ff;border:0;border-radius:9px;padding:8px 10px;font-weight:800">+3 مثالية</button>'
+      +'</div>';
+  }).join(""):'<div class="empty" style="padding:12px">لا يوجد اسم يبدأ بهذه الحروف في الشعبة الحالية</div>';
+}
+
+async function scoreStudentFromHome(id,score,reason){
+  var s=C().students.find(function(x){return String(x.id)===String(id)});
+  if(!s)return;
+  if(String(s.id).indexOf("local-")===0){
+    alert("هذا الطالب لم يُرفع إلى Supabase بعد. نفّذ ملف SQL المرفق مرة واحدة أولًا.");
+    return;
+  }
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/add_student_points_by_id",{
+      method:"POST",
+      headers:{
+        "apikey":SUPABASE_KEY,
+        "Authorization":"Bearer "+SUPABASE_KEY,
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        p_student_id:Number(s.id),
+        p_points:Number(score),
+        p_reason:reason
+      })
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    await syncStudentsFromSupabase();
+    document.getElementById("homeStudentSearch").value="";
+    renderHomeStudentSearch();
+  }catch(err){
+    console.error(err);
+    alert("تعذر تسجيل النقاط في Supabase");
+  }
+}
+
+function renderStudentSearch(){
+  var box=document.getElementById("studentSearchResults");
+  var input=document.getElementById("studentSearch");
+  if(!box||!input)return;
+  var q=(input.value||"").trim().toLowerCase();
+  var students=C().students.slice().sort(function(a,b){
+    return String(a.name).localeCompare(String(b.name),"ar");
+  });
+  if(!q){
+    box.innerHTML='<div class="empty" style="padding:30px 10px">اكتب أول حرفين أو أكثر من اسم الطالب</div>';
+    return;
+  }
+  var hits=students.filter(function(s){
+    var n=String(s.name).toLowerCase();
+    return n.startsWith(q) || n.includes(q);
+  });
+  box.innerHTML=hits.length?hits.map(function(s){
+    return '<button class="search-hit" data-search-student="'+s.id+'"><b>'+s.name+'</b><span>'+s.points+' ⭐</span></button>';
+  }).join(""):'<div class="empty" style="padding:30px 10px">لا يوجد طالب مطابق في هذه الشعبة</div>';
+}
+
+function report(){
+ let c=C(),ls=c.logs.filter(l=>l.day===day()),u=new Set(ls.map(l=>l.studentId)).size;
+ let total=c.students.reduce((a,s)=>a+(+s.points||0),0),sorted=c.students.slice().sort((a,b)=>(+b.points||0)-(+a.points||0));
+ let leader=sorted[0],cn=document.getElementById("reportClass");if(cn)cn.textContent=c.name+" • محدث تلقائيًا";
+ document.getElementById("reportGrid").innerHTML=
+ '<div class="reportbox"><b>'+c.students.length+'</b>عدد الطلاب</div>'+
+ '<div class="reportbox"><b>'+u+'/'+c.students.length+'</b>شاركوا اليوم</div>'+
+ '<div class="reportbox"><b>'+ls.length+'</b>مشاركات اليوم</div>'+
+ '<div class="reportbox"><b>'+ls.reduce((a,l)=>a+(+l.score||0),0)+'</b>نقاط اليوم</div>'+
+ '<div class="reportbox"><b>'+total+'</b>إجمالي النقاط</div>'+
+ '<div class="reportbox"><b>'+(leader?leader.name:"—")+'</b>المتصدر</div>';
+ let rr=document.getElementById("reportRanking");if(rr)rr.innerHTML=sorted.length?'<table class="reporttable"><tr><th>الترتيب</th><th>الطالب</th><th>النقاط</th></tr>'+sorted.map((s,i)=>'<tr><td>'+(i<3?["🥇","🥈","🥉"][i]:i+1)+'</td><td>'+s.name+'</td><td>'+s.points+' ⭐</td></tr>').join("")+'</table>':'<div class="empty">لا يوجد طلاب</div>';
+ let rl=document.getElementById("reportLogs");if(rl)rl.innerHTML=c.logs.length?'<table class="reporttable"><tr><th>الطالب</th><th>التقييم</th><th>النقاط</th><th>الوقت</th></tr>'+c.logs.slice().reverse().slice(0,100).map(l=>'<tr><td>'+l.name+'</td><td>'+l.reason+'</td><td>'+(l.score>0?'+':'')+l.score+'</td><td>'+(l.at?new Date(l.at).toLocaleString("ar-OM"):"—")+'</td></tr>').join("")+'</table>':'<div class="empty">لا توجد مشاركات</div>';
+}
+
+document.getElementById("welcomeEnter").addEventListener("click",function(){document.getElementById("welcomeScreen").classList.add("hidden");});
+document.getElementById("aiAnalyze").onclick=function(){let c=C(),s=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("aiText").textContent=s.length?"نجم الفصل حاليًا: "+s[0].name+" ("+s[0].points+" نقطة). استخدم العجلة لإعطاء فرص عادلة لجميع الطلاب.":"أضف الطلاب أولًا ثم ابدأ تسجيل المشاركات."};render();syncStudentsFromSupabase();setInterval(syncStudentsFromSupabase,10000)})();
 </script>
-</body>
-</html>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  var b=document.getElementById("clearRecentV25");
+  if(!b)return;
+  b.addEventListener("click",async function(){
+    if(!confirm("مسح آخر المشاركات للشعبة الحالية فقط؟\nلن تتغير نقاط الطلاب."))return;
+    try{
+      var classId=CLASS_DB_IDS[C().id]||1;
+      var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/clear_class_participations",{
+        method:"POST",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer "+SUPABASE_KEY,
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({p_class_id:classId})
+      });
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      await syncStudentsFromSupabase();
+    }catch(e){
+      console.error(e);
+      alert("تعذر مسح آخر المشاركات");
+    }
+  });
+});
+</script>
+
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v35</div>
+</body></html>
