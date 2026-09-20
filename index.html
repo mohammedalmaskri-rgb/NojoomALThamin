@@ -148,17 +148,33 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 @media(max-width:900px){.science-lineart-v35{display:none}}
 </style>
 
+
+<style>
+/* V36 additions */
+.toolbar-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.toolbar-row>div{flex:1;min-width:170px}
+select.media-select{width:100%;padding:13px;border:1px solid #d7e0ec;border-radius:13px;font:inherit;background:#fff}
+.attendance-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.attendance-student{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #dce8f7;border-radius:13px;padding:12px;background:#fff}
+.attendance-student.absent{background:#fff1f1;border-color:#f2b7b7}.attendance-student label{display:flex;align-items:center;gap:8px;font-weight:800;cursor:pointer}.attendance-student input{width:22px;height:22px}
+.danger-btn{border:1px solid #f0bcbc;background:#fff2f2;color:#b42318;border-radius:9px;padding:7px 10px;font-weight:900;cursor:pointer}
+.student-actions{display:flex;align-items:center;gap:8px}.history-student{width:100%;text-align:right;border:1px solid #dce8f7;background:#fff;border-radius:12px;padding:12px;margin:6px 0;font:inherit;font-weight:800;cursor:pointer}.history-student:hover{background:#f4f8ff}
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.media-preview{min-height:240px;display:grid;place-items:center;background:#f4f8ff;border:1px dashed #9bc0f4;border-radius:16px;overflow:hidden}.media-preview img,.media-preview video{max-width:100%;max-height:460px;border-radius:12px}
+.media-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.media-actions button{flex:1;min-width:150px}
+#mediaModal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:20000;display:none;align-items:center;justify-content:center;padding:25px}#mediaModal.on{display:flex}#mediaModalContent{width:100%;height:100%;display:grid;place-items:center}#mediaModalContent img,#mediaModalContent video{max-width:96vw;max-height:88vh}#mediaModalClose{position:absolute;top:18px;right:18px;width:auto;background:#fff;color:#111;padding:10px 16px;border-radius:12px;border:0;font-weight:900;font-size:18px}
+.absence-details{margin-top:12px;padding:14px;border-radius:13px;background:#f7faff;border:1px solid #dce8f7}.absence-chip{display:inline-block;margin:4px;padding:7px 10px;border-radius:999px;background:#fff0f0;color:#a61b1b;border:1px solid #f0caca;font-weight:800}
+@media(max-width:900px){.attendance-list,.media-grid{grid-template-columns:1fr}}
+</style>
 </head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم التاسع</h1><p> • التميز يبدأ من المشاركة</p><button id="welcomeEnter">دخول التطبيق</button></div></div>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
-<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v35</small></h1><p>🧪  <small>v35</small></p></div>
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36</small></h1><p>🧪  <small>v36</small></p></div>
 <div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b></div></div>
 <div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
 <nav>
-<button class="on" data-tab="home">🏠 &nbsp; الرئيسية</button><button data-tab="questions">❓ &nbsp; الأسئلة</button><button data-tab="question">🎡 &nbsp; السؤال</button><button data-tab="students">👥 &nbsp; الطلاب</button><button data-tab="rank">🏆 &nbsp; الترتيب</button><button data-tab="report">📊 &nbsp; التقرير</button><button data-tab="ai">🤖 &nbsp; AI</button>
+<button class="on" data-tab="home">🏠 &nbsp; الرئيسية</button><button data-tab="attendance">📋 &nbsp; الحضور</button><button data-tab="media">🎬 &nbsp; الوسائط</button><button data-tab="questions">❓ &nbsp; الأسئلة</button><button data-tab="question">🎡 &nbsp; السؤال</button><button data-tab="students">👥 &nbsp; الطلاب</button><button data-tab="rank">🏆 &nbsp; الترتيب</button><button data-tab="report">📊 &nbsp; التقرير</button><button data-tab="ai">🤖 &nbsp; AI</button>
 </nav><div class="science-bottom">🔬 🌱</div></aside>
 <main class="main">
-<div class="hero"><div class="heroTitle"><div class="cup">🏆</div><div><h2>نجوم التاسع</h2><p>🧪 </p><small>v35</small></div></div>
+<div class="hero"><div class="heroTitle"><div class="cup">🏆</div><div><h2>نجوم التاسع</h2><p>🧪 </p><small>v36</small></div></div>
 <div class="metric"><b id="heroStudents">0</b><span>👥 الطلاب</span></div><div class="metric"><b id="heroToday">0</b><span>⭐ نقاط اليوم</span></div><div class="metric"><b id="heroTotal">0</b><span>🎯 الإجمالي</span></div></div>
 
 <section id="home" class="tab on">
@@ -227,6 +243,49 @@ if (!Element.prototype.closest) Element.prototype.closest=function(s){var el=thi
 <div class="dashboard" style="grid-template-columns:1.2fr .8fr"><div class="card"><div class="title">🎡 عجلة الطلاب</div><canvas id="wheel" width="430" height="430"></canvas><button id="spin" class="primary">🎯 ابدأ الدوران</button><div id="winner" class="winner hidden"></div></div>
 <div class="card"><div class="title">⭐ تقييم الطالب المختار</div><div id="wheelGrade" class="hidden"><button class="score" style="background:#ffe1e1;border-color:#ffc5c5;color:#b42318" data-wscore="-2" data-wreason="خصم درجتين">🔻 خصم −2</button><button class="score" style="background:#fff0f0;border-color:#ffd2d2;color:#c62828" data-wscore="-1" data-wreason="خصم درجة">🔻 خصم −1</button><button class="score green" data-wscore="2" data-wreason="صح">✅ صح +2</button><button class="score yellow" data-wscore="1" data-wreason="حاول">🟡 حاول +1</button><button class="score blue" data-wscore="3" data-wreason="إجابة مثالية">⭐ إجابة مثالية +3</button></div><div id="noWinner" class="empty">شغّل العجلة أولًا لاختيار طالب</div></div></div></section>
 
+
+<section id="attendance" class="tab">
+  <div class="card">
+    <div class="title">📋 الحضور والغياب</div>
+    <div class="toolbar-row">
+      <div><label><b>الشعبة</b></label><select id="attendanceClass" class="media-select"></select></div>
+      <div><label><b>الحصة</b></label><select id="attendancePeriod" class="media-select"><option value="1">الحصة الأولى</option><option value="2">الحصة الثانية</option><option value="3">الحصة الثالثة</option><option value="4">الحصة الرابعة</option><option value="5">الحصة الخامسة</option><option value="6">الحصة السادسة</option><option value="7">الحصة السابعة</option></select></div>
+      <div><label><b>التاريخ</b></label><input id="attendanceDate" type="date"></div>
+    </div>
+    <div class="muted" style="margin-top:10px">ضع علامة فقط أمام الطالب الغائب ثم اضغط حفظ.</div>
+    <div id="attendanceList" class="attendance-list"></div>
+    <button id="saveAttendance" class="primary" style="margin-top:14px">💾 حفظ الحضور</button>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="title">📊 سجل غياب الطلاب</div>
+    <div class="muted">اضغط اسم الطالب لعرض كل أيام وحصص غيابه.</div>
+    <div id="absenceStudentList" style="margin-top:10px"></div>
+    <div id="absenceDetails"></div>
+  </div>
+</section>
+
+<section id="media" class="tab">
+  <div class="media-grid">
+    <div class="card">
+      <div class="title">🖼️ صورة للعرض</div>
+      <input id="mediaImageInput" type="file" accept="image/*">
+      <div id="mediaImagePreview" class="media-preview" style="margin-top:12px"><div class="empty">اختر صورة من الجهاز</div></div>
+      <div class="media-actions"><button id="showImageFullscreen" class="primary">📺 عرض للطلاب</button><button id="clearImageMedia" class="danger-btn">🗑️ مسح</button></div>
+    </div>
+    <div class="card">
+      <div class="title">🎬 فيديو من الجهاز</div>
+      <input id="mediaVideoInput" type="file" accept="video/*">
+      <div id="mediaVideoPreview" class="media-preview" style="margin-top:12px"><div class="empty">اختر فيديو من الجهاز</div></div>
+      <div class="media-actions"><button id="showVideoFullscreen" class="primary">📺 عرض للطلاب</button><button id="clearVideoMedia" class="danger-btn">🗑️ مسح</button></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="title">🔗 رابط YouTube</div>
+    <input id="youtubeUrl" placeholder="الصق رابط YouTube هنا..." inputmode="url">
+    <button id="openYoutube" class="primary" style="margin-top:10px">▶️ فتح الفيديو في YouTube</button>
+  </div>
+</section>
+
 <section id="students" class="tab">
 <div class="formgrid">
   <div class="card">
@@ -269,8 +328,10 @@ if(!data)data={current:"c2",globalQuestion:"",classes:[
 {id:"c4",name:"الصف التاسع 3",students:[],logs:[],used:[],goal:""},
 {id:"c5",name:"الصف التاسع 4",students:[],logs:[],used:[],goal:""},
 {id:"c6",name:"الصف التاسع 5",students:[],logs:[],used:[],goal:""},
-{id:"c7",name:"الصف التاسع 6",students:[],logs:[],used:[],goal:""}]};
-var CLASS_DB_IDS={"c1":1,"c2":2,"c3":3,"c4":4,"c5":5,"c6":6,"c7":7};
+{id:"c7",name:"الصف التاسع 6",students:[],logs:[],used:[],goal:""},
+{id:"c8",name:"الصف التاسع 7",students:[],logs:[],used:[],goal:""}]};
+var CLASS_DB_IDS={"c2":2,"c3":3,"c4":4,"c5":5,"c6":6,"c7":7,"c8":8};
+if(!data.classes.some(function(c){return c.id==="c8";}))data.classes.push({id:"c8",name:"الصف التاسع 7",students:[],logs:[],used:[],goal:""});
 async function syncStudentsFromSupabase(){
  try{
   var baseHeaders={
@@ -369,9 +430,9 @@ function showLiveQuestion(i){let q=(questionBanks[currentGradeKey()]||[])[i],b=d
 var wheelSelected=null,angle=0,spinning=false;function C(){return data.classes.find(x=>x.id===data.current)||data.classes[0]}function day(){let d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
 function classButtons(){return data.classes.map(x=>'<button class="chip '+(x.id===data.current?'on':'')+'" data-class="'+x.id+'">'+x.name+' ('+x.students.length+')</button>').join("")}
 function render(){let c=C(),today=c.logs.filter(l=>l.day===day()),tot=c.students.reduce((a,s)=>a+s.points,0);["sideStudents","heroStudents"].forEach(id=>document.getElementById(id).textContent=c.students.length);document.getElementById("heroToday").textContent=today.reduce((a,l)=>a+l.score,0);document.getElementById("heroTotal").textContent=tot;document.getElementById("classes").innerHTML=classButtons();document.getElementById("qClasses").innerHTML=classButtons();document.getElementById("goal").value=c.goal||"";document.getElementById("questionText").value=data.globalQuestion||"";
-document.getElementById("studentList").innerHTML=c.students.map(s=>'<div class="row"><b>'+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join("")||'<div class="empty">لا يوجد طلاب بعد</div>';let sorted=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("rankList").innerHTML=sorted.length?sorted.map((s,i)=>'<div class="row" style="'+(i<3?'border-width:2px;':'')+'"><b style="font-size:'+(i<3?'18px':'15px')+'">'+(i<3?["🥇","🥈","🥉"][i]:(i+1)+".")+' '+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join(""):'<div class="empty">لا يوجد طلاب في هذا الفصل بعد</div>';
+document.getElementById("studentList").innerHTML=c.students.map(s=>'<div class="row"><b>'+s.name+'</b><span class="student-actions"><span class="pts">'+s.points+' ⭐</span><button class="danger-btn" data-delete-student="'+s.id+'" data-delete-name="'+String(s.name).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">🗑️ حذف</button></span></div>').join("")||'<div class="empty">لا يوجد طلاب بعد</div>';let sorted=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("rankList").innerHTML=sorted.length?sorted.map((s,i)=>'<div class="row" style="'+(i<3?'border-width:2px;':'')+'"><b style="font-size:'+(i<3?'18px':'15px')+'">'+(i<3?["🥇","🥈","🥉"][i]:(i+1)+".")+' '+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join(""):'<div class="empty">لا يوجد طلاب في هذا الفصل بعد</div>';
 document.getElementById("recent").innerHTML=today.length?today.slice(-6).reverse().map(l=>'<div class="row"><b>'+l.name+'</b><span>'+l.reason+' <b class="pts">'+(l.score>0?"+":"")+l.score+'</b></span></div>').join(""):'<div class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div>';report();renderQuestionBank();renderStudentSearch();renderHomeStudentSearch();drawWheel("wheel");drawWheel("homeWheel")}
-document.addEventListener("click",e=>{let b=e.target.closest("button");if(!b)return;if(b.dataset.tab){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));document.querySelectorAll("nav button").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.tab).classList.add("on");b.classList.add("on");return}if(b.dataset.class){data.current=b.dataset.class;save();syncStudentsFromSupabase();return}if(b.dataset.wscore){awardWheel(+b.dataset.wscore,b.dataset.wreason)}})
+document.addEventListener("click",e=>{let b=e.target.closest("button");if(!b)return;if(b.dataset.tab){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));document.querySelectorAll("nav button").forEach(x=>x.classList.remove("on"));document.getElementById(b.dataset.tab).classList.add("on");b.classList.add("on");if(b.dataset.tab==="attendance"){fillAttendanceClasses();document.getElementById("attendanceClass").value=data.current;loadAttendance();}return}if(b.dataset.class){data.current=b.dataset.class;save();syncStudentsFromSupabase();return}if(b.dataset.wscore){awardWheel(+b.dataset.wscore,b.dataset.wreason)}})
 
 
 document.getElementById("homeStudentSearch").addEventListener("input",renderHomeStudentSearch);
@@ -483,6 +544,100 @@ document.getElementById("addNewStudent").onclick=async function(){
     alert("تعذر إضافة الطالب. حاول مرة أخرى.");
   }
 };
+
+// V36: حذف طالب
+async function deleteStudentById(id,name){
+  if(!confirm("هل تريد حذف الطالب:\n"+name+"؟\nسيتم حذف سجل مشاركاته وغيابه أيضًا."))return;
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/delete_student_by_id",{
+      method:"POST",headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({p_student_id:Number(id)})
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    await syncStudentsFromSupabase();
+    if(document.getElementById("attendance").classList.contains("on"))await loadAttendance();
+  }catch(e){console.error(e);alert("تعذر حذف الطالب. تأكد من تشغيل SQL الخاص بـ V36 مرة واحدة.");}
+}
+document.getElementById("studentList").addEventListener("click",function(e){
+  var b=e.target.closest("[data-delete-student]");if(!b)return;
+  deleteStudentById(b.dataset.deleteStudent,b.dataset.deleteName||"الطالب");
+});
+
+// V36: الحضور والغياب
+var absenceHistory=[];
+function attendanceToday(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function fillAttendanceClasses(){
+  var sel=document.getElementById("attendanceClass");
+  sel.innerHTML=data.classes.map(function(c){return '<option value="'+c.id+'">'+c.name+'</option>'}).join("");
+  sel.value=data.current;
+}
+async function fetchAbsenceHistory(classId){
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/get_absence_history",{
+      method:"POST",headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({p_class_id:CLASS_DB_IDS[classId]})
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    absenceHistory=await r.json();
+  }catch(e){console.error(e);absenceHistory=[];alert("تعذر تحميل سجل الغياب. تأكد من تشغيل SQL الخاص بـ V36.");}
+}
+async function loadAttendance(){
+  var classId=document.getElementById("attendanceClass").value||data.current;
+  var cls=data.classes.find(function(c){return c.id===classId})||C();
+  var date=document.getElementById("attendanceDate").value||attendanceToday();
+  var period=Number(document.getElementById("attendancePeriod").value||1);
+  await fetchAbsenceHistory(classId);
+  var absentIds=new Set(absenceHistory.filter(function(a){return String(a.attendance_date)===date&&Number(a.period)===period}).map(function(a){return String(a.student_id)}));
+  var box=document.getElementById("attendanceList");
+  box.innerHTML=cls.students.length?cls.students.slice().sort(function(a,b){return String(a.name).localeCompare(String(b.name),"ar")}).map(function(s){var checked=absentIds.has(String(s.id));return '<div class="attendance-student '+(checked?'absent':'')+'"><b>'+s.name+'</b><label><input type="checkbox" data-absent-id="'+s.id+'" '+(checked?'checked':'')+'> غائب</label></div>'}).join(""):'<div class="empty">لا يوجد طلاب في هذه الشعبة</div>';
+  box.querySelectorAll('input[type="checkbox"]').forEach(function(cb){cb.addEventListener("change",function(){cb.closest(".attendance-student").classList.toggle("absent",cb.checked)})});
+  renderAbsenceStudents(cls);
+}
+function renderAbsenceStudents(cls){
+  var box=document.getElementById("absenceStudentList");
+  box.innerHTML=cls.students.length?cls.students.slice().sort(function(a,b){return String(a.name).localeCompare(String(b.name),"ar")}).map(function(s){var count=absenceHistory.filter(function(a){return String(a.student_id)===String(s.id)}).length;return '<button class="history-student" data-history-student="'+s.id+'" data-history-name="'+String(s.name).replace(/&/g,'&amp;').replace(/\"/g,'&quot;')+'">'+s.name+' <span class="pts">('+count+' غياب)</span></button>'}).join(""):'<div class="empty">لا يوجد طلاب</div>';
+  document.getElementById("absenceDetails").innerHTML="";
+}
+document.getElementById("attendanceClass").addEventListener("change",async function(){data.current=this.value;localStorage.setItem(KEY,JSON.stringify(data));await syncStudentsFromSupabase();await loadAttendance()});
+document.getElementById("attendancePeriod").addEventListener("change",loadAttendance);
+document.getElementById("attendanceDate").addEventListener("change",loadAttendance);
+document.getElementById("saveAttendance").addEventListener("click",async function(){
+  var classId=document.getElementById("attendanceClass").value;
+  var date=document.getElementById("attendanceDate").value||attendanceToday();
+  var period=Number(document.getElementById("attendancePeriod").value||1);
+  var ids=Array.from(document.querySelectorAll("#attendanceList [data-absent-id]:checked")).map(function(x){return Number(x.dataset.absentId)});
+  try{
+    var r=await fetch(SUPABASE_URL+"/rest/v1/rpc/save_class_absences",{
+      method:"POST",headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({p_class_id:CLASS_DB_IDS[classId],p_attendance_date:date,p_period:period,p_student_ids:ids})
+    });
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    await loadAttendance();alert("تم حفظ الحضور بنجاح ✅");
+  }catch(e){console.error(e);alert("تعذر حفظ الحضور. تأكد من تشغيل SQL الخاص بـ V36 مرة واحدة.");}
+});
+document.getElementById("absenceStudentList").addEventListener("click",function(e){
+  var b=e.target.closest("[data-history-student]");if(!b)return;
+  var rows=absenceHistory.filter(function(a){return String(a.student_id)===String(b.dataset.historyStudent)});
+  var d=document.getElementById("absenceDetails");
+  d.className="absence-details";
+  d.innerHTML='<b>'+b.dataset.historyName+'</b><div style="margin-top:8px">'+(rows.length?rows.map(function(a){return '<span class="absence-chip">📅 '+a.attendance_date+' • الحصة '+a.period+'</span>'}).join(""):'لا يوجد غياب مسجل لهذا الطالب ✅')+'</div>';
+});
+
+// V36: الصور والفيديو وYouTube
+var imageObjectUrl="",videoObjectUrl="";
+function revokeUrl(u){if(u)try{URL.revokeObjectURL(u)}catch(e){}}
+document.getElementById("mediaImageInput").addEventListener("change",function(){var f=this.files&&this.files[0];if(!f)return;revokeUrl(imageObjectUrl);imageObjectUrl=URL.createObjectURL(f);document.getElementById("mediaImagePreview").innerHTML='<img src="'+imageObjectUrl+'" alt="صورة العرض">'});
+document.getElementById("mediaVideoInput").addEventListener("change",function(){var f=this.files&&this.files[0];if(!f)return;revokeUrl(videoObjectUrl);videoObjectUrl=URL.createObjectURL(f);document.getElementById("mediaVideoPreview").innerHTML='<video src="'+videoObjectUrl+'" controls playsinline></video>'});
+function showMediaFullscreen(type,url){if(!url){alert(type==="image"?"اختر صورة أولًا":"اختر فيديو أولًا");return}var c=document.getElementById("mediaModalContent");c.innerHTML=type==="image"?'<img src="'+url+'" alt="عرض للطلاب">':'<video src="'+url+'" controls autoplay playsinline></video>';document.getElementById("mediaModal").classList.add("on")}
+document.getElementById("showImageFullscreen").onclick=function(){showMediaFullscreen("image",imageObjectUrl)};
+document.getElementById("showVideoFullscreen").onclick=function(){showMediaFullscreen("video",videoObjectUrl)};
+document.getElementById("clearImageMedia").onclick=function(){revokeUrl(imageObjectUrl);imageObjectUrl="";document.getElementById("mediaImageInput").value="";document.getElementById("mediaImagePreview").innerHTML='<div class="empty">اختر صورة من الجهاز</div>'};
+document.getElementById("clearVideoMedia").onclick=function(){revokeUrl(videoObjectUrl);videoObjectUrl="";document.getElementById("mediaVideoInput").value="";document.getElementById("mediaVideoPreview").innerHTML='<div class="empty">اختر فيديو من الجهاز</div>'};
+document.getElementById("mediaModalClose").onclick=function(){document.getElementById("mediaModal").classList.remove("on");document.getElementById("mediaModalContent").innerHTML=""};
+document.getElementById("openYoutube").onclick=function(){var u=(document.getElementById("youtubeUrl").value||"").trim();if(!u){alert("الصق رابط YouTube أولًا");return}try{var x=new URL(u);if(!/(^|\.)youtube\.com$|(^|\.)youtu\.be$/.test(x.hostname)){alert("الرابط ليس رابط YouTube صحيح");return}window.open(u,"_blank")}catch(e){alert("الرابط غير صحيح")}};
+
+fillAttendanceClasses();document.getElementById("attendanceDate").value=attendanceToday();
+
 document.getElementById("goal").oninput=function(){C().goal=this.value;localStorage.setItem(KEY,JSON.stringify(data))};document.getElementById("questionText").oninput=function(){data.globalQuestion=this.value;localStorage.setItem(KEY,JSON.stringify(data))};
 document.getElementById("goQuestion").onclick=function(){document.querySelector('[data-tab="question"]').click()};
 
@@ -635,5 +790,7 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 </script>
 
-<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v35</div>
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36</div>
+
+<div id="mediaModal"><button id="mediaModalClose">✕ إغلاق</button><div id="mediaModalContent"></div></div>
 </body></html>
