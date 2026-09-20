@@ -164,7 +164,7 @@ select.media-select{width:100%;padding:13px;border:1px solid #d7e0ec;border-radi
 .absence-details{margin-top:12px;padding:14px;border-radius:13px;background:#f7faff;border:1px solid #dce8f7}.absence-chip{display:inline-block;margin:4px;padding:7px 10px;border-radius:999px;background:#fff0f0;color:#a61b1b;border:1px solid #f0caca;font-weight:800}
 @media(max-width:900px){.attendance-list,.media-grid{grid-template-columns:1fr}}
 </style>
-</head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم التاسع</h1><p> • التميز يبدأ من المشاركة</p><button id="welcomeEnter">دخول التطبيق</button></div></div>
+</head><body><div id="welcomeScreen"><div class="welcome-card"><div class="welcome-icons">🔬 🧬 ⚛️</div><h2>أهلًا أستاذ محمد 👋</h2><h1>⭐ نجوم التاسع</h1><p> • التميز يبدأ من المشاركة</p><button id="welcomeEnter" type="button" onclick="document.getElementById('welcomeScreen').classList.add('hidden')">دخول التطبيق</button></div></div>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
 <aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36</small></h1><p>🧪  <small>v36</small></p></div>
@@ -760,7 +760,7 @@ function report(){
  let rl=document.getElementById("reportLogs");if(rl)rl.innerHTML=c.logs.length?'<table class="reporttable"><tr><th>الطالب</th><th>التقييم</th><th>النقاط</th><th>الوقت</th></tr>'+c.logs.slice().reverse().slice(0,100).map(l=>'<tr><td>'+l.name+'</td><td>'+l.reason+'</td><td>'+(l.score>0?'+':'')+l.score+'</td><td>'+(l.at?new Date(l.at).toLocaleString("ar-OM"):"—")+'</td></tr>').join("")+'</table>':'<div class="empty">لا توجد مشاركات</div>';
 }
 
-document.getElementById("welcomeEnter").addEventListener("click",function(){document.getElementById("welcomeScreen").classList.add("hidden");});
+
 document.getElementById("aiAnalyze").onclick=function(){let c=C(),s=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("aiText").textContent=s.length?"نجم الفصل حاليًا: "+s[0].name+" ("+s[0].points+" نقطة). استخدم العجلة لإعطاء فرص عادلة لجميع الطلاب.":"أضف الطلاب أولًا ثم ابدأ تسجيل المشاركات."};render();syncStudentsFromSupabase();setInterval(syncStudentsFromSupabase,10000)})();
 </script>
 <script>
