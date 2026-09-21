@@ -167,7 +167,7 @@ select.media-select{width:100%;padding:13px;border:1px solid #d7e0ec;border-radi
 </head><body>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
-<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36</small></h1><p>🧪  <small>v36</small></p></div>
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36.2</small></h1><p>🧪  <small>v36</small></p></div>
 <div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b></div></div>
 <div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
 <nav>
@@ -213,7 +213,7 @@ select.media-select{width:100%;padding:13px;border:1px solid #d7e0ec;border-radi
   <div id="homeStudentSearchResults" style="margin-top:10px"></div>
 </div></div>
 <div class="dashboard">
-<div class="card tall"><div class="title">👥 عجلة الطلاب</div><canvas id="homeWheel" width="340" height="340"></canvas><button class="primary" id="goQuestion">⚡ تسجيل مشاركة سريع</button><div style="text-align:center;color:#8290a4;margin-top:12px">اكتب اسم الطالب بسرعة ثم اختر التقييم</div></div>
+<div class="card tall"><div class="title">👥 عجلة الطلاب</div><canvas id="homeWheel" width="340" height="340"></canvas><button class="primary" id="homeSpin">🎯 ابدأ الدوران</button><div id="homeWinner" class="winner hidden"></div><button class="primary" id="goQuestion" style="margin-top:10px">⚡ تسجيل مشاركة سريع</button><div style="text-align:center;color:#8290a4;margin-top:12px">العجلة تختار طالبًا عشوائيًا بدون تكرار حتى يمر جميع الطلاب</div></div>
 <div class="card tall"><div class="title">💼 أدوات الحصة</div><button class="score green" disabled>✅ صح<br>+2</button><button class="score yellow" disabled>🟡 حاول<br>+1</button><button class="score blue" disabled>⭐ إجابة مثالية<br>+3</button><div style="margin-top:20px;background:#f6f9ff;padding:16px;border-radius:13px;text-align:center">💡 شجّع طلابك واحتفل<br>بكل إنجاز صغير</div></div>
 <div class="card tall"><div class="recent-title-v35"><div class="title">🕘 آخر مشاركات</div><button id="clearRecentV25">🗑️ مسح القائمة</button></div><div id="recent" class="empty"><div class="big">📋🧪</div>لا توجد مشاركات حتى الآن</div></div>
 </div></section>
@@ -427,7 +427,7 @@ function currentGradeKey(){return "grade9"}
 function saveQuestionBanks(){localStorage.setItem(QUESTION_KEY,JSON.stringify(questionBanks))}
 function renderQuestionBank(){let list=document.getElementById("questionBankList"),lab=document.getElementById("questionBankLabel");if(!list||!lab)return;let k=currentGradeKey(),a=questionBanks[k]||[];lab.textContent="بنك أسئلة الصف التاسع";list.innerHTML=a.length?a.map((q,i)=>'<div class="qitem"><b>'+(i+1)+'. '+q.text+'</b>'+(q.image?'<img class="qthumb" src="'+q.image+'" alt="صورة السؤال">':'')+'<div><button data-use-q="'+i+'">عرض</button><button data-del-q="'+i+'">حذف</button></div></div>').join(""):'<div class="empty">لا توجد أسئلة محفوظة لهذا الصف</div>'}
 function showLiveQuestion(i){let q=(questionBanks[currentGradeKey()]||[])[i],b=document.getElementById("liveQuestion");if(!q)return;b.className="";b.innerHTML='<h2>'+q.text+'</h2>'+(q.image?'<img class="qimg" src="'+q.image+'" alt="صورة السؤال">':'')+["A","B","C","D"].map(k=>'<button class="qopt" data-answer="'+k+'" data-correct="'+q.correct+'"><b>'+({A:"أ",B:"ب",C:"ج",D:"د"}[k])+')</b> '+q[k]+'</button>').join("")}
-var wheelSelected=null,angle=0,spinning=false;function C(){return data.classes.find(x=>x.id===data.current)||data.classes[0]}function day(){let d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+var wheelSelected=null,angle=0,homeAngle=0,spinning=false,homeSpinning=false;function C(){return data.classes.find(x=>x.id===data.current)||data.classes[0]}function day(){let d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
 function classButtons(){return data.classes.map(x=>'<button class="chip '+(x.id===data.current?'on':'')+'" data-class="'+x.id+'">'+x.name+' ('+x.students.length+')</button>').join("")}
 function render(){let c=C(),today=c.logs.filter(l=>l.day===day()),tot=c.students.reduce((a,s)=>a+s.points,0);["sideStudents","heroStudents"].forEach(id=>document.getElementById(id).textContent=c.students.length);document.getElementById("heroToday").textContent=today.reduce((a,l)=>a+l.score,0);document.getElementById("heroTotal").textContent=tot;document.getElementById("classes").innerHTML=classButtons();document.getElementById("qClasses").innerHTML=classButtons();document.getElementById("goal").value=c.goal||"";document.getElementById("questionText").value=data.globalQuestion||"";
 document.getElementById("studentList").innerHTML=c.students.map(s=>'<div class="row"><b>'+s.name+'</b><span class="student-actions"><span class="pts">'+s.points+' ⭐</span><button class="danger-btn" data-delete-student="'+s.id+'" data-delete-name="'+String(s.name).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">🗑️ حذف</button></span></div>').join("")||'<div class="empty">لا يوجد طلاب بعد</div>';let sorted=c.students.slice().sort((a,b)=>b.points-a.points);document.getElementById("rankList").innerHTML=sorted.length?sorted.map((s,i)=>'<div class="row" style="'+(i<3?'border-width:2px;':'')+'"><b style="font-size:'+(i<3?'18px':'15px')+'">'+(i<3?["🥇","🥈","🥉"][i]:(i+1)+".")+' '+s.name+'</b><span class="pts">'+s.points+' ⭐</span></div>').join(""):'<div class="empty">لا يوجد طلاب في هذا الفصل بعد</div>';
@@ -645,7 +645,7 @@ document.getElementById("goQuestion").onclick=function(){document.querySelector(
 function drawWheel(id){
   let cv=document.getElementById(id);
   if(!cv) return;
-  let x=cv.getContext("2d"), ss=C().students, w=cv.width, r=w/2-6;
+  let x=cv.getContext("2d"), ss=C().students, w=cv.width, r=w/2-6, wheelAngle=(id==="homeWheel"?homeAngle:angle);
   x.clearRect(0,0,w,w);
   if(!ss.length){
     x.beginPath();x.arc(w/2,w/2,r,0,Math.PI*2);
@@ -656,7 +656,7 @@ function drawWheel(id){
   }
   let step=Math.PI*2/ss.length;
   ss.forEach((s,i)=>{
-    let a=angle+i*step;
+    let a=wheelAngle+i*step;
     x.beginPath();x.moveTo(w/2,w/2);x.arc(w/2,w/2,r,a,a+step);x.closePath();
     x.fillStyle=i%2?"#edf4ff":"#dbeafe";x.fill();x.strokeStyle="#fff";x.stroke();
     x.save();x.translate(w/2,w/2);x.rotate(a+step/2);
@@ -666,7 +666,41 @@ function drawWheel(id){
   x.beginPath();x.arc(w/2,w/2,38,0,Math.PI*2);x.fillStyle="#0867e9";x.fill();
   x.fillStyle="#fff";x.textAlign="center";x.font="bold 15px Arial";x.fillText("ابدأ",w/2,w/2+5);
 }
-document.getElementById("spin").onclick=function(){let ss=C().students;if(!ss.length||spinning)return;let av=ss.filter(s=>!C().used.includes(String(s.id)));if(!av.length){C().used=[];av=ss.slice()}let p=av[Math.floor(Math.random()*av.length)];C().used.push(String(p.id));localStorage.setItem(KEY,JSON.stringify(data));let idx=ss.indexOf(p),step=Math.PI*2/ss.length,target=-Math.PI/2-(idx+.5)*step,start=angle,delta=target-start;while(delta<Math.PI*2*5)delta+=Math.PI*2;spinning=true;document.getElementById("wheelGrade").classList.add("hidden");document.getElementById("noWinner").classList.remove("hidden");let st=performance.now();function go(now){let t=Math.min(1,(now-st)/3500),e=1-Math.pow(1-t,4);angle=start+delta*e;drawWheel("wheel");if(t<1)requestAnimationFrame(go);else{spinning=false;wheelSelected=p.id;document.getElementById("winner").textContent="🎉 الطالب المختار: "+p.name;document.getElementById("winner").classList.remove("hidden");document.getElementById("wheelGrade").classList.remove("hidden");document.getElementById("noWinner").classList.add("hidden")}}requestAnimationFrame(go)};
+function pickWheelStudent(){
+  let ss=C().students;if(!ss.length)return null;
+  let av=ss.filter(function(s){return !C().used.includes(String(s.id))});
+  if(!av.length){C().used=[];av=ss.slice()}
+  let p=av[Math.floor(Math.random()*av.length)];
+  C().used.push(String(p.id));localStorage.setItem(KEY,JSON.stringify(data));
+  return p;
+}
+function spinCanvas(id,p,onDone){
+  let ss=C().students,idx=ss.indexOf(p),step=Math.PI*2/ss.length;
+  let isHome=id==="homeWheel",start=isHome?homeAngle:angle;
+  let target=-Math.PI/2-(idx+.5)*step,delta=target-start;
+  while(delta<Math.PI*2*5)delta+=Math.PI*2;
+  let st=performance.now();
+  function go(now){
+    let t=Math.min(1,(now-st)/3500),e=1-Math.pow(1-t,4),v=start+delta*e;
+    if(isHome)homeAngle=v;else angle=v;
+    drawWheel(id);
+    if(t<1)requestAnimationFrame(go);else onDone();
+  }
+  requestAnimationFrame(go);
+}
+document.getElementById("homeSpin").onclick=function(){
+  if(homeSpinning)return;let p=pickWheelStudent();if(!p)return;homeSpinning=true;
+  let w=document.getElementById("homeWinner");w.classList.add("hidden");
+  spinCanvas("homeWheel",p,function(){homeSpinning=false;w.textContent="🎉 الطالب المختار: "+p.name;w.classList.remove("hidden")});
+};
+document.getElementById("spin").onclick=function(){
+  if(spinning)return;let p=pickWheelStudent();if(!p)return;spinning=true;
+  document.getElementById("wheelGrade").classList.add("hidden");document.getElementById("noWinner").classList.remove("hidden");
+  spinCanvas("wheel",p,function(){
+    spinning=false;wheelSelected=p.id;document.getElementById("winner").textContent="🎉 الطالب المختار: "+p.name;
+    document.getElementById("winner").classList.remove("hidden");document.getElementById("wheelGrade").classList.remove("hidden");document.getElementById("noWinner").classList.add("hidden");
+  });
+};
 function awardWheel(score,reason){if(!wheelSelected)return;let s=C().students.find(x=>String(x.id)===String(wheelSelected));s.points+=score;C().logs.push({studentId:s.id,name:s.name,score,reason,day:day()});document.getElementById("winner").textContent="✅ تم تسجيل "+reason+" لـ "+s.name;document.getElementById("wheelGrade").classList.add("hidden");wheelSelected=null;save()}
 
 
@@ -790,7 +824,7 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 </script>
 
-<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.1</div>
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.2 WHEEL FIX</div>
 
 <div id="mediaModal"><button id="mediaModalClose">✕ إغلاق</button><div id="mediaModalContent"></div></div>
 </body></html>
