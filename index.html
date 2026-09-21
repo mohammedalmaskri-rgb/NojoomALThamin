@@ -167,7 +167,7 @@ select.media-select{width:100%;padding:13px;border:1px solid #d7e0ec;border-radi
 </head><body>
 <div class="decor d1">🧪</div><div class="decor d2">🧲</div><div class="decor d3">🔬🌱</div><div class="decor d4">🧫</div>
 <div class="shell">
-<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36.2</small></h1><p>🧪  <small>v36</small></p></div>
+<aside class="sidebar"><div class="brand"><h1>⭐ نجوم التاسع <small style="font-size:10px">v36.3</small></h1><p>🧪  <small>v36</small></p></div>
 <div class="teacher"><div class="avatar">👨🏻‍🏫</div><div><b>أهلًا أستاذ محمد</b></div></div>
 <div class="sidecount">👥 <span id="sideStudents">0</span> الطلاب</div>
 <nav>
@@ -347,12 +347,15 @@ async function syncStudentsFromSupabase(){
   if(!studentsRes.ok)throw new Error("Students HTTP "+studentsRes.status);
   var students=await studentsRes.json();
 
-  var partsRes=await fetch(
-   SUPABASE_URL+"/rest/v1/participations?select=id,student_id,class_id,points,reason,created_at&order=created_at.desc",
-   {headers:baseHeaders,cache:"no-store"}
-  );
-  if(!partsRes.ok)throw new Error("Participations HTTP "+partsRes.status);
-  var parts=await partsRes.json();
+  var parts=[];
+  try{
+   var partsRes=await fetch(
+    SUPABASE_URL+"/rest/v1/participations?select=id,student_id,class_id,points,reason,created_at&order=created_at.desc",
+    {headers:baseHeaders,cache:"no-store"}
+   );
+   if(partsRes.ok){parts=await partsRes.json();}
+   else{console.warn("Participations HTTP "+partsRes.status+"; continuing with students only");}
+  }catch(partsErr){console.warn("Participations load failed; continuing with students only",partsErr);}
 
   var namesById={};
   students.forEach(function(s){namesById[String(s.id)]=s.name});
@@ -824,7 +827,7 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 </script>
 
-<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.2 WHEEL FIX</div>
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.3 STUDENTS + WHEELS</div>
 
 <div id="mediaModal"><button id="mediaModalClose">✕ إغلاق</button><div id="mediaModalContent"></div></div>
 </body></html>
