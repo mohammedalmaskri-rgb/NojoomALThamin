@@ -636,7 +636,7 @@ document.getElementById("showImageFullscreen").onclick=function(){showMediaFulls
 document.getElementById("showVideoFullscreen").onclick=function(){showMediaFullscreen("video",videoObjectUrl)};
 document.getElementById("clearImageMedia").onclick=function(){revokeUrl(imageObjectUrl);imageObjectUrl="";document.getElementById("mediaImageInput").value="";document.getElementById("mediaImagePreview").innerHTML='<div class="empty">اختر صورة من الجهاز</div>'};
 document.getElementById("clearVideoMedia").onclick=function(){revokeUrl(videoObjectUrl);videoObjectUrl="";document.getElementById("mediaVideoInput").value="";document.getElementById("mediaVideoPreview").innerHTML='<div class="empty">اختر فيديو من الجهاز</div>'};
-document.getElementById("mediaModalClose").onclick=function(){document.getElementById("mediaModal").classList.remove("on");document.getElementById("mediaModalContent").innerHTML=""};
+document.addEventListener("DOMContentLoaded",function(){var closeBtn=document.getElementById("mediaModalClose");if(closeBtn)closeBtn.onclick=function(){var modal=document.getElementById("mediaModal");var content=document.getElementById("mediaModalContent");if(modal)modal.classList.remove("on");if(content)content.innerHTML="";};});
 document.getElementById("openYoutube").onclick=function(){var u=(document.getElementById("youtubeUrl").value||"").trim();if(!u){alert("الصق رابط YouTube أولًا");return}try{var x=new URL(u);if(!/(^|\.)youtube\.com$|(^|\.)youtu\.be$/.test(x.hostname)){alert("الرابط ليس رابط YouTube صحيح");return}window.open(u,"_blank")}catch(e){alert("الرابط غير صحيح")}};
 
 fillAttendanceClasses();document.getElementById("attendanceDate").value=attendanceToday();
@@ -827,7 +827,7 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 </script>
 
-<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.3 STUDENTS + WHEELS</div>
+<div style="position:fixed;left:8px;bottom:8px;z-index:99999;background:#0b5de8;color:white;padding:4px 8px;border-radius:8px;font-size:11px;font-weight:900">BUILD v36.4 STARTUP FIX</div>
 
 <div id="mediaModal"><button id="mediaModalClose">✕ إغلاق</button><div id="mediaModalContent"></div></div>
 </body></html>
