@@ -47,6 +47,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.hud
       <button class="btn" id="nh3Btn">🧪 تجهيز الطرف الأيسر</button>
       <button class="btn" id="hclBtn" disabled>🧪 تجهيز الطرف الأيمن</button>
       <button class="btn primary" id="startBtn" disabled>▶ بدء التجربة</button>
+      <button class="btn" id="pauseBtn" disabled>⏸ إيقاف مؤقت</button>
       <button class="btn danger" id="resetBtn">↻ إعادة التجربة</button>
     </div>
     <div class="result" id="result">ابدأ بإضافة محلول الأمونيا إلى قطعة القطن.</div>
@@ -72,34 +73,63 @@ canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.hud
   </main>
 </div>
 <script>
-const leftBtn=document.getElementById('nh3Btn'), rightBtn=document.getElementById('hclBtn'), startBtn=document.getElementById('startBtn'), resetBtn=document.getElementById('resetBtn');
+const leftBtn=document.getElementById('nh3Btn'), rightBtn=document.getElementById('hclBtn'), startBtn=document.getElementById('startBtn'), pauseBtn=document.getElementById('pauseBtn'), resetBtn=document.getElementById('resetBtn');
 const leftGas=document.getElementById('leftGas'),rightGas=document.getElementById('rightGas');
 const c1=document.getElementById('cottonNH3'),c2=document.getElementById('cottonHCl'),result=document.getElementById('result'),meter=document.getElementById('meter'),ringLabel=document.getElementById('ringLabel');
 const leftLabel=document.getElementById('leftLabel'),rightLabel=document.getElementById('rightLabel'),speedText=document.getElementById('speedText'),legend=document.getElementById('legend');
 const steps=[1,2,3,4].map(i=>document.getElementById('s'+i)); const canvas=document.getElementById('fx'),ctx=canvas.getContext('2d');
 const gases={NH3:{name:'الأمونيا',M:17,color:'#6fe7ff'},HCl:{name:'كلوريد الهيدروجين',M:36.5,color:'#ff9b7a'}};
-let state=0,running=false,particles=[],ringX=null,startTime=0,raf,ringFormed=false;
+let state=0,running=false,paused=false,particles=[],ringX=null,startTime=0,pauseStarted=0,totalPaused=0,raf,ringFormed=false;
 function setStep(n){steps.forEach((s,i)=>s.classList.toggle('active',i===n-1));}
 function resize(){const r=canvas.getBoundingClientRect();canvas.width=Math.round(r.width*devicePixelRatio);canvas.height=Math.round(r.height*devicePixelRatio);ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)} resize();addEventListener('resize',resize);
 function updateLabels(){let a=gases[leftGas.value],b=gases[rightGas.value];leftLabel.innerHTML=`${leftGas.value}<br>${a.name}`;rightLabel.innerHTML=`${rightGas.value}<br>${b.name}`;legend.innerHTML=`<span style="color:${a.color}">●</span> ${a.name} &nbsp; <span style="color:${b.color}">●</span> ${b.name}`;speedText.textContent=a.M<b.M?`${a.name} أخف؛ ينتشر أسرع.`:a.M>b.M?`${b.name} أخف؛ ينتشر أسرع.`:'سرعتا الانتشار متقاربتان.'} updateLabels();leftGas.onchange=rightGas.onchange=updateLabels;
 leftBtn.onclick=()=>{if(state!==0)return;state=1;c1.classList.add('loaded');rightBtn.disabled=false;leftBtn.disabled=true;leftGas.disabled=true;setStep(2);result.textContent='تم تجهيز الطرف الأيسر. جهّز الطرف الأيمن.'};
 rightBtn.onclick=()=>{if(state!==1)return;state=2;c2.classList.add('loaded');rightBtn.disabled=true;rightGas.disabled=true;startBtn.disabled=false;setStep(3);result.textContent='الطرفان جاهزان. اضغط بدء التجربة.'};
-startBtn.onclick=()=>{if(state!==2||running)return;running=true;state=3;startBtn.disabled=true;startTime=performance.now();particles=[];ringX=null;ringFormed=false;result.textContent='تنتشر الجزيئات داخل الأنبوب…';animate()};
+startBtn.onclick=()=>{if(state!==2||running)return;running=true;paused=false;state=3;startBtn.disabled=true;pauseBtn.disabled=false;pauseBtn.textContent='⏸ إيقاف مؤقت';startTime=performance.now();totalPaused=0;particles=[];ringX=null;ringFormed=false;result.textContent='تنتشر الجزيئات داخل الأنبوب…';animate()};
+pauseBtn.onclick=()=>{if(!running)return;if(!paused){paused=true;pauseStarted=performance.now();cancelAnimationFrame(raf);pauseBtn.textContent='▶ متابعة التجربة';result.textContent='التجربة متوقفة مؤقتًا للشرح. اضغط متابعة التجربة لإكمال الانتشار.';}else{paused=false;totalPaused+=performance.now()-pauseStarted;pauseBtn.textContent='⏸ إيقاف مؤقت';result.textContent=ringFormed?'تكوّنت الحلقة البيضاء، وتستمر المحاكاة…':'تنتشر الجزيئات داخل الأنبوب…';animate(performance.now());}};
 resetBtn.onclick=reset;
-function reset(){cancelAnimationFrame(raf);running=false;state=0;particles=[];ringX=null;ringFormed=false;c1.classList.remove('loaded');c2.classList.remove('loaded');leftBtn.disabled=false;rightBtn.disabled=true;startBtn.disabled=true;leftGas.disabled=false;rightGas.disabled=false;meter.style.width='0%';ringLabel.classList.remove('show');setStep(1);result.textContent='تمت إعادة التجربة. جهّز الأمونيا وكلوريد الهيدروجين ثم ابدأ من جديد.';clear();updateLabels()}
+function reset(){cancelAnimationFrame(raf);running=false;paused=false;state=0;particles=[];ringX=null;ringFormed=false;c1.classList.remove('loaded');c2.classList.remove('loaded');leftBtn.disabled=false;rightBtn.disabled=true;startBtn.disabled=true;pauseBtn.disabled=true;pauseBtn.textContent='⏸ إيقاف مؤقت';leftGas.disabled=false;rightGas.disabled=false;meter.style.width='0%';ringLabel.classList.remove('show');setStep(1);result.textContent='تمت إعادة التجربة. جهّز الأمونيا وكلوريد الهيدروجين ثم ابدأ من جديد.';clear();updateLabels()}
 function spawn(side,w,h){let key=side==='left'?leftGas.value:rightGas.value,g=gases[key],speed=2.5/Math.sqrt(g.M);if(key==='HCl')speed*=0.48;particles.push({side,key,x:side==='left'?w*.13:w*.87,y:h*.46+(Math.random()-.5)*34,vx:(side==='left'?1:-1)*(speed+.35+Math.random()*.18),vy:(Math.random()-.5)*.28,r:2+Math.random()*1.8})}
 function clear(){ctx.clearRect(0,0,canvas.width,canvas.height)}
 function reaction(a,b){let pair=[a,b].sort().join('+');if(pair==='HCl+NH3')return {yes:true,label:'حلقة بيضاء NH₄Cl',text:'تكوّنت حلقة بيضاء من كلوريد الأمونيوم NH₄Cl.',eq:'NH₃(g) + HCl(g) → NH₄Cl(s)'};return {yes:false,label:'لا يتكوّن راسب',text:'في هذه المحاكاة لا يظهر ناتج صلب مرئي عند مزج هاتين المادتين. قارن سرعة انتشارهما ومكان التقائهما.',eq:''}}
-function animate(t=performance.now()){const w=canvas.clientWidth,h=canvas.clientHeight,elapsed=(t-startTime)/1000;clear();if(Math.random()<.8)spawn('left',w,h);if(Math.random()<.8)spawn('right',w,h);let a=gases[leftGas.value],b=gases[rightGas.value],vL=1/Math.sqrt(a.M),vR=(1/Math.sqrt(b.M))*0.48;let target=w*(.13+.74*(vL/(vL+vR)));for(const p of particles){p.x+=p.vx;p.y+=p.vy+(Math.random()-.5)*.15;p.y=Math.max(h*.39,Math.min(h*.56,p.y));if(p.x<w*.12||p.x>w*.88)p.dead=true;ctx.beginPath();ctx.fillStyle=gases[p.key].color;ctx.globalAlpha=.85;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}particles=particles.filter(p=>!p.dead);ctx.globalAlpha=1;let r=reaction(leftGas.value,rightGas.value);
-// لا تظهر الحلقة إلا عند أول تلامس فعلي بين جزيء NH3 وجزيء HCl.
-if(!ringFormed && r.yes){
-  const leftPs=particles.filter(p=>p.side==='left'&&!p.dead);
-  const rightPs=particles.filter(p=>p.side==='right'&&!p.dead);
-  let contact=null,best=Infinity;
-  for(const lp of leftPs){for(const rp of rightPs){const dx=lp.x-rp.x,dy=lp.y-rp.y,d2=dx*dx+dy*dy;if(d2<best){best=d2;contact=(lp.x+rp.x)/2}}}
-  if(contact!==null && best<100){ringFormed=true;ringX=contact;}
+function animate(t=performance.now()){
+  if(!running||paused)return;
+  const w=canvas.clientWidth,h=canvas.clientHeight,elapsed=(t-startTime-totalPaused)/1000;
+  clear();
+  if(Math.random()<.8)spawn('left',w,h);
+  if(Math.random()<.8)spawn('right',w,h);
+  const r=reaction(leftGas.value,rightGas.value);
+  // نحرك الجزيئات أولًا، ثم نتحقق من عبور جبهتي الغازين لبعضهما.
+  for(const p of particles){
+    p.x+=p.vx;p.y+=p.vy+(Math.random()-.5)*.15;
+    p.y=Math.max(h*.39,Math.min(h*.56,p.y));
+    if(p.x<w*.12||p.x>w*.88)p.dead=true;
+  }
+  particles=particles.filter(p=>!p.dead);
+  if(!ringFormed&&r.yes){
+    const leftPs=particles.filter(p=>p.side==='left');
+    const rightPs=particles.filter(p=>p.side==='right');
+    if(leftPs.length&&rightPs.length){
+      const frontL=Math.max(...leftPs.map(p=>p.x));
+      const frontR=Math.min(...rightPs.map(p=>p.x));
+      // الحلقة تتكون بالضبط عندما تصل جبهتا الغازين إلى بعضهما أو تتجاوز إحداهما الأخرى.
+      if(frontL>=frontR){ringFormed=true;ringX=(frontL+frontR)/2;}
+    }
+  }
+  for(const p of particles){ctx.beginPath();ctx.fillStyle=gases[p.key].color;ctx.globalAlpha=.85;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}
+  ctx.globalAlpha=1;
+  if(ringFormed&&r.yes){
+    // حلقة بيضاء واضحة داخل الأنبوب، لا مجرد خط رفيع.
+    const y=h*.475;
+    ctx.save();ctx.shadowColor='white';ctx.shadowBlur=22;ctx.strokeStyle='#fff';ctx.lineWidth=7;ctx.globalAlpha=.96;
+    ctx.beginPath();ctx.ellipse(ringX,y,9,h*.095,0,0,Math.PI*2);ctx.stroke();
+    ctx.lineWidth=3;ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(ringX,y,15,h*.11,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+    ringLabel.textContent=r.label;ringLabel.style.left=Math.max(4,Math.min(82,ringX/w*100-8))+'%';ringLabel.classList.add('show');
+  }
+  meter.style.width=Math.min(100,elapsed*18)+'%';
+  if(elapsed>8.5){running=false;pauseBtn.disabled=true;state=4;setStep(4);result.innerHTML=`<b>النتيجة:</b> ${r.text}<br><b>المعادلة:</b> ${r.eq}<br><b>الملاحظة:</b> الأمونيا NH₃ تنتشر أسرع، لذلك تتكون الحلقة البيضاء أقرب إلى طرف HCl.`;return}
+  raf=requestAnimationFrame(animate);
 }
-if(ringFormed&&r.yes){ctx.save();ctx.shadowColor='white';ctx.shadowBlur=18;ctx.fillStyle='#ffffffdd';ctx.fillRect(ringX-5,h*.38,10,h*.19);ctx.restore();ringLabel.textContent=r.label;ringLabel.style.left=(ringX/w*100-8)+'%';ringLabel.classList.add('show')}meter.style.width=Math.min(100,elapsed*18)+'%';if(elapsed>6.5){running=false;state=4;setStep(4);result.innerHTML=`<b>النتيجة:</b> ${r.text}${r.eq?'<br><b>المعادلة:</b> '+r.eq:''}<br><b>الملاحظة:</b> المادة الأقل كتلة مولية تنتشر أسرع.`;return}raf=requestAnimationFrame(animate)}
 </script>
 </body>
 </html>
