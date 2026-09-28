@@ -1,277 +1,59 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>متابعة تقدم صفوف الكيمياء - الوحدة الأولى</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>متابعة الكيمياء - الوحدة الأولى</title>
 <style>
-  :root{
-    --bg:#f6f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280;
-    --primary:#b91c1c; --primary2:#dc2626; --line:#e5e7eb;
-    --done:#166534; --doing:#92400e; --soft:#fff7ed;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
-  header{
-    position:sticky;top:0;z-index:10;background:linear-gradient(135deg,var(--primary),var(--primary2));
-    color:#fff;padding:18px 16px;box-shadow:0 2px 10px #0002
-  }
-  header h1{font-size:20px;margin:0 0 5px}
-  header p{margin:0;font-size:13px;opacity:.9}
-  main{max-width:1050px;margin:auto;padding:16px}
-  .toolbar,.summary{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  select,button{font:inherit}
-  select{
-    min-width:160px;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;background:#fff
-  }
-  button{
-    border:0;border-radius:10px;padding:10px 13px;cursor:pointer;font-weight:700
-  }
-  .primary{background:var(--primary);color:#fff}
-  .secondary{background:#eef2ff;color:#3730a3}
-  .ghost{background:#f3f4f6;color:#374151}
-  .danger{background:#fee2e2;color:#991b1b}
-  .class-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:16px}
-  .class-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .class-card h3{margin:0 0 8px;font-size:18px}
-  .progress{height:9px;border-radius:999px;background:#e5e7eb;overflow:hidden;margin:10px 0}
-  .bar{height:100%;background:var(--primary);width:0}
-  .small{font-size:12px;color:var(--muted);line-height:1.6}
-  .current{font-weight:800;line-height:1.55;margin-top:6px}
-  .next{margin-top:6px;padding:8px 10px;background:#f9fafb;border-radius:10px;font-size:13px}
-  .section{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;overflow:hidden}
-  .section h2{font-size:16px;margin:0;padding:13px 14px;background:#fafafa;border-bottom:1px solid var(--line)}
-  .point{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid #f1f5f9}
-  .point:last-child{border-bottom:0}
-  .num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#f3f4f6;font-size:12px;font-weight:700}
-  .point.done .num{background:#dcfce7;color:var(--done)}
-  .point.current-point{background:var(--soft)}
-  .point-title{font-size:14px;line-height:1.5}
-  .status{font-size:12px;font-weight:800;color:var(--muted)}
-  .point.done .status{color:var(--done)}
-  .point.current-point .status{color:var(--doing)}
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .note{width:100%;min-height:70px;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit;resize:vertical}
-  .summary strong{color:var(--primary)}
-  .footer-note{font-size:12px;color:var(--muted);text-align:center;padding:12px}
-  @media(max-width:560px){
-    .point{grid-template-columns:34px 1fr}
-    .status{grid-column:2}
-    .toolbar>*{flex:1 1 100%}
-  }
-</style>
-</head>
-<body>
-<header>
-  <h1>متابعة تقدم صفوف الكيمياء</h1>
-  <p>الصف التاسع • الوحدة الأولى: طبيعة المادة</p>
-</header>
-
-<main>
-  <div class="toolbar">
-    <label><strong>الصف:</strong></label>
-    <select id="classSelect"></select>
-    <button class="primary" id="doneBtn">✓ تم إنهاء النقطة الحالية</button>
-    <button class="ghost" id="backBtn">↩ تراجع نقطة</button>
-    <button class="secondary" id="exportBtn">تصدير نسخة احتياطية</button>
-    <button class="ghost" id="importBtn">استيراد نسخة</button>
-    <input id="importFile" type="file" accept="application/json" hidden>
-  </div>
-
-  <div id="cards" class="class-grid"></div>
-
-  <div class="summary">
-    <div id="selectedSummary"></div>
-    <div class="actions">
-      <textarea id="note" class="note" placeholder="ملاحظة للحصة القادمة… مثال: أكمل مثال الغليان ثم حل سؤال 3"></textarea>
-      <button class="primary" id="saveNote">حفظ الملاحظة</button>
-      <button class="danger" id="resetClass">تصفير تقدم هذا الصف</button>
-    </div>
-  </div>
-
-  <div id="sections"></div>
-  <div class="footer-note">يحفظ التقدم تلقائيًا على نفس الجهاز والمتصفح.</div>
-</main>
-
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial;background:#f6f6f7;color:#222}
+header{background:#b42318;color:#fff;padding:20px 16px}header h1{margin:0;font-size:22px}header p{margin:6px 0 0;font-size:13px;opacity:.9}
+main{max-width:900px;margin:auto;padding:15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.card,.box{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:15px}.card h2{margin:0;font-size:21px}.small{font-size:12px;color:#667085}
+.last{font-weight:700;margin:10px 0;min-height:40px;line-height:1.5}
+button,select{font:inherit;border:0;border-radius:10px;padding:11px;font-weight:700}
+.red{background:#b42318;color:#fff}.gray{background:#eee;color:#333}.card button{width:100%}
+.hidden{display:none}.head{display:flex;align-items:center;gap:10px;margin-bottom:12px}.head h2{flex:1;margin:0}
+.box{margin-bottom:12px}.box h3{margin:0 0 12px}select{width:100%;border:1px solid #d0d5dd;background:white;margin-bottom:10px}
+.item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #eee}.item:last-child{border:0}
+.tick{font-size:18px}.txt{flex:1;font-weight:650}.date{font-size:11px;color:#667085;margin-top:3px}
+.del{background:#fee4e2;color:#b42318;padding:7px 9px;font-size:12px}.empty{text-align:center;color:#667085;padding:15px}
+.next{background:#fff7ed;border-radius:10px;padding:11px;margin-top:10px;font-size:13px}
+</style></head><body>
+<header><h1>متابعة صفوف الكيمياء</h1><p>الصف التاسع • الوحدة الأولى: طبيعة المادة</p></header>
+<main><section id="home"><div class="grid" id="cards"></div></section>
+<section id="classPage" class="hidden">
+<div class="head"><button class="gray" onclick="goHome()">رجوع</button><h2 id="classTitle"></h2></div>
+<div class="box"><h3>✅ الدروس الفرعية التي خلصتها</h3><div id="doneList"></div><div id="nextTopic" class="next"></div></div>
+<div class="box"><h3>➕ أضف الدرس الذي خلصته اليوم</h3>
+<select id="topicSelect"></select><button class="red" style="width:100%" onclick="addTopic()">إضافة إلى المنجز</button></div>
+</section></main>
 <script>
-const classes = ["9/1","9/2","9/3","9/4","9/5","9/6","9/7"];
-
-const sections = [
-  {
-    title:"1-1 حالات المادة وتغيراتها",
-    points:[
-      "مفهوم المادة والحالات الفيزيائية الثلاث",
-      "خصائص الصلب والسائل والغاز",
-      "تأثير درجة الحرارة والضغط على حالات المادة",
-      "التغيرات في الحالة الفيزيائية",
-      "الانصهار والتجمد",
-      "التبخر والغليان",
-      "التكثف وتأثير الضغط في درجة الغليان",
-      "النموذج الجسيمي الحركي للمادة",
-      "أنواع الجسيمات: الذرات والجزيئات والأيونات",
-      "ترتيب وحركة الجسيمات في الحالات الثلاث",
-      "تفسير الانصهار والتبخر والغليان بالنموذج الجسيمي",
-      "تأثير الشوائب على درجات الانصهار والغليان",
-      "منحنيات التسخين والتبريد",
-      "نشاط رسم منحنى تبريد + أسئلة الدرس"
-    ]
-  },
-  {
-    title:"المخاليط والمحاليل",
-    points:[
-      "أنواع المخاليط",
-      "المحاليل: المذاب والمذيب",
-      "ذوبانية المواد الصلبة في السوائل",
-      "المحلول المركز والمخفف",
-      "تركيز المحلول",
-      "المحلول المشبع والذوبانية"
-    ]
-  },
-  {
-    title:"الانتشار",
-    points:[
-      "الانتشار في الموائع",
-      "انتشار الغازات",
-      "العوامل المؤثرة في سرعة الانتشار",
-      "تجربة الأمونيا وكلوريد الهيدروجين",
-      "تجربة الانتشار في السوائل"
-    ]
-  },
-  {
-    title:"نقاوة المواد وأهميتها",
-    points:[
-      "نقاوة المواد وتحديد هويتها",
-      "أهمية النقاوة في العقاقير والأغذية",
-      "الكروماتوجرافيا كاختبار للنقاوة"
-    ]
-  },
-  {
-    title:"1-2 فصل المواد وتنقيتها",
-    points:[
-      "اختيار طريقة الفصل حسب نوع المخلوط",
-      "فصل المواد الصلبة غير الذائبة عن السوائل: الترويق والترشيح",
-      "فصل مخاليط المواد الصلبة بالاختلاف في الخواص والذوبانية",
-      "نشاط فصل مخلوط ملح الطعام والرمل",
-      "فصل المحاليل: التبخير والتبلور",
-      "التقطير",
-      "التقطير التجزيئي",
-      "كروماتوجرافيا الورق: المبدأ والخطوات",
-      "نشاط استقصاء ملونات الطعام بالكروماتوجرافيا",
-      "جبهة المذيب وقيمة Rf",
-      "عوامل تحديد الموقع والمواد غير الملونة"
-    ]
-  },
-  {
-    title:"معالجة المياه",
-    points:[
-      "الماء النقي ومفهوم النقاوة علميًا",
-      "مراحل معالجة المياه",
-      "تحلية مياه البحر",
-      "استخدامات المياه",
-      "نشاط المواد الكيميائية في مياه البحر",
-      "ملخص الوحدة وأسئلة نهاية الوحدة"
-    ]
-  }
-];
-
-const flat = [];
-sections.forEach((s,si)=>s.points.forEach((p,pi)=>flat.push({section:si, index:pi, title:p})));
-
-const KEY="chem9_unit1_progress_v1";
-let state = JSON.parse(localStorage.getItem(KEY) || "{}");
-classes.forEach(c=>{
-  if(!state[c]) state[c]={done:-1,note:""};
-});
-let selected=classes[0];
-
-function save(){ localStorage.setItem(KEY,JSON.stringify(state)); }
-
-function renderSelect(){
-  const sel=document.getElementById("classSelect");
-  sel.innerHTML=classes.map(c=>`<option ${c===selected?"selected":""}>${c}</option>`).join("");
+const classes=["9/1","9/2","9/3","9/4","9/5","9/6","9/7"];
+const topics=["حالات المادة", "التغيرات في الحالة الفيزيائية", "الانصهار والتجمد", "التبخر والغليان والتكثف", "النموذج الجسيمي الحركي للمادة", "أنواع الجسيمات", "تأثير الشوائب على درجات الانصهار والغليان", "منحنيات التبريد والتسخين", "أنواع المخاليط", "المحاليل", "ذوبانية المواد الصلبة في السوائل", "الانتشار في الموائع", "انتشار الغازات", "نقاوة المواد وماهيتها", "فصل المواد وتنقيتها", "فصل المواد الصلبة غير الذائبة عن السوائل", "فصل مخاليط المواد الصلبة", "عمليات الفصل التي تعتمد على الاختلاف في الذوبانية", "فصل المحاليل", "كروماتوجرافيا الورق", "معالجة المياه"];
+const KEY="chem9_unit1_headings_v3";
+let data=JSON.parse(localStorage.getItem(KEY)||"{}"); classes.forEach(c=>data[c]??=[]);
+let current=null;
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function last(c){return data[c].length?data[c][data[c].length-1].topic:"لم يتم تسجيل درس بعد"}
+function renderHome(){
+ document.getElementById("cards").innerHTML=classes.map(c=>`<div class="card"><h2>${c}</h2>
+ <div class="small">آخر درس تم إنجازه</div><div class="last">${last(c)}</div>
+ <div class="small">عدد الدروس المنجزة: ${data[c].length} من ${topics.length}</div>
+ <button class="red" onclick="openClass('${c}')">فتح الصف</button></div>`).join("");
 }
-function pct(c){ return Math.round(((state[c].done+1)/flat.length)*100); }
-
-function renderCards(){
-  document.getElementById("cards").innerHTML=classes.map(c=>{
-    const d=state[c].done;
-    const current = d>=0 ? flat[d].title : "لم تبدأ بعد";
-    const next = d+1<flat.length ? flat[d+1].title : "تم إنهاء الوحدة الأولى";
-    return `<div class="class-card">
-      <h3>${c}</h3>
-      <div class="small">التقدم: ${pct(c)}%</div>
-      <div class="progress"><div class="bar" style="width:${pct(c)}%"></div></div>
-      <div class="small">آخر نقطة منتهية:</div>
-      <div class="current">${current}</div>
-      <div class="next"><strong>الحصة القادمة:</strong> ${next}</div>
-      <button class="ghost" style="margin-top:10px;width:100%" onclick="selectClass('${c}')">فتح الصف</button>
-    </div>`;
-  }).join("");
+function openClass(c){current=c;document.getElementById("home").classList.add("hidden");document.getElementById("classPage").classList.remove("hidden");renderClass()}
+function goHome(){current=null;document.getElementById("classPage").classList.add("hidden");document.getElementById("home").classList.remove("hidden");renderHome()}
+function renderClass(){
+ document.getElementById("classTitle").textContent=current;
+ const arr=data[current];
+ document.getElementById("doneList").innerHTML=arr.length?arr.map((x,i)=>`<div class="item"><span class="tick">✓</span><div class="txt">${x.topic}<div class="date">${x.date}</div></div><button class="del" onclick="removeTopic(${i})">حذف</button></div>`).join(""):`<div class="empty">ما سجلت أي درس لهذا الصف بعد.</div>`;
+ const done=new Set(arr.map(x=>x.topic)); const remaining=topics.filter(t=>!done.has(t));
+ document.getElementById("topicSelect").innerHTML=remaining.length?remaining.map(t=>`<option>${t}</option>`).join(""):`<option>تم إنهاء جميع عناوين الوحدة</option>`;
+ document.getElementById("nextTopic").innerHTML=remaining.length?`<b>التالي حسب ترتيب الكتاب:</b> ${remaining[0]}`:"🎉 تم تسجيل جميع عناوين الوحدة.";
 }
-
-function renderSummary(){
-  const d=state[selected].done;
-  const current=d>=0?flat[d].title:"لم تبدأ بعد";
-  const next=d+1<flat.length?flat[d+1].title:"تم إنهاء الوحدة الأولى";
-  document.getElementById("selectedSummary").innerHTML=
-    `<strong>${selected}</strong> — آخر نقطة منتهية: <b>${current}</b><br>
-     <span class="small">النقطة التالية:</span> <b>${next}</b>`;
-  document.getElementById("note").value=state[selected].note||"";
+function addTopic(){
+ const s=document.getElementById("topicSelect"); if(!s.value||s.value==="تم إنهاء جميع عناوين الوحدة")return;
+ if(data[current].some(x=>x.topic===s.value))return;
+ const d=new Date(); const date=d.toLocaleDateString("ar-OM");
+ data[current].push({topic:s.value,date}); save(); renderClass(); renderHome();
 }
-
-function renderSections(){
-  const done=state[selected].done;
-  let global=-1;
-  document.getElementById("sections").innerHTML=sections.map((s,si)=>{
-    const rows=s.points.map((p,pi)=>{
-      global++;
-      const cls=global<=done?"done":(global===done+1?"current-point":"");
-      const status=global<=done?"✓ منتهية":(global===done+1?"الحالية":"لاحقًا");
-      return `<div class="point ${cls}">
-        <div class="num">${global+1}</div>
-        <div class="point-title">${p}</div>
-        <div class="status">${status}</div>
-      </div>`;
-    }).join("");
-    return `<div class="section"><h2>${s.title}</h2>${rows}</div>`;
-  }).join("");
-}
-
-function render(){ renderSelect(); renderCards(); renderSummary(); renderSections(); save(); }
-
-window.selectClass=(c)=>{selected=c;render();window.scrollTo({top:0,behavior:"smooth"});};
-
-document.getElementById("classSelect").addEventListener("change",e=>{selected=e.target.value;render();});
-document.getElementById("doneBtn").addEventListener("click",()=>{
-  if(state[selected].done<flat.length-1) state[selected].done++;
-  render();
-});
-document.getElementById("backBtn").addEventListener("click",()=>{
-  if(state[selected].done>=0) state[selected].done--;
-  render();
-});
-document.getElementById("saveNote").addEventListener("click",()=>{
-  state[selected].note=document.getElementById("note").value.trim(); save(); renderCards();
-  alert("تم حفظ الملاحظة");
-});
-document.getElementById("resetClass").addEventListener("click",()=>{
-  if(confirm(`تصفير تقدم ${selected}؟`)){state[selected]={done:-1,note:""};render();}
-});
-document.getElementById("exportBtn").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download="chem9_unit1_backup.json"; a.click(); URL.revokeObjectURL(a.href);
-});
-document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change",e=>{
-  const f=e.target.files[0]; if(!f)return;
-  const r=new FileReader();
-  r.onload=()=>{try{state=JSON.parse(r.result);classes.forEach(c=>{if(!state[c])state[c]={done:-1,note:""};});render();alert("تم استيراد النسخة");}catch{alert("الملف غير صالح");}};
-  r.readAsText(f);
-});
-
-render();
-</script>
-</body>
-</html>
+function removeTopic(i){if(confirm("حذف هذا الدرس من المنجز؟")){data[current].splice(i,1);save();renderClass();renderHome()}}
+renderHome();
+</script></body></html>
